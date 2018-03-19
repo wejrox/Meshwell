@@ -15,20 +15,24 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from rest_framework import routers
-from mysite import views
+from mysite import views as site_views
+from django.views.generic import TemplateView
+from apps.api import views as api_views
 
 # Set up our default URL router
 router = routers.DefaultRouter()
 
-# Register the API entries created in views.py
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+# Register the static pages
+
+# Register dynamic pages
+router.register(r'profile', api_views.ProfileViewSet, base_name='profile')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    # Add a reference to all of the router entries created
-    url(r'^', include(router.urls)),
+    # Add a reference to core pages
+    url(r'^$', site_views.index, name='index'),
+    url(r'^api/', include(router.urls)),
     # Add a reference to the API authentication
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

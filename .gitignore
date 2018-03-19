@@ -3,3 +3,6 @@
 
 # Database
 *.sqlite
+
+# Ignore non-project specific files when deciding project language
+mysite/static/* linguist-vendored
