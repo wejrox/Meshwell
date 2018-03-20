@@ -1,11 +1,24 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User, Group
+from django.contrib.auth import validators
+from django.forms import ValidationError
+from django.db import IntegrityError
+from django.utils.translation import gettext as _
 from ..api.models import Profile
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = User
 		fields = ('username', 'date_joined', 'first_name', 'last_name', 'groups',)
+		extra_kwargs = {
+            		'username': {'validators': [validators.UnicodeUsernameValidator]},
+        	}
+
+	def validate(self, data):
+		if self.context['request']._request.method == 'POST':
+			if User.objects.filter(username=data['username']):
+				raise serializers.ValidationError('Username already exists')
+		return data
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 	user = UserSerializer(required='True')
@@ -16,28 +29,32 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
 	# Create a new User and Profile
 	def create(self, validated_data):
-		# User
+		# Create User object
 		user_data = validated_data.pop('user')
 		user = User.objects.create()
 
-		# Groups must be set this way for some reason
+		# Groups must be set this way due to being unabel to set many-many relationships
 		group_name = user_data.get('groups', user.groups)
 		if group_name:
 			user_group = Group.objects.get(name=group_name[0])
 			user_group.user_set.add(user)
 
+		# Set user details
 		user.username = user_data.get('username', user.username)
 		user.date_joined = user_data.get('date_joined', user.date_joined)
 		user.first_name = user_data.get('first_name', user.first_name)
 		user.last_name = user_data.get('last_name', user.last_name)
+
+		# Generate profile and save
+		profile = Profile.objects.create(user=user, **validated_data)
 		user.save()
 
-		# Profile
-		profile = Profile.objects.create(user=user, **validated_data)
+		# Return the profile's details after creation
 		return profile
 
 	# Update the User and Profile
 	def update(self, instance, validated_data):
+		# Get user information
 		user_data = validated_data.pop('user')
 		user = instance.user
 
@@ -49,7 +66,6 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 		instance.positivity_commends = validated_data.get('positivity_commends', instance.positivity_commends)
 		instance.skill_commends = validated_data.get('skill_commends', instance.skill_commends)
 		instance.communication_commends = validated_data.get('communication_comments', instance.communication_commends)
-		instance.save()
 
 		# Update user
 		user.username = user_data.get('username', user.username)
@@ -57,11 +73,14 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 		user.first_name = user_data.get('first_name', user.first_name)
 		user.last_name = user_data.get('last_name', user.last_name)
 
-		# Update groups
+		# Update groups if any have been selected
 		group_name = user_data.get('groups', user.groups)
 		if group_name:
 			user_group = Group.objects.get(name=group_name[0])
 			user_group.user_set.add(user)
 
+		# Save to database
+		profile.save()
 		user.save()
+
 		return instance
