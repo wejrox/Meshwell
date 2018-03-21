@@ -23,7 +23,9 @@ from apps.api.urls import router as api_router
 urlpatterns = [
     # Add a reference to core pages
     path('', site_views.index, name='index'),
-    path('', site_views.profile, name='profile'),
+    #path('', site_views.profile, name='profile'),
+    url(r'^profile/$', site_views.profile, name='profile'),
+    url(r'^feedback/$', site_views.feedback, name='feedback'),
     url(r'^api/', include(api_router.urls)),
     # Add a reference to the API authentication
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
