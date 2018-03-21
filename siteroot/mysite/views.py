@@ -26,3 +26,27 @@ def index(request):
 
 	# Give back the context to the index page
 	return render(request, 'index.html', context)
+
+#views for the profile page
+def profile(request):
+	#reference from index function
+	user_pk = 8
+	url = 'http://52.62.206.111/api/profile/' + str(user+pk) + '?format=json'
+	response = requests.get(url)
+	data = response.json()
+	
+	#Dummy Data
+	context ={
+	
+		'username':data['user']['username'],
+		'first_name':data['user']['first_name'],
+		'last_name':data['user']['last_name'],
+		'pref_server':data['pref_server'],
+		'birth_date':data['birth_date'],
+		'sessions_played':data['serssions_played'],
+		'teamwork_commends':data['teamwork_commends'],
+		'positivity_commends':data['positivity_commends'],
+		'skill_commends':data['skill_commends'],
+		'communication_commends':data['communication_commends'],
+	}
+	return render(request, 'profile.html', context)
