@@ -4,7 +4,7 @@ from django.contrib.auth import validators
 from django.forms import ValidationError
 from django.db import IntegrityError
 from django.utils.translation import gettext as _
-from ..api.models import Profile
+from ..api.models import Profile, Availability, Game, Game_Role, Session, Session_Profile, Report
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
@@ -84,3 +84,34 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 		user.save()
 
 		return instance
+
+class AvailabilitySerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Availability
+		fields = ('profile', 'start_time', 'end_time', 'pref_day',)
+
+
+class GameSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Game
+		fields = ('name', 'max_players', 'description',)
+
+class Game_RoleSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Game_Role
+		fields = ('game', 'name', 'description',)
+
+class SessionSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Session
+		fields = ('game', 'time_created', 'time_commenced', 'time_completed',)
+
+class Session_ProfileSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Session_Profile
+		fields = ('session', 'profile', 'game_role',)
+
+class ReportSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Report
+		fields = ('session', 'user_reported', 'sent_by', 'time_sent', 'report_reason',)
