@@ -4,6 +4,8 @@ from mysite.serializers import UserSerializer, GroupSerializer
 from django.http import HttpResponse
 from django.shortcuts import render
 import requests
+from mysite.forms import FeedbackForm
+from .forms import FeedbackForm 
 
 # The current sample index page, which makes requests to the API, and passes accross the information required.
 def index(request):
@@ -50,3 +52,33 @@ def profile(request):
 		'communication_commends':data['communication_commends'],
 	}
 	return render(request, 'profile.html', context)
+
+#views for the feedback form page
+def feedback(request):
+	form = FeedbackForm(request.POST or None)
+	if form.is_valid():
+		
+		### printing the values of full_name, email, title, and email
+		#for key, value in form.cleaned_data.itrritems():
+			#print key, value
+			
+		full_name = form.cleaned_data.get("full_name")
+		email = form.cleaned_data.get("email")
+		title = form.cleaned_data.get("title")
+		message = form.cleaned_data.get("message")
+			
+	context ={
+		'form': form,
+	
+	}
+	return render(request, 'feedback.html', context)
+
+
+
+
+
+
+
+
+
+
