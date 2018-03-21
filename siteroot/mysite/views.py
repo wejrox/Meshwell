@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 import requests
 from mysite.forms import FeedbackForm
-from .forms import FeedbackForm 
+
 
 # The current sample index page, which makes requests to the API, and passes accross the information required.
 def index(request):
