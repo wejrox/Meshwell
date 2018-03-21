@@ -59,7 +59,7 @@ def feedback(request):
 	if form.is_valid():
 		
 		### printing the values of full_name, email, title, and email
-		#for key, value in form.cleaned_data.itrritems():
+		#for key, value in form.cleaned_data.iteritems():
 			#print key, value
 			
 		full_name = form.cleaned_data.get("full_name")
