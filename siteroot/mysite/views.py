@@ -25,4 +25,4 @@ def index(request):
 	}
 
 	# Give back the context to the index page
-	return render(request, 'index.html', context)
+	return render(request, 'mysite/index.html', context)

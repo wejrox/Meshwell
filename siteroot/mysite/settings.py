@@ -55,7 +55,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-		BASE_DIR + '/mysite/templates/',
+		BASE_DIR + '/mysite/templates',
 	],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -125,4 +125,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Media files(images, other) uploaded by the User (admin or non)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIRE, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
