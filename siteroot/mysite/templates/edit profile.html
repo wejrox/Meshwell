@@ -1,16 +1,12 @@
 <html>
 <body>
 
-<h1>Edit Profile Page</h1>
+<title>Edit Profile Page</title>
 
 
 <div class="container">
 
    <form method="post">
-      {% csrf_token %}
-
-      {{ form.as_p }} #Replace with whatever forms view ID is
+      {{ form.as_p }}
 	  <button type="submit">Submit</button>
    </form>
-   </div>
- </html>
