@@ -1,12 +1,22 @@
 <html>
+<head>
+<title>Edit Profile</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+ integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+</head>
 <body>
 
-<title>Edit Profile Page</title>
+<h1>Edit Profile Page</h1>
 
 
 <div class="container">
 
    <form method="post">
-      {{ form.as_p }}
-	  <button type="submit">Submit</button>
+      {% csrf_token %}
+
+      {{ form.as_p }} #Replace with whatever forms view ID is
+	  <input type="submit" class="btn btn-info" value="Submit Button">
    </form>
+   </div>
+ </html>
