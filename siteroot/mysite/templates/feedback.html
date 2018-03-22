@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>Contact Form</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+ integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+</head>
+
+
+<h1>FEEDBACK FORM</h1>
+
+
+
+<body>
+	<form method="post">
+    {% csrf_token %}
+		 {{ form.as_p }}
+	 <input type="submit" class="btn btn-info" value="Submit Button">
+ </form>
+ </body>
+
+
+ </html>
