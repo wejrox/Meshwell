@@ -17,8 +17,8 @@ class FeedbackForm(forms.Form):
         model = User
         fields = (
             'first_name'
-			      'last_name'
-			      'email'
+	    'last_name'
+	    'email'
             'title'
             'message'
 			)
