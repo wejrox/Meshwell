@@ -88,30 +88,30 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 class AvailabilitySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Availability
-		fields = ('profile', 'start_time', 'end_time', 'pref_day',)
+		fields = ('url', 'profile', 'start_time', 'end_time', 'pref_day',)
 
 
 class GameSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Game
-		fields = ('name', 'max_players', 'description',)
+		fields = ('url', 'name', 'max_players', 'description',)
 
 class Game_RoleSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Game_Role
-		fields = ('game', 'name', 'description',)
+		fields = ('url', 'game', 'name', 'description',)
 
 class SessionSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Session
-		fields = ('game', 'time_created', 'time_commenced', 'time_completed',)
+		fields = ('url', 'game', 'datetime_created', 'start_time', 'end_time',)
 
 class Session_ProfileSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Session_Profile
-		fields = ('session', 'profile', 'game_role',)
+		fields = ('url', 'session', 'profile', 'game_role',)
 
 class ReportSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Report
-		fields = ('session', 'user_reported', 'sent_by', 'time_sent', 'report_reason',)
+		fields = ('url', 'session', 'user_reported', 'sent_by', 'datetime_sent', 'report_reason',)

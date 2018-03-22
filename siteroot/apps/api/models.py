@@ -126,9 +126,9 @@ class Session(models.Model):
 		null=False,
 	)
 
-	time_created = models.DateTimeField(auto_now_add=True,)
-	time_commenced = models.DateTimeField()
-	time_completed = models.DateTimeField()
+	datetime_created = models.DateTimeField(auto_now_add=True,)
+	start_time = models.TimeField(blank=True, null=True,)
+	end_time = models.TimeField(blank=True, null=True,)
 
 # An entry for a profile's session, connected with a Session when it is found
 class Session_Profile(models.Model):
@@ -192,5 +192,5 @@ class Report(models.Model):
 		default=TOXICITY,
 	)
 
-	time_sent = models.DateTimeField(auto_now_add=True,)
+	datetime_sent = models.DateTimeField(auto_now_add=True,)
 

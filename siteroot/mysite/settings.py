@@ -27,9 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['52.62.206.111','ec2-52-62-206-111.ap-southeast-2.compute.amazonaws.com']
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -57,7 +55,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-		BASE_DIR + '/mysite/templates/',
+		BASE_DIR + '/mysite/templates',
 	],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -120,10 +118,11 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static server files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
-print(STATIC_ROOT)
+# Media files(images, other) uploaded by the User (admin or non)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
