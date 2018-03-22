@@ -1,0 +1,55 @@
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+
+  display: flex;
+  align-items: center;
+}
+
+.carousel-inner img {
+  margin: auto;
+}
+
+.navbar-light .navbar-nav .nav-link{
+	color: #f44c41;
+}
+
+.navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link {
+	color: #ffffff;
+}
+
+.bg-light {
+	background-color: #373737 !important;
+}
+
+.navbar-light .navbar-brand:focus, .navbar-light .navbar-brand:hover{
+	color: #ffffff;
+}
+
+.navbar-light .navbar-brand{
+	color: #f44c41;
+}
+
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover{
+  color: #f44c41;
+}
+
+.carousel-inner{
+	background:#272727;
+}
+
+.navbar-brand
+{
+  font-family: "timeburner";
+    src: url("css/fonts/timeburner.eot");
+    src: 
+    url("css/fonts/timeburner.woff") format("woff"),
+    url("css/fonts/timeburner.otf") format("opentype"),
+    url("css/fonts/timeburner.svg#filename") format("svg");
+
+  font-size: 24pt;
+}
+
+.dummyTextClass{
+  padding: 65px;
+}
