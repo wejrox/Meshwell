@@ -10,7 +10,7 @@ class FeedbackForm(forms.Form):
   
   email = models.EmailField(required=true)
   title = forms.CharField(max_length=100)
-  message = forms.CharField(widget=forms.Textarea)
+  message = forms.CharField(widget=forms.Textarea, required=True)
   
  #Class meta will dictate what the form uses for its fields
   class Meta:
