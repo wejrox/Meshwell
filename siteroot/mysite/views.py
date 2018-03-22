@@ -68,6 +68,9 @@ def feedback(request):
 			message = form.cleaned_data.get("message")
 			
 			return HttpResponseRedirect('')
+	else:
+		form = FeedbackForm()
+		
 	context ={
 		'form': form,
 	
