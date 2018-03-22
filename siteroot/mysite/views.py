@@ -55,17 +55,17 @@ def profile(request):
 
 #views for the feedback form page
 def feedback(request):
-	form = FeedbackForm(request.POST or None)
-	if form.is_valid():
+	if request.method == ''POST:
+		form = FeedbackForm(request.POST)
+		if form.is_valid():
 		
-		### printing the values of full_name, email, title, and email
-		#for key, value in form.cleaned_data.iteritems():
-			#print key, value
-			
-		full_name = form.cleaned_data.get("full_name")
-		email = form.cleaned_data.get("email")
-		title = form.cleaned_data.get("title")
-		message = form.cleaned_data.get("message")
+			### printing the values of full_name, email, title, and email
+			#for key, value in form.cleaned_data.iteritems():
+				#print key, value
+			full_name = form.cleaned_data.get("full_name")
+			email = form.cleaned_data.get("email")
+			title = form.cleaned_data.get("title")
+			message = form.cleaned_data.get("message")
 			
 	context ={
 		'form': form,
