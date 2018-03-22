@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from apps.api.models import Profile
 from mysite.models import Feedback
+
 #form to create profile
 #RegistrationForm VIEW must be created first as well as URl
 class RegistrationForm(UserCreationForm):
@@ -34,10 +35,14 @@ class RegistrationForm(UserCreationForm):
     user.last_name = self.cleaned_data['last_name']
     user.email = self.cleaned_data['email']
     user.birth_date = self.cleaned_data['birth_date']
+    #Create user profile
+    profile = Profile.objects.create()
+    profile.user = user
 
     if commit:
       user.save()
-      return user
+      profile.save()
+      return user()
 
 
 class EditProfileForm(RegistrationForm):
@@ -50,16 +55,26 @@ class EditProfileForm(RegistrationForm):
             'birth_date',
         )
 
-class FeedbackForm(forms.Form):
+class FeedbackForm(forms.ModelForm):
+	class Meta:
+		model=Feedback
+		exclude=[]
+
   #full_name = forms.CharField(max_length=100)
   #email = forms.emailField()
 
   #used Mihir's forms.py as reference by using class Meta: and model=user
-  name = forms.CharField(max_length=100)
-  email = forms.EmailField(required=True)
-  title = forms.CharField(max_length=100)
-  message = forms.CharField(widget=forms.Textarea, required=True)
+#  name = forms.CharField(max_length=100)
+#  email = forms.EmailField(required=True)
+#  title = forms.CharField(max_length=100)
+#  message = forms.CharField(widget=forms.Textarea, required=True)
 
  #Class meta will dictate what the form uses for its fields
-  class Meta:
-        model = Feedback
+#  class Meta:
+#    model = Feedback
+#    fields = (
+#      'name',
+#      'email',
+#      'title',
+#      'message',
+#    )

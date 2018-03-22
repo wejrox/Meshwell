@@ -5,11 +5,12 @@ from django.forms import ValidationError
 from django.db import IntegrityError
 from django.utils.translation import gettext as _
 from ..api.models import Profile, Availability, Game, Game_Role, Session, Session_Profile, Report
+from django.contrib.auth.hashers import check_password, make_password
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = User
-		fields = ('username', 'date_joined', 'first_name', 'last_name', 'groups',)
+		fields = ('username', 'password', 'date_joined', 'first_name', 'last_name', 'groups',)
 		extra_kwargs = {
             		'username': {'validators': [validators.UnicodeUsernameValidator]},
         	}
@@ -25,7 +26,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
 	class Meta:
 		model = Profile
-		fields = ('url', 'user', 'password', 'pref_server', 'birth_date', 'sessions_played', 'teamwork_commends', 'positivity_commends', 'skill_commends', 'communication_commends')
+		fields = ('url', 'user', 'pref_server', 'birth_date', 'sessions_played', 'teamwork_commends', 'positivity_commends', 'skill_commends', 'communication_commends')
 
 	# Create a new User and Profile
 	def create(self, validated_data):
@@ -39,9 +40,10 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 			user_group = Group.objects.get(name=group_name[0])
 			user_group.user_set.add(user)
 
+		# Create password hash
 		# Set user details
 		user.username = user_data.get('username', user.username)
-		user.password = user_data.get('password', user.password)
+		user.password = make_password(user_data.get('password', user.password))
 		user.date_joined = user_data.get('date_joined', user.date_joined)
 		user.first_name = user_data.get('first_name', user.first_name)
 		user.last_name = user_data.get('last_name', user.last_name)
@@ -70,6 +72,9 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
 		# Update user
 		user.username = user_data.get('username', user.username)
+		# Only set new password if password changed
+		if not check_password(user_data.get('password'), user.password):
+			user.password = make_password(user_data.get('password', user.password))
 		user.email = user_data.get('email', user.email)
 		user.first_name = user_data.get('first_name', user.first_name)
 		user.last_name = user_data.get('last_name', user.last_name)
@@ -81,7 +86,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 			user_group.user_set.add(user)
 
 		# Save to database
-		profile.save()
+		instance.save()
 		user.save()
 
 		return instance

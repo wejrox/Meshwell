@@ -7,19 +7,21 @@
 </head>
 
 
-<h1>FEEDBACK FORM</h1>
+<h1>{{ title }}</h1>
 
 
 
 <body>
-	<p>Your feedback is greatly appreciated, as it helps us to deliver you with a better service!</p>
+	<p>{{ message }}</p>
 <!--Using form.py & view.py to call feedback form-->
+	{% if success == 'False' %}
 	<form method="post">
     		{% csrf_token %}
-		 {{ form.as_p }}
+		{{ form.as_p }}
 		 <br>
 	 <input type="submit" class="btn btn-info" value="Submit Button">
- </form>
+	 </form>
+	{% endif %}
  </body>
 
 
