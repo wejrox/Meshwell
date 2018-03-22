@@ -1,11 +1,26 @@
-{% extends 'layouts/base.html' %}
-{% block title %}Contact - {{ block.super }}{% endblock %}
+<html>
+<head>
+<title>Contact Form</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+ integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+</head>
 
-{% block content %}
-<h1>Feedback</h1>
-<form role="form" action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
-{% endblock %}
+
+<h1>FEEDBACK FORM</h1>
+
+
+
+<body>
+	<p>Your feedback is greatly appreciated, as it helps us to deliver you with a better service!</p>
+<!--Using form.py & view.py to call feedback form-->
+	<form method="post">
+    		{% csrf_token %}
+		 {{ form.as_p }}
+		 <br>
+	 <input type="submit" class="btn btn-info" value="Submit Button">
+ </form>
+ </body>
+
+
+ </html>

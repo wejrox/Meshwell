@@ -34,26 +34,41 @@ def index(request):
 #views for the profile page
 def profile(request):
 	#reference from index function
-	user_pk = 8
-	url = 'http://52.62.206.111/api/profile/' + str(user+pk) + '?format=json'
+	user_pk = request.user
+	url = 'http://52.62.206.111/api/profile/' + str(user_pk.id) + '?format=json'
 	response = requests.get(url)
 	data = response.json()
 
 	#Dummy Data
-	context ={
-
+	context = {
 		'username':data['user']['username'],
 		'first_name':data['user']['first_name'],
 		'last_name':data['user']['last_name'],
 		'pref_server':data['pref_server'],
 		'birth_date':data['birth_date'],
-		'sessions_played':data['serssions_played'],
+		'sessions_played':data['sessions_played'],
 		'teamwork_commends':data['teamwork_commends'],
 		'positivity_commends':data['positivity_commends'],
 		'skill_commends':data['skill_commends'],
 		'communication_commends':data['communication_commends'],
 	}
-	return render(request, 'profile.html', context)
+	return render(request, 'mysite/profile.html', context)
+
+# Login view
+def login_view(request):
+	if request.method == 'POST':
+		form = AuthenticationForm(data=request.POST)
+		if form.is_valid():
+			user = form.get_user()
+			login(request,user)
+	else:
+		form = AuthenticationForm()
+
+	# Display form or validation
+	context = {
+		'form':form,
+	}
+	return render(request, 'mysite/login.html', context)
 
 #views for the feedback form page
 def feedback(request):
@@ -72,7 +87,7 @@ def feedback(request):
 			#for key, value in form.cleaned_data.iteritems():
 				#print key, value
 
-			full_name = form.cleaned_data.get("full_name")
+			full_name = form.cleaned_data.get("name")
 			email = form.cleaned_data.get("email")
 			title = form.cleaned_data.get("title")
 			message = form.cleaned_data.get("message")
@@ -82,37 +97,7 @@ def feedback(request):
 	else:
 		form = FeedbackForm()
 
-	context ={
+	context = {
 		'title': "Feedback submittted! Thank You!"
 	}
-	return render(request, 'feedback.html', context)
-
-
-#def login_view(request):
-	 ## here you get the post request username and password
-	 #username = request.POST.get('username', '')
-   	 #password = request.POST.get('password', '')
-
-	## authentication of the user, to check if it's active or None
-    	#user = auth.authenticate(username=username, password=password)
-
-	#if user is not None:
-       		#if user.is_active:
-            	## this is where the user login actually happens, before this the user
-            	## is not logged in.
-            	#auth.login(request, user)
-
-	#return render(request, 'login.html', context)
-
-def login(request):
-	if request.method == 'POST':
-		form = AuthenticationForm(data=request.POST)
-		if form.is_valid():
-			user = form.get_user()
-			login(request,user)
-	else	:
-		form = AuthenticationForm()
-	context = {
-		'form':form,
-	}
-	return render(request, 'login.html', context)
+	return render(request, 'mysite/feedback.html', context)
