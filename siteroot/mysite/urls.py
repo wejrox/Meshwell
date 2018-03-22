@@ -25,13 +25,8 @@ urlpatterns = [
     path('', site_views.index, name='index'),
     path('profile/', site_views.profile, name='profile'),
     path('feedback/', site_views.feedback, name='feedback'),
-    path('login/', site_views.login_view, name='login_view'),
+    path('login/', site_views.login, name='login'),
     url(r'^api/', include(api_router.urls)),
     # Add a reference to the API authentication
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
-
-
-##url(r'^profile/$', site_views.profile, name='profile'),
-##url(r'^feedback/$', site_views.feedback, name='feedback'),
-##url(r'^login_view/$', site_views.login_view, name='profile')

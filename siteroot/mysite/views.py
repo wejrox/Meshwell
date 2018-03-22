@@ -104,7 +104,7 @@ def feedback(request):
 
 	#return render(request, 'login.html', context)
 
-def login_view(request):
+def login(request):
 	if request.method == 'POST':
 		form = AuthenticationForm(data=request.POST)
 		if form.is_valid():
