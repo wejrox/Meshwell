@@ -63,7 +63,7 @@ def feedback(request):
 		"title": title,
 		"form": form
 	}
-	if request.method == ''POST:
+	if request.method == 'POST':
 		if form.is_valid():
 			#saving details from the feedback form
 			instance = form.save(commit=False)
@@ -104,13 +104,13 @@ def feedback(request):
 
 	#return render(request, 'login.html', context)
 
-def login_view(request)
-	if reqquest.method == 'POST':
+def login_view(request):
+	if request.method == 'POST':
 		form = AuthenticationForm(data=request.POST)
 		if form.is_valid():
 			user = form.get_user()
-        		login(request,user)
-	else:
+			login(request,user)
+	else	:
 		form = AuthenticationForm()
 	context = {
 		'form':form,
