@@ -56,25 +56,33 @@ def profile(request):
 
 #views for the feedback form page
 def feedback(request):
+	title = 'Feedback'
+	form = FeedbackForm(request.POST)
+	context = {
+		"title": title,
+		"form": form
+	}
 	if request.method == ''POST:
-		form = FeedbackForm(request.POST)
 		if form.is_valid():
-		
+			#saving details from the feedback form
+			instance = form.save(commit=False)
+			
 			### printing the values of full_name, email, title, and email
 			#for key, value in form.cleaned_data.iteritems():
 				#print key, value
+				
 			full_name = form.cleaned_data.get("full_name")
 			email = form.cleaned_data.get("email")
 			title = form.cleaned_data.get("title")
 			message = form.cleaned_data.get("message")
 			
-			return HttpResponseRedirect('')
+			instance.save()
+			
 	else:
 		form = FeedbackForm()
 		
 	context ={
-		'form': form,
-	
+		'title': "Feedback submittted! Thank You!"
 	}
 	return render(request, 'feedback.html', context)
 
