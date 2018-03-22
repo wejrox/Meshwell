@@ -6,6 +6,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 import requests
 from mysite.forms import FeedbackForm
+#from django.contrib import auth
+from django.contrib.auth.views import login
+from django.contrib.auth.forms import AuthenticationForm
+
+
 
 
 # The current sample index page, which makes requests to the API, and passes accross the information required.
@@ -87,11 +92,31 @@ def feedback(request):
 	return render(request, 'feedback.html', context)
 
 
+#def login_view(request):
+	 ## here you get the post request username and password
+	 #username = request.POST.get('username', '')
+   	 #password = request.POST.get('password', '')
 
+	## authentication of the user, to check if it's active or None
+    	#user = auth.authenticate(username=username, password=password)
+	
+	#if user is not None:
+       		#if user.is_active:
+            	## this is where the user login actually happens, before this the user
+            	## is not logged in.
+            	#auth.login(request, user)
 
+	#return render(request, 'login.html', context)
 
-
-
-
-
-
+def login_view(request)
+	if reqquest.method == 'POST':
+		form = AuthenticationForm(data=request.POST)
+		if form.is_valid():
+			user = form.get_user()
+        		login(request,user)
+	else:
+		form = AuthenticationForm()
+	context = {
+		'form':form,
+	}
+	return render(request, 'login.html', context)
