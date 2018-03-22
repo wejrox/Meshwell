@@ -15,6 +15,7 @@
 	<p>Welcome to the Profile Page,here you can edit your personal details for other players to see and get to know you better!</p>
 <!--Using form.py & view.py to call feedback form-->
 	<form method="post">
+    {% csrf_token %}
 		 {{ form.as_p }}
 		 <br>
 	 <input type="submit" class="btn btn-info" value="Submit Button">
