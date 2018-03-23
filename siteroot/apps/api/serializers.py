@@ -4,13 +4,13 @@ from django.contrib.auth import validators
 from django.forms import ValidationError
 from django.db import IntegrityError
 from django.utils.translation import gettext as _
-from ..api.models import Profile, Availability, Game, Game_Role, Session, Session_Profile, Report
+from ..api.models import Profile, Availability, Game, Game_Role, Session, Session_Profile, Report, Profile_Connected_Game_Account, Game_Api_Connection, Feedback
 from django.contrib.auth.hashers import check_password, make_password
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = User
-		fields = ('username', 'password', 'date_joined', 'first_name', 'last_name', 'groups',)
+		fields = ('username', 'password', 'date_joined', 'last_login', 'first_name', 'last_name', 'email', 'groups', 'is_staff', 'is_active', 'is_superuser')
 		extra_kwargs = {
             		'username': {'validators': [validators.UnicodeUsernameValidator]},
         	}
@@ -26,7 +26,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
 	class Meta:
 		model = Profile
-		fields = ('url', 'user', 'pref_server', 'birth_date', 'sessions_played', 'teamwork_commends', 'positivity_commends', 'skill_commends', 'communication_commends')
+		fields = '__all__' #('url', 'user', 'pref_server', 'birth_date', 'sessions_played', 'teamwork_commends', 'positivity_commends', 'skill_commends', 'communication_commends')
 
 	# Create a new User and Profile
 	def create(self, validated_data):
@@ -92,32 +92,59 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 		return instance
 
 class AvailabilitySerializer(serializers.HyperlinkedModelSerializer):
+	profile = ProfileSerializer(required='True')
 	class Meta:
 		model = Availability
-		fields = ('url', 'profile', 'start_time', 'end_time', 'pref_day',)
+		fields = '__all__'
 
 
 class GameSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Game
-		fields = ('url', 'name', 'max_players', 'description',)
+		fields = '__all__'
 
 class Game_RoleSerializer(serializers.HyperlinkedModelSerializer):
+	game = GameSerializer(required='Truue')
 	class Meta:
 		model = Game_Role
-		fields = ('url', 'game', 'name', 'description',)
+		fields = '__all__'
 
 class SessionSerializer(serializers.HyperlinkedModelSerializer):
+	game = GameSerializer(required='True')
 	class Meta:
 		model = Session
-		fields = ('url', 'game', 'datetime_created', 'start_time', 'end_time',)
+		fields = '__all__'
 
 class Session_ProfileSerializer(serializers.HyperlinkedModelSerializer):
+	session = SessionSerializer(required='True')
+	profile = ProfileSerializer(required='True')
+	game_role = Game_RoleSerializer(required='True')
 	class Meta:
 		model = Session_Profile
-		fields = ('url', 'session', 'profile', 'game_role',)
+		fields = '__all__'
 
 class ReportSerializer(serializers.HyperlinkedModelSerializer):
+	session = SessionSerializer(required='True')
 	class Meta:
 		model = Report
-		fields = ('url', 'session', 'user_reported', 'sent_by', 'datetime_sent', 'report_reason',)
+		fields = '__all__'
+
+class Game_Api_ConnectionSerializer(serializers.HyperlinkedModelSerializer):
+	game = GameSerializer(required='True')
+
+	class Meta:
+		model = Game_Api_Connection
+		fields = '__all__'
+
+
+class Profile_Connected_Game_AccountSerializer(serializers.HyperlinkedModelSerializer):
+	profile = ProfileSerializer(required='True')
+	game_api = Game_Api_ConnectionSerializer(required='True')
+	class Meta:
+		model = Profile_Connected_Game_Account
+		fields = '__all__'
+
+class FeedbackSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Feedback
+		fields = '__all__'

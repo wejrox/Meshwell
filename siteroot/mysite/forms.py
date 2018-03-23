@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from apps.api.models import Profile
-from mysite.models import Feedback
+from apps.api.models import Profile, Feedback
 
 #form to create profile
 #RegistrationForm VIEW must be created first as well as URl
