@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # We are building on top of djangos default user model as it provides authentication already, adding our required fields for meshwell
 class Profile(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.OneToOneField(User, on_delete=models.PROTECT)
 
 	USWEST = 'usw'
 	USEAST = 'use'
@@ -31,12 +31,15 @@ class Profile(models.Model):
 		default=USWEST,
 	)
 
-	birth_date = models.DateField(null=True, blank=False)
-	sessions_played = models.IntegerField(null=False, blank=False, default='0')
-	teamwork_commends = models.IntegerField(null=False, blank=False, default='0')
-	communication_commends = models.IntegerField(null=False, blank=False, default='0')
-	skill_commends = models.IntegerField(null=False, blank=False, default='0')
-	positivity_commends = models.IntegerField(null=False, blank=False, default='0')
+	birth_date = models.DateField(null=True, blank=False,)
+	sessions_played = models.IntegerField(null=False, blank=False, default='0',)
+	teamwork_commends = models.IntegerField(null=False, blank=False, default='0',)
+	communication_commends = models.IntegerField(null=False, blank=False, default='0',)
+	skill_commends = models.IntegerField(null=False, blank=False, default='0',)
+	positivity_commends = models.IntegerField(null=False, blank=False, default='0',)
+
+	# The users name on discord, which is limited by them to 32 chars, plus 5 for id. e.g. myname#1205
+	discord_name = models.CharField(max_length=37, null=True, blank=True,)
 
 # An entry for the users availability. All fields required, connected to an account
 class Availability(models.Model):
@@ -74,6 +77,8 @@ class Availability(models.Model):
 		default=MONDAY,
 	)
 
+	competitive = models.BooleanField(default=False)
+
 # An entry for a game that we support
 class Game(models.Model):
 	name = models.CharField(
@@ -94,6 +99,17 @@ class Game(models.Model):
 		blank=False,
 		default='No description provided.',
 	)
+
+# Each game we have needs a standard method of getting rank.
+class Game_Api_Connection(models.Model):
+	game = models.OneToOneField('Game', on_delete=models.PROTECT,)
+	# This url should contain a tag that includes <User_ID> that will be replaced when making a request.
+	api_url = models.CharField(max_length=255, null=False, blank=False,)
+	# What the JSON representation of competitive rank is called for this API
+	comp_json = models.CharField(max_length=15, null=False, blank=False,)
+	# What the JSON representation of casual rank is called for this API
+	cas_json = models.CharField(max_length=15, null=False, blank=False,)
+
 
 # An entry for a Role that has a connected game
 class Game_Role(models.Model):
@@ -116,6 +132,27 @@ class Game_Role(models.Model):
 		blank=False,
 		default='No description provided.',
 	)
+
+# A game account that a user has connected to their account
+class Profile_Connected_Game_Account(models.Model):
+	profile = models.ForeignKey(
+		'Profile',
+		on_delete=models.PROTECT,
+		blank=False,
+		null=False,
+	)
+
+	game_api = models.ForeignKey(
+		'Game_Api_Connection',
+		on_delete=models.PROTECT,
+		blank=False,
+		null=False,
+	)
+
+	# The ID that we should use to request the players details.
+	game_player_name = models.CharField(max_length=50, blank=False, null=False, default='<Missing>')
+	cas_rank = models.IntegerField(blank=True, null=True, default=0,)
+	comp_rank = models.IntegerField(blank=True, null=True, default=0,)
 
 # An entry for a Session, created when two players queue that could match, then players that match are added when possible
 class Session(models.Model):
