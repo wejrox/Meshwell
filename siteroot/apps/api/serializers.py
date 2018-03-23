@@ -92,7 +92,6 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 		return instance
 
 class AvailabilitySerializer(serializers.HyperlinkedModelSerializer):
-	profile = ProfileSerializer(required='True')
 	class Meta:
 		model = Availability
 		fields = '__all__'
@@ -104,42 +103,31 @@ class GameSerializer(serializers.HyperlinkedModelSerializer):
 		fields = '__all__'
 
 class Game_RoleSerializer(serializers.HyperlinkedModelSerializer):
-	game = GameSerializer(required='Truue')
 	class Meta:
 		model = Game_Role
 		fields = '__all__'
 
 class SessionSerializer(serializers.HyperlinkedModelSerializer):
-	game = GameSerializer(required='True')
 	class Meta:
 		model = Session
 		fields = '__all__'
 
 class Session_ProfileSerializer(serializers.HyperlinkedModelSerializer):
-	session = SessionSerializer(required='True')
-	profile = ProfileSerializer(required='True')
-	game_role = Game_RoleSerializer(required='True')
 	class Meta:
 		model = Session_Profile
 		fields = '__all__'
 
 class ReportSerializer(serializers.HyperlinkedModelSerializer):
-	session = SessionSerializer(required='True')
 	class Meta:
 		model = Report
 		fields = '__all__'
 
 class Game_Api_ConnectionSerializer(serializers.HyperlinkedModelSerializer):
-	game = GameSerializer(required='True')
-
 	class Meta:
 		model = Game_Api_Connection
 		fields = '__all__'
 
-
 class Profile_Connected_Game_AccountSerializer(serializers.HyperlinkedModelSerializer):
-	profile = ProfileSerializer(required='True')
-	game_api = Game_Api_ConnectionSerializer(required='True')
 	class Meta:
 		model = Profile_Connected_Game_Account
 		fields = '__all__'

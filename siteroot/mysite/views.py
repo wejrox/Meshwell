@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 import requests
 from mysite.forms import FeedbackForm
-#from django.contrib import auth
+from django.contrib.auth import logout
 from django.contrib.auth.views import login
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -80,3 +80,7 @@ def feedback(request):
 			return render(request, 'mysite/feedback.html', context)
 	else:
 		return render(request, 'mysite/feedback.html', context)
+
+# Logging out. Currently loads a page. Recommend logging out to open a popup box that the user must click 'OK' to and be redirected to index.
+def logout(request):
+	logout(request)

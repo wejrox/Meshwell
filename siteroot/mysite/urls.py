@@ -23,9 +23,9 @@ from apps.api.urls import router as api_router
 urlpatterns = [
     # Add a reference to core pages
     path('', site_views.index, name='index'),
-    path('accounts/profile/', site_views.profile, name='profile'),
+    path('account/profile/', site_views.profile, name='profile'),
     path('feedback/', site_views.feedback, name='feedback'),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('account/', include('django.contrib.auth.urls')),
     url(r'^api/', include(api_router.urls)),
     # Add a reference to the API authentication
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
