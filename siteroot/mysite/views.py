@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 import requests
+import json
 from mysite.forms import FeedbackForm
 from django.contrib.auth import logout
 from django.contrib.auth.views import login
@@ -12,10 +13,14 @@ from django.contrib.auth.forms import AuthenticationForm
 
 # Index page/Landing page
 def index(request):
-	# Get what we need from the API response and give it to the context
-	context = {
+	url = 'http://52.62.206.111/api/game/?format=json'
+	response = requests.get(url)
+	data = response.json()
 
-	}
+	context = {'games':{}}
+	for game in data:
+		g = { 'name':game['name'], 'description':game['description'] }
+		context['games'][game['name']] = g
 
 	# Give back the context to the index page
 	return render(request, 'mysite/index.html', context)
@@ -44,7 +49,8 @@ def profile(request):
 		}
 		return render(request, 'mysite/profile.html', context)
 	else:
-		return HttpResponse('Unauthorized', status=401)
+		context = {'message':'You must be logged in to view this page'}
+		return render(request, 'mysite/error_page.html', context)
 
 #views for the feedback form page
 def feedback(request):

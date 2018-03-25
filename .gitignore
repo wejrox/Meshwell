@@ -5,4 +5,4 @@
 *.sqlite
 
 # Ignore non-project specific files when deciding project language
-mysite/static/* linguist-vendored
+siteroot/mysite/static/* linguist-vendored
