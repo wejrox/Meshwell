@@ -1,0 +1,21 @@
+{% extends 'mysite/base_meshwell.html' %}
+{% load static %}
+{% block title %} Feedback Form {% endblock %}
+{% block content %}
+
+
+<h1>{{ title }}</h1>
+
+
+<p>{{ message }}</p>
+<!--Using form.py & view.py to call feedback form-->
+{% if success == 'False' %}
+<form method="post">
+		{% csrf_token %}
+	{{ form.as_p }}
+	 <br>
+ <input type="submit" class="btn btn-info" value="Submit Button">
+ </form>
+{% endif %}
+
+{% endblock %}
