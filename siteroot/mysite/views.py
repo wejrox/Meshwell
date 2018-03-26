@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 import requests
 import json
-from mysite.forms import FeedbackForm
+from mysite.forms import FeedbackForm, DeactivateUser
 from django.contrib.auth import logout
 from django.contrib.auth.views import login
 from django.contrib.auth.forms import AuthenticationForm
@@ -95,11 +95,13 @@ def deactivate_user(request):
 		'success': 'False',
 	}
 	if request.method == 'POST':
-		username = request.POST['username']
-		password = request.POST['password']
+		#using built-in Authentication Form
+		#username = request.POST['username']
+		#password = request.POST['password']
 		
 		if form.is_valid():
-			user = authenticate(username=username, password=password)
+			#using built-in Authentication Form
+			#user = authenticate(username=username, password=password)
 			if user is not None:
 				user.is_active = False
 				user.save()
