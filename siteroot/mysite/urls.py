@@ -25,7 +25,7 @@ urlpatterns = [
     path('', site_views.index, name='index'),
     path('accounts/profile/', site_views.profile, name='profile'),
     path('feedback/', site_views.feedback, name='feedback'),
-    path('deactivate', site_views.deactivate_user, name='deactivate'),
+    path('accounts/deactivate', site_views.deactivate_user, name='deactivate'),
     path('account/', include('django.contrib.auth.urls')),
     url(r'^api/', include(api_router.urls)),
     # Add a reference to the API authentication
