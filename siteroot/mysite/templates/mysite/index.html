@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends base_meshwell.html %}
 {% block title%} Meshwell Homepage {% endblock %}
 
@@ -36,3 +37,25 @@
 		Please log in to view API functionality.
 	</h3>
 </div>
+=======
+{% extends 'mysite/base_meshwell.html' %}
+{% load staticfiles %}
+{% block content %}
+<h1>Welcome to Meshwell </h1>
+<h3>Below is a list of our currently supported games </h3>
+<table>
+	<tr>
+		<td>Icon</td>
+		<td>Name</td>
+		<td>Description</td>
+	</tr>
+	{% for key, value in games.items %}
+	<tr>
+		<td>{% if value.image_url %} <img src="{% static value.image_url %}" alt="{{ value.name }}" width="200" height="200">{% endif %}</td>
+		<td>{{ value.name }}</td>
+		<td>{{ value.description }}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}
+>>>>>>> origin/testing
