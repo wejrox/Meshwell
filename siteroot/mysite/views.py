@@ -10,11 +10,14 @@ from mysite.forms import FeedbackForm
 from django.contrib.auth import logout
 from django.contrib.auth.views import login
 from django.contrib.auth.forms import AuthenticationForm
+# Import settings
+from django.conf import settings
 
 # Index page/Landing page
 def index(request):
 	url = 'http://52.62.206.111/api/game/?format=json'
-	response = requests.get(url)
+	headers = {'Authorization':'Token ' + settings.API_TOKEN}
+	response = requests.get(url, headers=headers)
 	data = response.json()
 
 	context = {'games':{}}

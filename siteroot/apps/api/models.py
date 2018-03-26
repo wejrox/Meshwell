@@ -1,5 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+# Auth
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+from django.conf import settings
 
 # We are building on top of djangos default user model as it provides authentication already, adding our required fields for meshwell
 class Profile(models.Model):
@@ -43,6 +48,12 @@ class Profile(models.Model):
 
 	# The users name on discord, which is limited by them to 32 chars, plus 5 for id. e.g. myname#1205
 	discord_name = models.CharField(max_length=37, null=True, blank=True,)
+
+# Add a trigger for token authentication generation on user signup
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+	if created:
+		Token.objects.create(user=instance)
 
 # An entry for the users availability. All fields required, connected to an account
 class Availability(models.Model):
