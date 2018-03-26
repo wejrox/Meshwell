@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from apps.api.models import Profile, Feedback
 
 #form to create profile
@@ -78,5 +78,18 @@ class FeedbackForm(forms.ModelForm):
 #      'message',
 #    )
 
-Class DeactivateUser(forms.Form):
-	username = forms.CharField()
+#Class DeactivateUser(forms.Form):
+	#username = forms.CharField(required=True)
+	#password = forms.CharField(required=True)
+	
+class DeactivateUser(AuthenticationForm):
+	class Meta:
+		model = User
+		fields = (
+			'username',
+			'password1',
+			'password2',
+		)
+		
+		     
+	
