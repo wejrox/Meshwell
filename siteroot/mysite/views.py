@@ -95,11 +95,14 @@ def deactivate_user(request):
 		'success': 'False',
 	}
 	if request.method == 'POST':
+		username = request.POST['username']
+		password = request.POST['password']
+		
 		if form.is_valid():
-			deact = User.objects.get(username=form.cleaned_data['username'])
-			if deact is not None:
-				deact.is_active = False
-				deact.save()
+			user = authenticate(username=username, password=password)
+			if user is not None:
+				user.is_active = False
+				user.save()
 				
 				context = {
 					'title': 'Account Deactivated',
