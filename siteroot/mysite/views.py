@@ -15,7 +15,7 @@ from django.conf import settings
 
 # Index page/Landing page
 def index(request):
-	url = 'http://52.62.206.111/api/game/?format=json'
+	url = 'http://127.0.0.1/api/game/?format=json'
 	headers = {'Authorization':'Token ' + settings.API_TOKEN}
 	response = requests.get(url, headers=headers)
 	data = response.json()
@@ -34,7 +34,7 @@ def profile(request):
 	if request.user.is_authenticated:
 		headers = { 'Authorization':'Token ' + settings.API_TOKEN }
 		profile = Profile.objects.get(user=request.user.id)
-		url = 'http://52.62.206.111/api/profile/' + str(profile.id) + '/?format=json'
+		url = 'http://127.0.0.1/api/profile/' + str(profile.id) + '/?format=json'
 		response = requests.get(url, headers=headers)
 		data = response.json()
 
