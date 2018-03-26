@@ -32,9 +32,10 @@ def index(request):
 def profile(request):
 	#reference from index function
 	if request.user.is_authenticated:
+		headers = { 'Authorization':'Token ' + settings.API_TOKEN }
 		profile = Profile.objects.get(user=request.user.id)
 		url = 'http://52.62.206.111/api/profile/' + str(profile.id) + '/?format=json'
-		response = requests.get(url)
+		response = requests.get(url, headers=headers)
 		data = response.json()
 
 		#Dummy Data
@@ -52,7 +53,7 @@ def profile(request):
 		}
 		return render(request, 'mysite/profile.html', context)
 	else:
-		context = {'message':'You must be logged in to view this page'}
+		context = {'error_title':'Not logged in', 'message':'You must be logged in to view this page'}
 		return render(request, 'mysite/error_page.html', context)
 
 #views for the feedback form page

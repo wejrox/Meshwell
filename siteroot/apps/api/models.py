@@ -49,6 +49,14 @@ class Profile(models.Model):
 	# The users name on discord, which is limited by them to 32 chars, plus 5 for id. e.g. myname#1205
 	discord_name = models.CharField(max_length=37, null=True, blank=True,)
 
+# Add a trigger for creating a profile if a user is created and the profile doesn't exist
+# This handles user creation from the website, alongside user creation via api which creates both a user and an attached profile
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_profile(sender, instance=None, created=False, **kwargs):
+	userprofile = Profile.objects.filter(user=instance)
+	if created and not userprofile:
+		profile = Profile.objects.create(user=instance)
+
 # Add a trigger for token authentication generation on user signup
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
