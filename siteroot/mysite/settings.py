@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
@@ -25,7 +24,7 @@ SECRET_KEY = 'j$=k_x0)0w&e)+bi0$7i%xirun42j-e$_b7o3e_qi%5wu8&lmr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['52.62.206.111','ec2-52-62-206-111.ap-southeast-2.compute.amazonaws.com']
+ALLOWED_HOSTS = ['127.0.0.1','52.62.206.111','ec2-52-62-206-111.ap-southeast-2.compute.amazonaws.com']
 
 # Application definition
 INSTALLED_APPS = [
@@ -36,7 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'apps.api',
+    'mysite',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +85,18 @@ DATABASES = {
     }
 }
 
+# Rest Framework settings
+REST_FRAMEWORK = {
+	'DEFAULT_PERMISSION_CLASSES': (
+		'rest_framework.permissions.IsAdminUser',
+	),
+	'DEFAULT_AUTHENTICATION_CLASSES': (
+		'rest_framework.authentication.TokenAuthentication',
+	)
+}
+
+# Token authentication
+API_TOKEN = '642631c867be46ec5638d99f35431d566c8997c8'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

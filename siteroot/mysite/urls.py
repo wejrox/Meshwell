@@ -17,16 +17,16 @@ from django.conf.urls import url, include
 from django.urls import path
 from mysite import views as site_views
 from apps.api.urls import router as api_router
-
+from rest_framework.authtoken import views as token_views
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     # Add a reference to core pages
     path('', site_views.index, name='index'),
-    path('profile/', site_views.profile, name='profile'),
+    path('accounts/profile/', site_views.profile, name='profile'),
     path('feedback/', site_views.feedback, name='feedback'),
-    path('login/', site_views.login, name='login'),
+    path('account/', include('django.contrib.auth.urls')),
     url(r'^api/', include(api_router.urls)),
     # Add a reference to the API authentication
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^api-token-auth/', token_views.obtain_auth_token)
 ]
