@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 import requests
 import json
-from mysite.forms import FeedbackForm
+from mysite.forms import FeedbackForm, DeactivateUser
 from django.contrib.auth import logout
 from django.contrib.auth.views import login
 from django.contrib.auth.forms import AuthenticationForm
@@ -70,16 +70,6 @@ def feedback(request):
 		if form.is_valid():
 			#saving details from the feedback form
 			instance = form.save(commit=False)
-
-			### printing the values of full_name, email, title, and email
-			#for key, value in form.cleaned_data.iteritems():
-			#print key, value
-
-			full_name = form.cleaned_data.get("name")
-			email = form.cleaned_data.get("email")
-			title = form.cleaned_data.get("title")
-			message = form.cleaned_data.get("message")
-
 			instance.save()
 
 			context = {
@@ -94,3 +84,45 @@ def feedback(request):
 # Logging out. Currently loads a page. Recommend logging out to open a popup box that the user must click 'OK' to and be redirected to index.
 def logout(request):
 	logout(request)
+
+
+def deactivate_user(request):
+	title = 'Deactivate User'
+	form = DeactivateUser(request.POST)
+	context = {
+		'title': title,
+		'message': 'Are you sure you want to Deactivate your account?',
+		'success': 'False',
+	}
+	if request.method == 'POST':
+		#using built-in Authentication Form
+		#username = request.POST['username']
+		#password = request.POST['password']
+		
+		if form.is_valid():
+			#using built-in Authentication Form
+			#user = authenticate(username=username, password=password)
+			if user is not None:
+				user.is_active = False
+				user.save()
+				
+				context = {
+					'title': 'Account Deactivated',
+					'message': 'Your account has been deactivated',
+					'success': 'True',
+				}
+				return render(request, 'mysite/index.html', context)
+	else:
+		form = DeactivateUser()
+	context = {
+		'form': form,
+	}
+	return render(request, 'mysite/deactivate_user.html', context)
+	
+	
+	
+	
+	
+	
+	
+	
