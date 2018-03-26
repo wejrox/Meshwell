@@ -1,7 +1,7 @@
-<<<<<<< HEAD
-{% extends base_meshwell.html %}
-{% block title%} Meshwell Homepage {% endblock %}
-
+{% extends 'mysite/base_meshwell.html' %}
+{% load static %}
+{% block title %} Meshwell Homepage {% endblock %}
+{% block content %}
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
   <ol class="carousel-indicators">
     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -29,18 +29,6 @@
   </a>
 </div>
 
-<div id="dummyText" class="dummyTextClass">
-	<h1>
-		You are now on the index page.</br>
-	</h1>
-	<h3>
-		Please log in to view API functionality.
-	</h3>
-</div>
-=======
-{% extends 'mysite/base_meshwell.html' %}
-{% load staticfiles %}
-{% block content %}
 <h1>Welcome to Meshwell </h1>
 <h3>Below is a list of our currently supported games </h3>
 <table>
@@ -58,4 +46,3 @@
 	{% endfor %}
 </table>
 {% endblock %}
->>>>>>> origin/testing
