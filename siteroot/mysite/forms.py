@@ -77,3 +77,6 @@ class FeedbackForm(forms.ModelForm):
 #      'title',
 #      'message',
 #    )
+
+Class DeactivateUser(forms.Form):
+	username = forms.CharField()
