@@ -9,7 +9,7 @@ class RegistrationForm(UserCreationForm):
   first_name = forms.CharField(max_length=30, required = False, help_text='Optional.')
   last_name = forms.CharField(max_length=30, required = False, help_text='Optional.')
   email = forms.EmailField(max_length=254, required=True, help_text='Required. Enter a valid email address.')
-  birth_date = forms.DateField()
+  birth_date = forms.DateField(help_text='Required. Format: YYYY-MM-DD')
  #Class meta will dictate what the form uses for its fields
   class Meta:
         model = User
