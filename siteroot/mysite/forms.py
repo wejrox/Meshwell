@@ -57,11 +57,6 @@ class FeedbackForm(forms.ModelForm):
 		exclude=[]
 
 # User deactivation
-class DeactivateUser(AuthenticationForm):
-	class Meta:
-		model = User
-		fields = (
-			'username',
-			'password1',
-			'password2',
-		)
+class DeactivateUser(forms.Form):
+	username = forms.CharField(help_text="Enter your username.")
+	password = forms.CharField(help_text="Enter your password.", widget=forms.PasswordInput())

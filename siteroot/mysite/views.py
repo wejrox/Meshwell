@@ -160,9 +160,9 @@ def deactivate_user(request):
 
 		if form.is_valid():
 			# Authenticate the user details they entered
-			user = authenticate(username=username, password=password)
+			user = authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
 			# User details entered must be the user that is logged in
-			if request.user = user:
+			if request.user == user:
 				user.is_active = False
 				user.save()
 
@@ -172,6 +172,7 @@ def deactivate_user(request):
 					'success': 'True',
 				}
 				return render(request, 'registration/deactivate_success.html', context)
-
+			else:
+				return redirect('index')
 	# Show the deactivate page again if the form is invalid or if no form was posted
 	return render(request, 'registration/deactivate.html', context)
