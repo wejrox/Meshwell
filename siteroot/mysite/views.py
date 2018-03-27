@@ -87,6 +87,10 @@ def feedback(request):
 
 #views for the registration page
 def register(request):
+	# Ensure there is nobody logged in
+	if request.user.is_authenticated:
+		return redirect('index')
+
 	title = 'Register'
 	form = RegistrationForm(request.POST)
 
@@ -117,6 +121,7 @@ def register(request):
 	return render(request, 'registration/register.html', {'form':form})
 
 #Views for Edit Profile page
+@login_required
 def edit_profile(request):
 	if request.method == 'POST':
 		form = EditProfileForm(request.POST, instance=request.user)
@@ -134,27 +139,30 @@ def edit_profile(request):
 		return redirect('index')
 
 # Logging out. Currently loads a page. Recommend logging out to open a popup box that the user must click 'OK' to and be redirected to index.
+@login_required
 def logout(request):
 	logout(request)
 
-
+@login_required
 def deactivate_user(request):
-	title = 'Deactivate User'
-	form = DeactivateUser(request.POST)
+	form = DeactivateUser()
 	context = {
-		'title': title,
-		'message': 'Are you sure you want to Deactivate your account?',
+		'title': 'Confirm Details',
+		'message': 'Please enter your login details in order to confirm deactivation.',
 		'success': 'False',
+		'form': form,
 	}
 	if request.method == 'POST':
+		form = DeactivateUser(request.POST)
 		#using built-in Authentication Form
 		#username = request.POST['username']
 		#password = request.POST['password']
 
 		if form.is_valid():
-			#using built-in Authentication Form
-			#user = authenticate(username=username, password=password)
-			if user is not None:
+			# Authenticate the user details they entered
+			user = authenticate(username=username, password=password)
+			# User details entered must be the user that is logged in
+			if request.user = user:
 				user.is_active = False
 				user.save()
 
@@ -163,10 +171,7 @@ def deactivate_user(request):
 					'message': 'Your account has been deactivated',
 					'success': 'True',
 				}
-				return render(request, 'mysite/index.html', context)
-	else:
-		form = DeactivateUser()
-	context = {
-		'form': form,
-	}
-	return render(request, 'mysite/deactivate_user.html', context)
+				return render(request, 'registration/deactivate_success.html', context)
+
+	# Show the deactivate page again if the form is invalid or if no form was posted
+	return render(request, 'registration/deactivate.html', context)

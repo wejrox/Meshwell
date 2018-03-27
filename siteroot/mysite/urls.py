@@ -18,17 +18,19 @@ from django.urls import path
 from mysite import views as site_views
 from apps.api.urls import router as api_router
 from rest_framework.authtoken import views as token_views
+from django.contrib.auth import views as auth_views
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    # Add a reference to core pages
+    # Core
     path('', site_views.index, name='index'),
+    path('feedback/', site_views.feedback, name='feedback'),
+    # Account pages
     path('account/profile/', site_views.profile, name='profile'),
     path('account/signup/', site_views.register, name='register'),
-    path('feedback/', site_views.feedback, name='feedback'),
     path('account/deactivate/', site_views.deactivate_user, name='deactivate'),
-    path('account/', include('django.contrib.auth.urls')),
+    path('account/login/', auth_views.LoginView.as_view(), name='login'),
+    path('account/logout/', auth_views.LogoutView.as_view(), name='logout'),
+    # API
     url(r'^api/', include(api_router.urls)),
-    # Add a reference to the API authentication
-    url(r'^api-token-auth/', token_views.obtain_auth_token)
 ]
