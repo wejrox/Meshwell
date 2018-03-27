@@ -32,7 +32,7 @@ urlpatterns = [
     path('account/deactivate/', site_views.deactivate_user, name='deactivate'),
     path('account/login/', auth_views.LoginView.as_view(), name='login'),
     path('account/logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path(‘admin/’, admin.site.urls),
+    url(r'^admin/', admin.site.urls),
     # API
     url(r'^api/', include(api_router.urls)),
 ]
