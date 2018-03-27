@@ -67,10 +67,14 @@
 			      </li>
 			    </ul>
 			    <ul class="navbar-nav ml-auto">
-				    <li class="nav-item">
-				       <a class="btn btn-danger" href="{% url 'login' %}">Login</a>
-				     </li>
-				 </ul>
+                    <li class="nav-item">
+                    {% if user.is_authenticated %}
+                           <a class="btn btn-outline-danger" href="{% url 'logout' %}">Logout</a>
+                    {% else %}
+                           <a class="btn btn-danger" href="{% url 'login' %}">Login</a>
+                    {% endif %}
+                    </li>
+                </ul>
 			  </div>
 			</nav>
 		</header>
