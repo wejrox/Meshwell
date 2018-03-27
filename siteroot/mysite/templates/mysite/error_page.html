@@ -1,4 +1,6 @@
 {% extends 'mysite/base_meshwell.html' %}
+{% load static %}
+{% block title %} Error | Meshwell {% endblock %}
 {% block content %}
 <h1>{{ error_title }}</h1>
 <h3>{{ message }}</h3>

@@ -1,16 +1,7 @@
-<html>
- <head>
-   <title>Profile Page></title>
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-     crossorigin="anonymous">
-<h1>Profile Page</h1>
-<body>
-
-
-
-
-
+{% extends 'mysite/base_meshwell.html' %}
+{% load static %}
+{% block title %} Profile Page | Meshwell {% endblock %}
+{% block content %}
 <p>Welcome to the Profile Page,here you can edit your personal details for other players to see and get to know you better!</p>
 
  <ul>
@@ -30,14 +21,5 @@
 
   </ul>
 
-
   <input type="button" class="btn btn-danger" value="EDIT INFO" onclick="location.href = '#EDIT PROFILE URL';">
-
-
-
-
-
-
-
-</body>
-</html>
+  {% endblock %}
