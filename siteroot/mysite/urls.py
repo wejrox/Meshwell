@@ -23,9 +23,10 @@ from rest_framework.authtoken import views as token_views
 urlpatterns = [
     # Add a reference to core pages
     path('', site_views.index, name='index'),
-    path('accounts/profile/', site_views.profile, name='profile'),
+    path('account/profile/', site_views.profile, name='profile'),
+    path('account/signup/', site_views.register, name='register'),
     path('feedback/', site_views.feedback, name='feedback'),
-    path('accounts/deactivate', site_views.deactivate_user, name='deactivate'),
+    path('account/deactivate/', site_views.deactivate_user, name='deactivate'),
     path('account/', include('django.contrib.auth.urls')),
     url(r'^api/', include(api_router.urls)),
     # Add a reference to the API authentication

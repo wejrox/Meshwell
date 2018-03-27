@@ -51,11 +51,12 @@ class Profile(models.Model):
 
 # Add a trigger for creating a profile if a user is created and the profile doesn't exist
 # This handles user creation from the website, alongside user creation via api which creates both a user and an attached profile
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+@receiver(post_save, sender=User)
 def create_profile(sender, instance=None, created=False, **kwargs):
 	userprofile = Profile.objects.filter(user=instance)
 	if created and not userprofile:
 		profile = Profile.objects.create(user=instance)
+		profile.save()
 
 # Add a trigger for token authentication generation on user signup
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)

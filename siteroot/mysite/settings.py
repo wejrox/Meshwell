@@ -139,3 +139,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 # Media files(images, other) uploaded by the User (admin or non)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+LOGIN_URL = '/account/login'
+LOGIN_REDIRECT_URL = '/account/profile'

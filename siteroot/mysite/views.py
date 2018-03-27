@@ -3,14 +3,16 @@ from apps.api.models import Profile
 from rest_framework import viewsets
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import requests
 import json
 from mysite.forms import FeedbackForm, DeactivateUser
-from django.contrib.auth import logout
+from django.contrib import messages
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.views import login
 from django.contrib.auth.forms import AuthenticationForm
-from mysite.core.forms import SignUpForm
+from django.contrib.auth.decorators import login_required
+from mysite.forms import RegistrationForm
 # Import settings
 from django.conf import settings
 
@@ -30,6 +32,7 @@ def index(request):
 	return render(request, 'mysite/index.html', context)
 
 #views for the profile page
+@login_required
 def profile(request):
 	#reference from index function
 	if request.user.is_authenticated:
@@ -85,49 +88,50 @@ def feedback(request):
 #views for the registration page
 def register(request):
 	title = 'Register'
-		form = RegistrationForm(request.POST)
-		context = {
-		'username':
-		'first_name':
-	    'last_name':
-	    'email':
-		'birth_date':
-	    'password1':
-	    'password2':
-		}
+	form = RegistrationForm(request.POST)
+
 	if request.method =='POST':
+		# Create the user
 		if form.is_valid():
 			user = form.save()
 			user.refresh_from_db() #load profile created by register
 			user.save()
-		username = form.cleaned_data.get('username')
-		raw_password = form.cleaned_data.get("password1')
-		first_name = form.cleaned_data.get('first_name')
-		last_name = form.cleaned_data.get('last_name')
-		user.profile.birth_date = form.cleaned_data.get('birth_date')
-		user = authenticate(username=user.username, password=raw_password)
-		login(request, user)
-		return redirect('mysite/login.html')
+			user.refresh_from_db()
+			# Get username and password to log in with
+			username = form.cleaned_data.get('username')
+			raw_password = form.cleaned_data.get('password1')
+			# Set the profile birth_date to the one given
+			profile = Profile.objects.get(user=user)
+			profile.birth_date = form.cleaned_data.get('birth_date')
+			profile.save()
 
+			# Redirect to login page
+			return redirect('login')
 	else:
+		# Recreate the form since we aren't posting
 		form = RegistrationForm()
-			return render(request, 'mysite/register.html', context)
+		# Send the form to the page and render it
+		return render(request, 'registration/register.html', {'form':form})
+
+	# Return the form if the form isn't valid but post was specified
+	return render(request, 'registration/register.html', {'form':form})
 
 #Views for Edit Profile page
 def edit_profile(request):
+	if request.method == 'POST':
+		form = EditProfileForm(request.POST, instance=request.user)
+		context = {
+			'form':form,
+		}
 
-    if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=request.user)
-		context = {'email':,
-		'first_name':,
-		'last_name':,
-		'birth_date':}
-        if form.is_valid():
-            form.save()
-            return redirect(reverse('mysite/profile.html'))
-    else:
-        form = EditProfileForm(instance=request.user)
-        return render(request, 'mysite/edit_profile.html', context)
+		if form.is_valid():
+			form.save()
+			return redirect(reverse('mysite/profile.html'))
+		else:
+			form = EditProfileForm(instance=request.user)
+			return render(request, 'mysite/edit_profile.html', context)
+	else:
+		return redirect('index')
 
 # Logging out. Currently loads a page. Recommend logging out to open a popup box that the user must click 'OK' to and be redirected to index.
 def logout(request):
