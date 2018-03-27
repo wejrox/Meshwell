@@ -96,7 +96,7 @@ REST_FRAMEWORK = {
 }
 
 # Token authentication
-API_TOKEN = '642631c867be46ec5638d99f35431d566c8997c8'
+API_TOKEN = 'd48a9f90f4cd22cfda843b389979225f6bb58a2b'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
