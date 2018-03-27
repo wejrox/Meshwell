@@ -24,7 +24,7 @@ SECRET_KEY = 'j$=k_x0)0w&e)+bi0$7i%xirun42j-e$_b7o3e_qi%5wu8&lmr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','52.62.206.111','ec2-52-62-206-111.ap-southeast-2.compute.amazonaws.com']
+ALLOWED_HOSTS = ['127.0.0.1','52.62.206.111','meshwell.ml', 'www.meshwell.ml']
 
 # Application definition
 INSTALLED_APPS = [
@@ -96,7 +96,7 @@ REST_FRAMEWORK = {
 }
 
 # Token authentication
-API_TOKEN = '642631c867be46ec5638d99f35431d566c8997c8'
+API_TOKEN = 'd48a9f90f4cd22cfda843b389979225f6bb58a2b'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -116,6 +116,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Authentication Backend
+AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.ModelBackend',
+    )
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -139,3 +143,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 # Media files(images, other) uploaded by the User (admin or non)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+LOGIN_URL = '/account/login'
+LOGIN_REDIRECT_URL = '/account/profile'
