@@ -98,14 +98,14 @@ def deactivate_user(request):
 		#using built-in Authentication Form
 		#username = request.POST['username']
 		#password = request.POST['password']
-		
+
 		if form.is_valid():
 			#using built-in Authentication Form
 			#user = authenticate(username=username, password=password)
 			if user is not None:
 				user.is_active = False
 				user.save()
-				
+
 				context = {
 					'title': 'Account Deactivated',
 					'message': 'Your account has been deactivated',
@@ -118,11 +118,3 @@ def deactivate_user(request):
 		'form': form,
 	}
 	return render(request, 'mysite/deactivate_user.html', context)
-	
-	
-	
-	
-	
-	
-	
-	
