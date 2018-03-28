@@ -66,6 +66,9 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 # An entry for the users availability. All fields required, connected to an account
 class Availability(models.Model):
+	def __str__(self):
+		return str.join(str(start_time), str(end_time))
+
 	MONDAY = 'mon'
 	TUESDAY = 'tue'
 	WEDNESDAY = 'wed'
@@ -209,7 +212,7 @@ class Session(models.Model):
 # An entry for a profile's session, connected with a Session when it is found
 class Session_Profile(models.Model):
 	def __str__(self):
-		return str.join(self.profile, self.game_role)
+		return str.join(str(self.profile), str(self.game_role))
 
 	session = models.ForeignKey(
 		'Session',
@@ -235,7 +238,7 @@ class Session_Profile(models.Model):
 # An entry for a report that a player has made.
 class Report(models.Model):
 	def __str__(self):
-		return str.join(self.user_reported, self.datetime_sent)
+		return str.join(str(self.user_reported), str(self.datetime_sent))
 
 	TOXICITY = 'toxic'
 	SPORTSMANSHIP = 'sportsmanship'
