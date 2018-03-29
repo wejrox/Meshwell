@@ -6,3 +6,6 @@
 
 # Ignore non-project specific files when deciding project language
 siteroot/mysite/static/* linguist-vendored
+
+# As we are running testing environments, ignore changes to the settings file
+siteroot/mysite/settings.py
