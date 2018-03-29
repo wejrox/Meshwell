@@ -8,4 +8,4 @@
 siteroot/mysite/static/* linguist-vendored
 
 # As we are running testing environments, ignore changes to the settings file
-siteroot/mysite/settings.py
+#siteroot/mysite/settings.py
