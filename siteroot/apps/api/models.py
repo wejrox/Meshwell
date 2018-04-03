@@ -182,7 +182,7 @@ class Profile_Connected_Game_Account(models.Model):
 	)
 
 	game_api = models.ForeignKey(
-		'Game_Api_Connection',
+		'Game',
 		on_delete=models.PROTECT,
 		blank=False,
 		null=False,
