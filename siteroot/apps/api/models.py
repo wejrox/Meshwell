@@ -282,7 +282,7 @@ class Report(models.Model):
 # The feedback model for when a user submits feedback on the website
 class Feedback(models.Model):
 	def __str__(self):
-		return title + ', ' + name
+		return self.title + ', ' + self.name
 
 	name = models.CharField(max_length=120)
 	email = models.EmailField()

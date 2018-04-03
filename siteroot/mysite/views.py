@@ -12,7 +12,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.views import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from mysite.forms import RegistrationForm
+from mysite.forms import RegistrationForm, EditProfileForm
 # Import settings
 from django.conf import settings
 
@@ -136,7 +136,9 @@ def edit_profile(request):
 			form = EditProfileForm(instance=request.user)
 			return render(request, 'mysite/edit_profile.html', context)
 	else:
-		return redirect('index')
+		form = EditProfileForm(instance=request.user)
+		context = { 'form':form, }
+		return render(request, 'mysite/edit_profile.html', context)
 
 # Logging out. Currently loads a page. Recommend logging out to open a popup box that the user must click 'OK' to and be redirected to index.
 @login_required
