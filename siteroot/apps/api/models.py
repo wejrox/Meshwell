@@ -67,7 +67,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 # An entry for the users availability. All fields required, connected to an account
 class Availability(models.Model):
 	def __str__(self):
-		return str.join(str(start_time), str(end_time))
+		return str.join(str(self.start_time), str(self.end_time))
 
 	MONDAY = 'mon'
 	TUESDAY = 'tue'
@@ -288,3 +288,54 @@ class Feedback(models.Model):
 	email = models.EmailField()
 	title = models.CharField(max_length=254)
 	message = models.TextField()
+
+class User_Preference(models.Model):
+	def __str__(self):
+		return str.join(str(self.start_time), str(self.end_time))
+
+	MONDAY = 'mon'
+	TUESDAY = 'tue'
+	WEDNESDAY = 'wed'
+	THURSDAY = 'thu'
+	FRIDAY = 'fri'
+	SATURDAY = 'sat'
+	SUNDAY = 'sun'
+
+	PREFE_DAY_CHOICES = (
+		(MONDAY, 'Monday'),
+		(TUESDAY, 'Tuesday'),
+		(WEDNESDAY, 'Wednesday'),
+		(THURSDAY, 'Thursday'),
+		(FRIDAY, 'Friday'),
+		(SATURDAY, 'Saturday'),
+		(SUNDAY, 'Sunday'),
+	)
+
+	game = models.ForeignKey(
+		'Game',
+		on_delete=models.PROTECT,
+		blank=False,
+		null=False,
+	)
+
+	game_role = models.ForeignKey(
+		'Game_Role',
+		on_delete=models.PROTECT,
+		blank=False,
+		null=False,
+	)
+
+	session = models.ForeignKey(
+		'Session',
+		on_delete=models.PROTECT,
+		blank=True,
+		null=True,
+	)
+
+	pref_days = models.CharField(
+		max_length=3,
+		choices=PREFE_DAY_CHOICES,
+		default=MONDAY,
+	)
+	start_time = models.TimeField(null=True, blank=False)
+	end_time = models.TimeField(null=True, blank=False)

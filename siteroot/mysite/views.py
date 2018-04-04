@@ -6,13 +6,13 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 import requests
 import json
-from mysite.forms import FeedbackForm, DeactivateUser
+from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, UserPreferenceForm
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.views import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from mysite.forms import RegistrationForm, EditProfileForm
+
 # Import settings
 from django.conf import settings
 
@@ -178,3 +178,35 @@ def deactivate_user(request):
 				return redirect('index')
 	# Show the deactivate page again if the form is invalid or if no form was posted
 	return render(request, 'registration/deactivate.html', context)
+
+@login_required
+def user_preference(request):
+	form = UserPreferenceForm()
+	context = {
+		'title': 'User Preference',
+		'message': 'Please enter your preference details.',
+		'success': 'False',
+		'form': form,
+	}
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			form = UserPreferenceForm(request.POST)
+
+			if form.is_valid():
+				form.save()
+				context = {
+					'title': 'Preference created.',
+					'message': 'Your preference is created.',
+					'success': 'True',
+				}
+				return render(request, 'registration/preference_success.html', context)
+			else:
+				form = UserPreferenceForm()
+				return render(request, 'registration/preference.html', context)
+		else:
+			form = UserPreferenceForm()
+			return render(request, 'registration/preference.html', context)
+	else:
+		context = {'error_title':'Not logged in', 'message':'You must be logged in to view this page'}
+		return render(request, 'mysite/error_page.html', context)
+
