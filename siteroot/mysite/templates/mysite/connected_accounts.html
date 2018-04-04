@@ -1,0 +1,25 @@
+{% extends 'mysite/base_meshwell.html' %}
+{% load static %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h3>Connected Game Accounts</h3>
+
+<table>
+	<tr>
+		<td>Game Name</td>
+		<td>Connected Account</td>
+		<td>Platform</td>
+		<td>Casual Rank</td>
+		<td>Competitive Rank</td>
+	</tr>
+	{% for value in accounts %}
+	<tr>
+		<td>{{ value.game.name }}</td>
+		<td>{{ value.game_player_tag }}</td>
+		<td>{{ value.platform }}</td>
+		<td>{{ value.cas_rank }}</td>
+		<td>{{ value.comp_rank }}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}

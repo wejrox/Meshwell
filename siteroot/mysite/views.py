@@ -198,6 +198,7 @@ def connect_account(request):
 	if request.method == 'POST':
 		form = ConnectAccountForm(request.POST)
 		if form.is_valid():
+
 			# Create a new instance from the form
 			instance = form.save(commit=False)
 			instance.profile = request.user.profile
@@ -209,13 +210,44 @@ def connect_account(request):
 
 @login_required
 def connected_accounts(request):
-        url = 'http://127.0.0.1/api/profile_connected_game_account/?format=json'
-        headers = {'Authorization':'Token ' + settings.API_TOKEN }
-        response = requests.get(url, headers=headers)
-        data = response.json()
+	url = 'http://127.0.0.1/api/profile_connected_game_account/?format=json&profile.user.username=' + request.user.username
+	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
+	response = requests.get(url, headers=headers)
+	data = response.json()
 
-        context = {'games':{}}
-        for game in data:
-                g = { 'name':game['name'], 'description':game['description'] }
-                context['games'][game['name']] = g
+	for account in data:
+		print(account)
+		response = requests.get(account['game'], headers=headers)
+		game_data = response.json()
+		account['game'] = game_data
 
+	context = { 'accounts':data, }
+
+	return render(request, 'mysite/connected_accounts.html', context)
+
+@login_required
+def get_r6siege_ratings(player_name, region):
+	url = 'https://r6db.com/api/v2/players?name=' + player_name
+	headers = { 'X-App-Id':'MyRequest' }
+	response = requests.get(url, headers=headers)
+	data = response.json()
+
+	# Cancel the check if the user was not found or too many were found
+	if not response.ok or len(data) > 1:
+		return None
+
+	# Decide which region to check
+	reg = ""
+	if region == 'oce':
+		reg = 'apac'
+	else if region == 'na':
+		reg = 'emea'
+	else if region == 'eu':
+		reg = 'ncsa'
+
+	ranks = { 'cas_rank':0, 'comp_rank':0 }
+
+	ranks['cas_rank'] = 0
+	ranks['comp_rank'] = data[0]['ranks'][region]['mmr']
+
+	return ranks
