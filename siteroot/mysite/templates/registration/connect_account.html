@@ -9,7 +9,8 @@
 		{% csrf_token %}
 		{{ form.as_p }}
 		<br>
-		<input type="submit" class="btn btn-info" value="Attempt Connection">
+		<input type="submit" class="btn btn-info" value="Attempt Connection"><br>
+		{{ error }}
 	</form>
 </div>
 {% endblock %}

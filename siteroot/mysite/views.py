@@ -17,6 +17,19 @@ from django.core.exceptions import ObjectDoesNotExist
 # Import settings
 from django.conf import settings
 
+# Method to get data from INTERNAL API (Meshwell API)
+# Takes a table name, and parameters in the form of 'username=root' or similar
+def retrieve_data(table, *params):
+	url = 'http://127.0.0.1/api/'+table+'/?format=json'
+	# Add the additional parameters
+	for string in params:
+		url += '&'+string
+	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
+	response = requests.get(url, headers=headers)
+	data = response.json()
+
+	return data
+
 # Index page/Landing page
 def index(request):
 	url = 'http://127.0.0.1/api/game/?format=json'
@@ -198,25 +211,44 @@ def connect_account(request):
 	if request.method == 'POST':
 		form = ConnectAccountForm(request.POST)
 		if form.is_valid():
+			ranks = None
+			# Get the rank depending on which game was selected
+			if form.cleaned_data['game'].name == 'Rainbow Six Siege':
+				# Ensure game doesn't already have an account connected to it
+				connected_account = retrieve_data('profile_connected_game_account', 'profile.user.username='+request.user.username)
+				if not connected_account:
+					ranks = get_r6siege_ranks(request, form.cleaned_data['game_player_tag'])
+				else:
+					context['error'] = 'You already have an account connected for this game.'
+					return render(request, 'registration/connect_account.html', context)
 
-			# Create a new instance from the form
-			instance = form.save(commit=False)
-			instance.profile = request.user.profile
-			instance.save()
+			# Create a new instance so long as we found some ranks
+			if ranks is not None:
+				# Create a new instance from the form
+				instance = form.save(commit=False)
+				instance.profile = request.user.profile
+				instance.cas_rank = ranks['cas_rank']
+				instance.comp_rank = ranks['comp_rank']
+				instance.save()
 
-			return redirect('connected_accounts')
+				return redirect('connected_accounts')
+			else:
+				context['error'] = 'The account name you have entered does not exist'
+				return render(request, 'registration/connect_account.html', context)
+		else:
+			return render(request, 'registration/connect_account.html', context)
+
 	else:
 		return render(request, 'registration/connect_account.html', context)
 
+	return render(request, 'registration/connect_account.html', context)
 @login_required
 def connected_accounts(request):
-	url = 'http://127.0.0.1/api/profile_connected_game_account/?format=json&profile.user.username=' + request.user.username
-	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
-	response = requests.get(url, headers=headers)
-	data = response.json()
+	data = retrieve_data('profile_connected_game_account', 'username='+request.user.username)
 
+	# Headers needed since we have to get the game name still
+	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
 	for account in data:
-		print(account)
 		response = requests.get(account['game'], headers=headers)
 		game_data = response.json()
 		account['game'] = game_data
@@ -226,24 +258,24 @@ def connected_accounts(request):
 	return render(request, 'mysite/connected_accounts.html', context)
 
 @login_required
-def get_r6siege_ratings(player_name, region):
-	url = 'https://r6db.com/api/v2/players?name=' + player_name
+def get_r6siege_ranks(request, player_tag):
+	url = 'https://r6db.com/api/v2/players?name=' + player_tag
 	headers = { 'X-App-Id':'MyRequest' }
 	response = requests.get(url, headers=headers)
 	data = response.json()
-
+	print(player_tag)
 	# Cancel the check if the user was not found or too many were found
 	if not response.ok or len(data) > 1:
 		return None
 
 	# Decide which region to check
-	reg = ""
-	if region == 'oce':
-		reg = 'apac'
-	else if region == 'na':
-		reg = 'emea'
-	else if region == 'eu':
-		reg = 'ncsa'
+	region = request.user.profile.pref_server
+	if region == 'oce' or region == 'as' or region == 'me':
+		region = 'apac'
+	elif region == 'saf' or region == 'usw' or region == 'use':
+		region = 'ncsa'
+	elif region == 'eu' or region == 'saf':
+		region = 'emea'
 
 	ranks = { 'cas_rank':0, 'comp_rank':0 }
 

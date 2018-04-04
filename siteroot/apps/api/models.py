@@ -67,7 +67,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 # An entry for the users availability. All fields required, connected to an account
 class Availability(models.Model):
 	def __str__(self):
-		return str.join(str(start_time), str(end_time))
+		return str.join(str(self.start_time), str(self.end_time))
 
 	MONDAY = 'mon'
 	TUESDAY = 'tue'
