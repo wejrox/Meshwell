@@ -35,6 +35,7 @@ urlpatterns = [
     path('account/login/', auth_views.LoginView.as_view(), name='login'),
     path('account/logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('account/edit_profile/', site_views.edit_profile, name='edit_profile'),
+    path('account/preference/', site_views.user_preference, name='user_preference'),
     # Admin
     url(r'^admin/', admin.site.urls),
     # API

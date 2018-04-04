@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from apps.api.models import Profile, Feedback, Profile_Connected_Game_Account
+from apps.api.models import Profile, Feedback, User_Preference, Profile_Connected_Game_Account
 
 #form to create profile
 #RegistrationForm VIEW must be created first as well as URl
@@ -70,3 +70,8 @@ class ConnectAccountForm(forms.ModelForm):
 			'game_player_tag',
 			'platform',
 		)
+
+class UserPreferenceForm(forms.ModelForm):
+	class Meta:
+		model = User_Preference
+		exclude = []
