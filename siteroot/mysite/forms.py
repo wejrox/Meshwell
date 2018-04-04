@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from apps.api.models import Profile, Feedback
+from apps.api.models import Profile, Feedback, Profile_Connected_Game_Account
 
 #form to create profile
 #RegistrationForm VIEW must be created first as well as URl
@@ -60,3 +60,13 @@ class FeedbackForm(forms.ModelForm):
 class DeactivateUser(forms.Form):
 	username = forms.CharField(help_text="Enter your username.")
 	password = forms.CharField(help_text="Enter your password.", widget=forms.PasswordInput())
+
+# Connect a user account to a game
+class ConnectAccountForm(forms.ModelForm):
+	class Meta:
+		model=Profile_Connected_Game_Account
+		fields = (
+			'game',
+			'game_player_tag',
+			'platform',
+		)

@@ -92,7 +92,10 @@ REST_FRAMEWORK = {
 	),
 	'DEFAULT_AUTHENTICATION_CLASSES': (
 		'rest_framework.authentication.TokenAuthentication',
-	)
+	),
+	'DEFAULT_FILTER_BACKENDS': (
+		'django_filters.rest_framework.DjangoFilterBackend',
+	),
 }
 
 # Token authentication
@@ -140,10 +143,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Comment out for Local Development
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Uncomment for Local Development
-#STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 
 # Media files(images, other) uploaded by the User (admin or non)
 MEDIA_URL = '/media/'

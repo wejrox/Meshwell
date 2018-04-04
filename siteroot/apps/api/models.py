@@ -129,6 +129,7 @@ class Game(models.Model):
 		default='No description provided.',
 	)
 
+# OBSELETE (NO LONGER IN USE, MANUALLY ADDED INSTEAD)
 # Each game we have needs a standard method of getting rank.
 class Game_Api_Connection(models.Model):
 	game = models.OneToOneField('Game', on_delete=models.PROTECT,)
@@ -172,7 +173,17 @@ class Game_Role(models.Model):
 # A game account that a user has connected to their account
 class Profile_Connected_Game_Account(models.Model):
 	def __str__(self):
-		return self.game_player_name
+		return self.game_player_tag
+
+	PS4 = 'ps4'
+	XBOX = 'xone'
+	PC = 'pc'
+
+	PLATFORM_CHOICES = (
+		(PS4, 'Playstation 4'),
+		(XBOX, 'Xbox One'),
+		(PC, 'PC'),
+	)
 
 	profile = models.ForeignKey(
 		'Profile',
@@ -181,15 +192,23 @@ class Profile_Connected_Game_Account(models.Model):
 		null=False,
 	)
 
-	game_api = models.ForeignKey(
+	game = models.ForeignKey(
 		'Game',
 		on_delete=models.PROTECT,
 		blank=False,
 		null=False,
+		default=1,
 	)
 
 	# The ID that we should use to request the players details.
-	game_player_name = models.CharField(max_length=50, blank=False, null=False, default='<Missing>')
+	game_player_tag = models.CharField(max_length=50, blank=False, null=False, default='<Missing>')
+	platform = models.CharField(
+		max_length=5,
+		blank=False,
+		null=False,
+		choices=PLATFORM_CHOICES,
+                default=PC,
+	)
 	cas_rank = models.IntegerField(blank=True, null=True, default=0,)
 	comp_rank = models.IntegerField(blank=True, null=True, default=0,)
 
