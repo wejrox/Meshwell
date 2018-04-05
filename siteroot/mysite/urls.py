@@ -43,4 +43,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     # API
     url(r'^api/', include(api_router.urls)),
+    # Temporary Development
+    path('css-standard/', site_views.css_standard, name='css-standard'),
 ]

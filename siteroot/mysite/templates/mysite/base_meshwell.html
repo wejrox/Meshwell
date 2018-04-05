@@ -60,6 +60,9 @@
 			      <li class="nav-item {% if request.resolver_match.url_name == "about-us" %}active{% endif %}">
 			        <a class="nav-link" href="{% url 'about-us' %}">About Us</a>
 			      </li>
+			      <li class="nav-item {% if request.resolver_match.url_name == "css-standard" %}active{% endif %}">
+			        <a class="nav-link" href="{% url 'css-standard' %}">CSS Standard</a>
+			      </li>
 			    </ul>
 			    <ul class="navbar-nav ml-auto">
 			    	{% if user.is_authenticated %}
@@ -149,10 +152,5 @@
     </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-</body>
-
-
-
-
-	<!--/.Footer-->
+</body><!--/.Footer-->
 </html>
