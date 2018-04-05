@@ -47,6 +47,16 @@ def index(request):
 	# Give back the context to the index page
 	return render(request, 'mysite/index.html', context)
 
+# User dashboard
+@login_required
+def dashboard(request):
+	context = {
+		'title':'Dashboard',
+		'message':'This is a stub page for the dashboard. No functionality has been added yet.',
+	}
+
+	return render(request, 'mysite/dashboard.html', context)
+
 #views for the profile page
 @login_required
 def profile(request):
@@ -82,6 +92,22 @@ def profile(request):
 	else:
 		context = {'error_title':'Not logged in', 'message':'You must be logged in to view this page'}
 		return render(request, 'mysite/error_page.html', context)
+
+# Catalog of games
+def catalog(request):
+	context = {
+		'title':'Games Catalog',
+		'message':'This is a stub page for our games catalog. No functionality has been added yet.',
+	}
+	return render(request, 'mysite/catalog.html', context)
+
+# About us
+def about_us(request):
+	context = {
+		'title':'About Us',
+		'message':'This is a stub page for the about us page. No functionality has been added yet.',
+	}
+	return render(request, 'mysite/about_us.html', context)
 
 #views for the feedback form page
 def feedback(request):
