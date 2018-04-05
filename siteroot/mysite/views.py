@@ -24,7 +24,7 @@ def retrieve_data(table, *params):
 	# Add the additional parameters
 	for string in params:
 		url += '&'+string
-	print(url)
+
 	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
 	response = requests.get(url, headers=headers)
 	if response.ok:
@@ -34,10 +34,7 @@ def retrieve_data(table, *params):
 
 # Index page/Landing page
 def index(request):
-	url = 'http://127.0.0.1/api/game/?format=json'
-	headers = {'Authorization':'Token ' + settings.API_TOKEN}
-	response = requests.get(url, headers=headers)
-	data = response.json()
+	data = retrieve_data('game')
 
 	context = {'games':{}}
 	for game in data:
@@ -55,6 +52,8 @@ def dashboard(request):
 		'message':'This is a stub page for the dashboard. No functionality has been added yet.',
 	}
 
+	data = retrieve_data('profile', 'id=2')
+	print(data)
 	return render(request, 'mysite/dashboard.html', context)
 
 #views for the profile page
@@ -69,12 +68,7 @@ def profile(request):
 			profile = Profile.objects.create(user=request.user)
 			profile.save()
 
-		# Get the user's profile
-		headers = { 'Authorization':'Token ' + settings.API_TOKEN }
-		profile = request.user.profile
-		url = 'http://127.0.0.1/api/profile/' + str(profile.id) + '/?format=json'
-		response = requests.get(url, headers=headers)
-		data = response.json()
+		data = retrieve_data('profile/'+str(profile.id))
 
 		context = {
 			'username':data['user']['username'],
@@ -242,7 +236,7 @@ def connect_account(request):
 			ranks = None
 			# Get the rank depending on which game was selected
 			if form.cleaned_data['game'].name == 'Rainbow Six Siege':
-				# Ensure game doesn't already have an account connected to it
+				# Ensure profile's game doesn't already have an account connected to it
 				connected_account = retrieve_data('profile_connected_game_account', 'profile='+str(request.user.profile.id))
 				if not connected_account:
 					ranks = get_r6siege_ranks(request, form.cleaned_data['game_player_tag'])
