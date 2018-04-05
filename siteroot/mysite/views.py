@@ -9,7 +9,7 @@ import json
 from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, UserPreferenceForm, ConnectAccountForm
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.views import login
+from django.contrib.auth.views import login as contrib_login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
@@ -33,7 +33,7 @@ def retrieve_data(table, *params):
 	return None
 
 # Deletes data from the database using the INTERNAL API (Meshwell API)
-# Takes a table name, and an entry id (pk)
+# Takes an API url address to delete
 def delete_data(url):
 	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
 	response = requests.delete(url, headers=headers)
@@ -153,7 +153,7 @@ def feedback(request):
 def register(request):
 	# Ensure there is nobody logged in
 	if request.user.is_authenticated:
-		return redirect('index')
+		return redirect('dashboard')
 
 	title = 'Register'
 	form = RegistrationForm(request.POST)
@@ -204,6 +204,12 @@ def edit_profile(request):
 		form = EditProfileForm(instance=request.user)
 		context = { 'title': 'Edit Profile', 'form':form, }
 		return render(request, 'mysite/edit_profile.html', context)
+
+# Login. Implemented here to prevent logged in users from accessing the page
+def login(request):
+	if request.user.is_authenticated:
+		return redirect(settings.LOGIN_REDIRECT_URL)
+	return contrib_login(request)
 
 # Logging out. Currently loads a page. Recommend logging out to open a popup box that the user must click 'OK' to and be redirected to index.
 @login_required
