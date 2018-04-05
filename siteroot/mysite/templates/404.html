@@ -1,0 +1,9 @@
+{% extends 'mysite/base_meshwell.html' %}
+{% load static %}
+{% block title %} 404 Page Not Found {% endblock %}
+{% block content %}
+
+<h1>404 Error</h1>
+<h2>Something went wrong. Page not found.</h2>
+<a href="{% url 'index' %}" class="btn btn-danger">Let's go back home</button>
+{% endblock %}
