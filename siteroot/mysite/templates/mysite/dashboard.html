@@ -1,4 +1,11 @@
 {% extends 'mysite/base_meshwell.html' %}
 {% load static %}
 {% block title %}{{ title }}{% endblock %}
-{% block content %}{{ message }}{% endblock %}
+{% block content %}
+<p>{{ message }}</p>
+<p>
+	<a href="{% url 'profile' %}" class="btn btn-info" role="button">View Profile</a><br><br>
+	<a href="{% url 'connected_accounts' %}" class="btn btn-info" role="button">Connected Game Accounts</a><br><br>
+	<a href="#" class="btn btn-info" role="button">Availability</a>
+</p>
+{% endblock %}
