@@ -26,16 +26,19 @@ urlpatterns = [
     # Core
     path('', site_views.index, name='index'),
     path('feedback/', site_views.feedback, name='feedback'),
+    path('catalog/', site_views.catalog, name='catalog'),
+    path('about-us/', site_views.about_us, name='about-us'),
     # Account pages
-    path('account/profile/', site_views.profile, name='profile'),
+    path('dashboard/', site_views.dashboard, name='dashboard'),
+    path('dashboard/profile/', site_views.profile, name='profile'),
     path('account/signup/', site_views.register, name='register'),
-    path('account/connect_account/', site_views.connect_account, name='connect_account'),
-    path('account/connected_accounts/', site_views.connected_accounts, name='connected_accounts'),
+    path('dashboard/connect_account/', site_views.connect_account, name='connect_account'),
+    path('dashboard/connected_accounts/', site_views.connected_accounts, name='connected_accounts'),
     path('account/deactivate/', site_views.deactivate_user, name='deactivate'),
     path('account/login/', auth_views.LoginView.as_view(), name='login'),
     path('account/logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('account/edit_profile/', site_views.edit_profile, name='edit_profile'),
-    path('account/preference/', site_views.user_preference, name='user_preference'),
+    path('dasboard/edit_profile/', site_views.edit_profile, name='edit_profile'),
+    path('dashboard/preference/', site_views.user_preference, name='user_preference'),
     # Admin
     url(r'^admin/', admin.site.urls),
     # API

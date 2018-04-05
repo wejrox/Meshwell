@@ -51,6 +51,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'mysite.urls'
+APPEND_SLASH = True
 
 TEMPLATES = [
     {
