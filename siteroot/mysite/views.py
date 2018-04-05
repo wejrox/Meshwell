@@ -277,7 +277,14 @@ def connected_accounts(request):
 
 	context = { 'accounts':data, }
 
+	if(request.GET.get('Unlink Account')):
+		unlink_account(request.user.profile, request.GET.get('game'))
+
 	return render(request, 'mysite/connected_accounts.html', context)
+
+@login_required
+def unlink_account(profile, game_name):
+	# Unlink the account
 
 @login_required
 def get_r6siege_ranks(request, player_tag):
