@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from ..api import serializers
 from ..api.models import Profile, Availability, Game, Game_Role, Session, Session_Profile, Report, Profile_Connected_Game_Account, Game_Api_Connection, Feedback
@@ -34,6 +35,13 @@ class ReportViewSet(viewsets.ModelViewSet):
 class Profile_Connected_Game_AccountViewSet(viewsets.ModelViewSet):
 	queryset = Profile_Connected_Game_Account.objects.all()
 	serializer_class = serializers.Profile_Connected_Game_AccountSerializer
+	def get_queryset(self):
+                queryset = Profile_Connected_Game_Account.objects.all()
+                profile = self.request.query_params.get('profile')
+                if profile is not None:
+                        queryset = queryset.filter(profile__id=profile)
+                return queryset
+
 
 class Game_Api_ConnectionViewSet(viewsets.ModelViewSet):
 	queryset = Game_Api_Connection.objects.all()

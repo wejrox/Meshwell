@@ -24,11 +24,13 @@ def retrieve_data(table, *params):
 	# Add the additional parameters
 	for string in params:
 		url += '&'+string
+	print(url)
 	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
 	response = requests.get(url, headers=headers)
-	data = response.json()
-
-	return data
+	if response.ok:
+		data = response.json()
+		return data
+	return None
 
 # Index page/Landing page
 def index(request):
@@ -215,7 +217,7 @@ def connect_account(request):
 			# Get the rank depending on which game was selected
 			if form.cleaned_data['game'].name == 'Rainbow Six Siege':
 				# Ensure game doesn't already have an account connected to it
-				connected_account = retrieve_data('profile_connected_game_account', 'profile.user.username='+request.user.username)
+				connected_account = retrieve_data('profile_connected_game_account', 'profile='+str(request.user.profile.id))
 				if not connected_account:
 					ranks = get_r6siege_ranks(request, form.cleaned_data['game_player_tag'])
 				else:
@@ -244,14 +246,14 @@ def connect_account(request):
 	return render(request, 'registration/connect_account.html', context)
 @login_required
 def connected_accounts(request):
-	data = retrieve_data('profile_connected_game_account', 'username='+request.user.username)
-
+	data = retrieve_data('profile_connected_game_account', 'profile='+str(request.user.profile.id))
 	# Headers needed since we have to get the game name still
 	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
-	for account in data:
-		response = requests.get(account['game'], headers=headers)
-		game_data = response.json()
-		account['game'] = game_data
+	if data is not None:
+		for account in data:
+			response = requests.get(account['game'], headers=headers)
+			game_data = response.json()
+			account['game'] = game_data
 
 	context = { 'accounts':data, }
 
