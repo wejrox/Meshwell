@@ -3,7 +3,6 @@
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
 <h3>Connected Game Accounts</h3>
-
 <table>
 	<tr>
 		<td>Game Name</td>
@@ -13,8 +12,8 @@
 		<td>Competitive Rank</td>
 	</tr>
 	<tr>
-	{% for value in accounts %}
-		<td>{{ value.game.game_name }}</td>
+	{% for key, value in accounts.items %}
+		<td>{{ value.game_name }}</td>
 		<td>{{ value.game_player_tag }}</td>
 		<td>{{ value.platform }}</td>
 		<td>{{ value.cas_rank }}</td>
@@ -28,7 +27,7 @@
 		</td>
 		{% else %}
 		<td>
-			<a href="{% url 'register' %}" class="btn btn-success btn-sm" value="Connect Account">Connect Account</a>
+			<a href="{% url 'connect_account' %}" class="btn btn-success btn-sm" value="Connect Account">Connect Account</a>
 		</td>
 		{% endif %}
 	</tr>

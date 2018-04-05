@@ -291,6 +291,7 @@ def connected_accounts(request):
 	for game in games:
 		final_data[game['name']] = {}
 		final_data[game['name']]['game_name'] = game['name']
+		final_data[game['name']]['game_player_tag'] = 'Not Connected!'
 
 	# Set each account to be inside the game if it exists
 	if data is not None:
@@ -306,11 +307,12 @@ def connected_accounts(request):
 					entry['comp_rank'] = account['comp_rank']
 					entry['connected'] = True
 
-	context = { 'games':games, 'accounts':final_data, }
+	context = { 'accounts':final_data, }
 
+	# User clicks unlink button
 	if(request.GET.get('Unlink Account')):
 		unlink_account(request.user.profile, request.GET.get('game'))
-
+		return render(request, 'mysite/connected_accounts.html', context)
 	return render(request, 'mysite/connected_accounts.html', context)
 
 @login_required
