@@ -32,6 +32,20 @@ def retrieve_data(table, *params):
 		return data
 	return None
 
+# Deletes data from the database using the INTERNAL API (Meshwell API)
+# Takes a table name, and an entry id (pk)
+def delete_data(url):
+	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
+	response = requests.delete(url, headers=headers)
+
+	if response.ok:
+		print('deleted the entry')
+		return True
+	else:
+		print('couldn\'t unlink the entry')
+		print(response.status_code)
+		return False
+
 # Index page/Landing page
 def index(request):
 	data = retrieve_data('game')
@@ -264,18 +278,35 @@ def connect_account(request):
 		return render(request, 'registration/connect_account.html', context)
 
 	return render(request, 'registration/connect_account.html', context)
+
 @login_required
 def connected_accounts(request):
 	data = retrieve_data('profile_connected_game_account', 'profile='+str(request.user.profile.id))
+	games = retrieve_data('game')
 	# Headers needed since we have to get the game name still
 	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
+
+	# Pre-create the games that we have
+	final_data = {}
+	for game in games:
+		final_data[game['name']] = {}
+		final_data[game['name']]['game_name'] = game['name']
+
+	# Set each account to be inside the game if it exists
 	if data is not None:
 		for account in data:
 			response = requests.get(account['game'], headers=headers)
 			game_data = response.json()
-			account['game'] = game_data
+			for entry in final_data:
+				print(entry)
+				if game_data['name'] == entry['game_name']:
+					entry['game_player_tag'] = account['game_player_tag']
+					entry['platform'] = account['platform']
+					entry['cas_rank'] = account['cas_rank']
+					entry['comp_rank'] = account['comp_rank']
+					entry['connected'] = True
 
-	context = { 'accounts':data, }
+	context = { 'games':games, 'accounts':final_data, }
 
 	if(request.GET.get('Unlink Account')):
 		unlink_account(request.user.profile, request.GET.get('game'))
@@ -284,7 +315,10 @@ def connected_accounts(request):
 
 @login_required
 def unlink_account(profile, game_name):
-	# Unlink the account
+	print('unlinking account')
+	# Get the record to delete
+	record = retrieve_data('profile_connected_game_account', 'profile='+str(profile.id), 'game='+game_name)
+	delete_data(record[0]['url'])
 
 @login_required
 def get_r6siege_ranks(request, player_tag):

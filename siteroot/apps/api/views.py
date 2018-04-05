@@ -39,8 +39,18 @@ class Profile_Connected_Game_AccountViewSet(viewsets.ModelViewSet):
 	def get_queryset(self):
 		queryset = Profile_Connected_Game_Account.objects.all()
 		profile = self.request.query_params.get('profile')
+		id = self.request.query_params.get('id')
+		game = self.request.query_params.get('game')
+		# If given an id there can only be 1 response
+		if id is not None:
+			queryset = Profile_Connected_Game_Account.get(id=str(id))
+			return queryset
+		# If given a profile there may be many responses
 		if profile is not None:
-			queryset = Profile_Connected_Game_Account.objects.filter(profile__id=int(profile))
+			queryset = queryset.filter(profile__id=int(profile))
+		# Ir given a game there may be many responses
+		if game is not None:
+			queryset = queryset.filter(game__name=game)
 		return queryset
 
 
