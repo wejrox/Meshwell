@@ -190,6 +190,7 @@ def edit_profile(request):
 	if request.method == 'POST':
 		form = EditProfileForm(request.POST, instance=request.user)
 		context = {
+			'title':'Edit Profile',
 			'form':form,
 		}
 
@@ -201,7 +202,7 @@ def edit_profile(request):
 			return render(request, 'mysite/edit_profile.html', context)
 	else:
 		form = EditProfileForm(instance=request.user)
-		context = { 'form':form, }
+		context = { 'title': 'Edit Profile', 'form':form, }
 		return render(request, 'mysite/edit_profile.html', context)
 
 # Logging out. Currently loads a page. Recommend logging out to open a popup box that the user must click 'OK' to and be redirected to index.
@@ -314,7 +315,7 @@ def connected_accounts(request):
 					entry['comp_rank'] = account['comp_rank']
 					entry['connected'] = True
 
-	context = { 'accounts':final_data, }
+	context = { 'title':'Connected Accounts', 'accounts':final_data, }
 
 	# User clicks unlink button
 	if(request.GET.get('Unlink Account')):

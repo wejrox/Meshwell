@@ -37,7 +37,7 @@ urlpatterns = [
     path('account/deactivate/', site_views.deactivate_user, name='deactivate'),
     path('account/login/', auth_views.LoginView.as_view(), name='login'),
     path('account/logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('dasboard/edit_profile/', site_views.edit_profile, name='edit_profile'),
+    path('dashboard/edit_profile/', site_views.edit_profile, name='edit_profile'),
     path('dashboard/preference/', site_views.user_preference, name='user_preference'),
     # Admin
     url(r'^admin/', admin.site.urls),
