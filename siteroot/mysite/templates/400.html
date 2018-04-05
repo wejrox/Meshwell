@@ -1,0 +1,9 @@
+{% extends 'mysite/base_meshwell.html' %}
+{% load static %}
+{% block title %}400 Bad Request{% endblock %}
+{% block content %}
+
+<h1>400 Error</h1>
+<h2>I'm sorry Dave, I'm afraid I can't do that. A bad request was made.</h2>
+<a href="{% url 'index' %}" class="btn btn-danger">Let's go back home</button>
+{% endblock %}
