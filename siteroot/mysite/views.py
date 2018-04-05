@@ -101,6 +101,13 @@ def profile(request):
 		context = {'error_title':'Not logged in', 'message':'You must be logged in to view this page'}
 		return render(request, 'mysite/error_page.html', context)
 
+# CSS Standarisation Page
+def css_standard(request):
+	context = {
+		'title':'CSS Standard',
+	}
+	return render(request, 'mysite/css_standard.html', context)
+
 # Catalog of games
 def catalog(request):
 	context = {
