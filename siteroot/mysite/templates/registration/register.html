@@ -1,12 +1,25 @@
 {% extends 'mysite/base_meshwell.html' %}
 {% load static %}
-{% block title %} Registration Form | Meshwell {% endblock %}
+{% block title %} Registration{% endblock %}
 {% block content %}
-<h1>Signup</h1>
-<form method="post">
-	{% csrf_token %}
-	{{ form.as_p }}
-	 <br>
- <button type="submit">Sign Up</button>
- </form>
+<div class="mainContent">
+	<div class="headerContent">
+		Signup
+	</div>
+	<form method="post">
+		{% csrf_token %}
+		{% for field in form %}
+		<div class="form-group row">
+			<label class="col-sm-2 col-form-label" for="{{ field.name }}">
+				{{ field.label_tag }}
+			</label>
+			<div class="col-sm-10">
+				{{ field }}
+			</div>
+			{{ field.errors }}
+		</div>
+		{% endfor %}
+		<button class="btn btn-danger" type="submit">Register</button>
+	</form>
+</div>
 {% endblock %}

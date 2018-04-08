@@ -1,6 +1,6 @@
 {% extends 'mysite/base_meshwell.html' %}
 {% load static %}
-{% block title %} Homepage | Meshwell {% endblock %}
+{% block title %}Homepage{% endblock %}
 {% block content %}
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
   <ol class="carousel-indicators">
@@ -28,21 +28,31 @@
     <span class="sr-only">Next</span>
   </a>
 </div>
-
-<h1>Welcome to Meshwell </h1>
-<h3>Below is a list of our currently supported games </h3>
-<table>
-	<tr>
-		<td>Icon</td>
-		<td>Name</td>
-		<td>Description</td>
-	</tr>
-	{% for key, value in games.items %}
-	<tr>
-		<td>{% if value.image_url %} <img src="{% static value.image_url %}" alt="{{ value.name }}" width="200" height="200">{% endif %}</td>
-		<td>{{ value.name }}</td>
-		<td>{{ value.description }}</td>
-	</tr>
-	{% endfor %}
-</table>
+<div class="mainContent">
+	<div class="headerContent">
+		Welcome to Meshwell
+	</div>
+	<br>
+	<div class="guiderContent">Currently supported games</div>
+	<br>
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+				<th scope="col">Icon</th>
+				<th scope="col">Name</th>
+				<th scope="col">Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for key, value in games.items %}
+			<tr>
+				<td>{% if value.image_url %} <img src="{% static value.image_url %}" alt="{{ value.name }}" width="200" height="200">{% endif %}</td>
+				<td>{{ value.name }}</td>
+				<td>{{ value.description }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<br>
+</div>
 {% endblock %}

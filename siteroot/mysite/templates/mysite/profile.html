@@ -1,13 +1,26 @@
-{% extends 'mysite/base_meshwell.html' %}
+
+
+<html>
+	<head>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+
+
+
+  </head>
+  {% extends 'mysite/base_meshwell.html' %}
 {% load static %}
-{% block title %} Profile Page | Meshwell {% endblock %}
+{% block title %}Profile{% endblock %}
 {% block content %}
-<p>Welcome to the Profile Page,here you can edit your personal details for other players to see and get to know you better!</p>
+<!--<p>Welcome to the Profile Page,here you can edit your personal details for other players to see and get to know you better!</p>
 
  <ul>
     <li><strong>UserName:</strong> {{ username }}</li>
 
-    <li><strong>First Name:</strong> {{ first_name }}</li>
+    <li><strong>First Name:</strong> {{ first_name }}
 
 	 <li><strong>Last Name:</strong> {{ last_name }}</li>
 
@@ -19,7 +32,155 @@
 
   <li><strong>Sessions Played:</strong> {{ sessions_played }}</li>
 
-  </ul>
+</ul>
+old code,commented out for testing purposes -->
+<div  align="center"><h1>PROFILE</h1>
+<br>
+<br>
+<body>
+<div class="container">
+	<div class="row">
 
-  <input type="button" class="btn btn-danger" value="EDIT INFO" onclick="location.href = '#EDIT PROFILE URL';">
+
+       <div class="col-md-7 ">
+
+				<!-- <div class="card" style="width: 20rem;">
+				             <div class="card-body">
+				               <h3 class="card-title">User Profile</h3>
+				             </div>
+-->
+    <div class="box box-info">
+
+            <div class="box-body">
+                     <div class="col-sm-6">
+                     <div  align="center"> <img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" id="profile-image1" class="img-circle img-responsive"> </div>
+
+                <input id="profile-image-upload" class="hidden" type="file">
+<div style="color:#999;" >click here to change profile image</div>
+                <!--Upload Image Js And Css-->
+
+
+
+
+
+
+
+                     </div>
+
+              <br>
+
+              <!-- /input-group -->
+            </div>
+            <div class="col-sm-6">
+            <h4 style="color:#00b1b1;"> {{ username }}</h4></span>
+              <span><p> {{ Username }}</p></span>
+            </div>
+            <div class="clearfix"></div>
+            <hr style="margin:5px 0 5px 0;">
+
+
+<!--<div class="col-sm-5 col-xs-6 tital " >First Name:</div><div class="col-sm-7 col-xs-6 "><strong> {{ first_name }} </strong></div>
+     <div class="clearfix"></div>
+<div class="bot-border"></div>
+
+
+<div class="col-sm-5 col-xs-6 tital " >Last Name:</div><div class="col-sm-7"><strong> {{ last_name }} </strong></div>
+  <div class="clearfix"></div>
+<div class="bot-border"></div>
+
+<div class="col-sm-5 col-xs-6 tital " >Email:</div><div class="col-sm-7"> {{ email }}</div>
+
+  <div class="clearfix"></div>
+<div class="bot-border"></div>
+
+<div class="col-sm-5 col-xs-6 tital " >Date Of Birth:</div><div class="col-sm-7"> {{ date_birth }}</div>
+
+  <div class="clearfix"></div>
+<div class="bot-border"></div>
+
+<div class="col-sm-5 col-xs-6 tital " >Commendations:</div><div class="col-sm-7"> {{ commendations }}</div>
+<div class="bot-border"></div>
+
+<div class="col-sm-5 col-xs-6 tital " >Sessions PLayed:</div><div class="col-sm-7"> {{ sessions_played }}</div>
+
+ <div class="clearfix"></div>
+<div class="bot-border"></div>
+
+OLD CODE EDITED OUT FOR TESTING-->
+
+
+<div class=" col-md-9 col-lg-9 ">
+								<table class="table table-user-information">
+									<tbody>
+										<tr>
+											<td>Username:</td>
+											<td> {{ username }}</td>
+										</tr>
+										<tr>
+											<td>First Name:</td>
+											<td>{{ first_name }}</td>
+										</tr>
+										<tr>
+											<td>Last Name</td>
+											<td>{{ last_name }}</td>
+										</tr>
+
+											 <tr>
+													 <tr>
+											<td>Email:</td>
+											<td>{{ email }}</td>
+										</tr>
+											<tr>
+											<td>Birth Date</td>
+											<td>{{ date_birth }}</td>
+										</tr>
+										<tr>
+											<td>Commendations:</td>
+											<td> {{ commendations }}</td>
+										</tr>
+											<td>Sessions Played</td>
+											<td>{{sessions_played}}
+											</td>
+
+										</tr>
+
+									</tbody>
+								</table>
+
+								<div  align="center"><a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Info</a> </div>
+
+							</div>
+
+
+
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+
+        </div>
+
+
+    </div>
+    </div>
+</div>
+    <script>
+              $(function() {
+    $('#profile-image1').on('click', function() {
+        $('#profile-image-upload').click();
+    });
+});
+              </script>
+
+
+
+
+
+
+
+
+
+   </div>
+</div>
+</body>
   {% endblock %}
+  </html>

@@ -26,13 +26,23 @@ urlpatterns = [
     # Core
     path('', site_views.index, name='index'),
     path('feedback/', site_views.feedback, name='feedback'),
+    path('catalog/', site_views.catalog, name='catalog'),
+    path('about-us/', site_views.about_us, name='about-us'),
     # Account pages
-    path('account/profile/', site_views.profile, name='profile'),
-    path('account/signup/', site_views.register, name='register'),
+    path('dashboard/', site_views.dashboard, name='dashboard'),
+    path('dashboard/profile/', site_views.profile, name='profile'),
+    path('register/', site_views.register, name='register'),
+    path('dashboard/connect_account/', site_views.connect_account, name='connect_account'),
+    path('dashboard/connected_accounts/', site_views.connected_accounts, name='connected_accounts'),
     path('account/deactivate/', site_views.deactivate_user, name='deactivate'),
-    path('account/login/', auth_views.LoginView.as_view(), name='login'),
-    path('account/logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('login/', site_views.login, name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('dashboard/edit_profile/', site_views.edit_profile, name='edit_profile'),
+    path('dashboard/preference/', site_views.user_preference, name='user_preference'),
+    # Admin
     url(r'^admin/', admin.site.urls),
     # API
     url(r'^api/', include(api_router.urls)),
+    # Temporary Development
+    path('css-standard/', site_views.css_standard, name='css-standard'),
 ]

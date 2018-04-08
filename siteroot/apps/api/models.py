@@ -66,6 +66,9 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 # An entry for the users availability. All fields required, connected to an account
 class Availability(models.Model):
+	def __str__(self):
+		return str.join(str(self.start_time), str(self.end_time))
+
 	MONDAY = 'mon'
 	TUESDAY = 'tue'
 	WEDNESDAY = 'wed'
@@ -126,6 +129,7 @@ class Game(models.Model):
 		default='No description provided.',
 	)
 
+# OBSELETE (NO LONGER IN USE, MANUALLY ADDED INSTEAD)
 # Each game we have needs a standard method of getting rank.
 class Game_Api_Connection(models.Model):
 	game = models.OneToOneField('Game', on_delete=models.PROTECT,)
@@ -169,7 +173,17 @@ class Game_Role(models.Model):
 # A game account that a user has connected to their account
 class Profile_Connected_Game_Account(models.Model):
 	def __str__(self):
-		return self.game_player_name
+		return self.game_player_tag
+
+	PS4 = 'ps4'
+	XBOX = 'xone'
+	PC = 'pc'
+
+	PLATFORM_CHOICES = (
+		(PS4, 'Playstation 4'),
+		(XBOX, 'Xbox One'),
+		(PC, 'PC'),
+	)
 
 	profile = models.ForeignKey(
 		'Profile',
@@ -178,15 +192,23 @@ class Profile_Connected_Game_Account(models.Model):
 		null=False,
 	)
 
-	game_api = models.ForeignKey(
-		'Game_Api_Connection',
+	game = models.ForeignKey(
+		'Game',
 		on_delete=models.PROTECT,
 		blank=False,
 		null=False,
+		default=1,
 	)
 
 	# The ID that we should use to request the players details.
-	game_player_name = models.CharField(max_length=50, blank=False, null=False, default='<Missing>')
+	game_player_tag = models.CharField(max_length=50, blank=False, null=False, default='<Missing>')
+	platform = models.CharField(
+		max_length=5,
+		blank=False,
+		null=False,
+		choices=PLATFORM_CHOICES,
+                default=PC,
+	)
 	cas_rank = models.IntegerField(blank=True, null=True, default=0,)
 	comp_rank = models.IntegerField(blank=True, null=True, default=0,)
 
@@ -209,7 +231,7 @@ class Session(models.Model):
 # An entry for a profile's session, connected with a Session when it is found
 class Session_Profile(models.Model):
 	def __str__(self):
-		return str.join(self.profile, self.game_role)
+		return str.join(str(self.profile), str(self.game_role))
 
 	session = models.ForeignKey(
 		'Session',
@@ -235,7 +257,7 @@ class Session_Profile(models.Model):
 # An entry for a report that a player has made.
 class Report(models.Model):
 	def __str__(self):
-		return str.join(self.user_reported, self.datetime_sent)
+		return str.join(str(self.user_reported), str(self.datetime_sent))
 
 	TOXICITY = 'toxic'
 	SPORTSMANSHIP = 'sportsmanship'
@@ -279,9 +301,60 @@ class Report(models.Model):
 # The feedback model for when a user submits feedback on the website
 class Feedback(models.Model):
 	def __str__(self):
-		return title + ', ' + name
+		return self.title + ', ' + self.name
 
 	name = models.CharField(max_length=120)
 	email = models.EmailField()
 	title = models.CharField(max_length=254)
 	message = models.TextField()
+
+class User_Preference(models.Model):
+	def __str__(self):
+		return str.join(str(self.start_time), str(self.end_time))
+
+	MONDAY = 'mon'
+	TUESDAY = 'tue'
+	WEDNESDAY = 'wed'
+	THURSDAY = 'thu'
+	FRIDAY = 'fri'
+	SATURDAY = 'sat'
+	SUNDAY = 'sun'
+
+	PREFE_DAY_CHOICES = (
+		(MONDAY, 'Monday'),
+		(TUESDAY, 'Tuesday'),
+		(WEDNESDAY, 'Wednesday'),
+		(THURSDAY, 'Thursday'),
+		(FRIDAY, 'Friday'),
+		(SATURDAY, 'Saturday'),
+		(SUNDAY, 'Sunday'),
+	)
+
+	game = models.ForeignKey(
+		'Game',
+		on_delete=models.PROTECT,
+		blank=False,
+		null=False,
+	)
+
+	game_role = models.ForeignKey(
+		'Game_Role',
+		on_delete=models.PROTECT,
+		blank=False,
+		null=False,
+	)
+
+	session = models.ForeignKey(
+		'Session',
+		on_delete=models.PROTECT,
+		blank=True,
+		null=True,
+	)
+
+	pref_days = models.CharField(
+		max_length=3,
+		choices=PREFE_DAY_CHOICES,
+		default=MONDAY,
+	)
+	start_time = models.TimeField(null=True, blank=False)
+	end_time = models.TimeField(null=True, blank=False)

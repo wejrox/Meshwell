@@ -1,6 +1,6 @@
 {% extends 'mysite/base_meshwell.html' %}
 {% load static %}
-{% block title %} Feedback Form | Meshwell {% endblock %}
+{% block title %}Feedback{% endblock %}
 {% block content %}
 
 
@@ -8,9 +8,9 @@
 
 
 <p>{{ message }}</p>
-<!--Using form.py & view.py to call feedback form-->
+<!--Using form.py & view.py to call feedback form testing-->
 {% if success == 'False' %}
-<form method="post">
+<form method="post">dadd
 		{% csrf_token %}
 	{{ form.as_p }}
 	 <br>

@@ -1,7 +1,11 @@
 {% extends 'mysite/base_meshwell.html' %}
-{% block title %}Logged Out | Meshwell {% endblock %}
+{% block title %}Logged Out{% endblock %}
 {% block content %}
-<h1>Logged out</h1>
-<p>You have successfully logged out.</p>
-<a href="{% url 'login'%}">Click here to login again.</a>
+<div class="mainContent">
+	<div class="headerContent">
+		Logged out
+	</div>
+	<p>You have successfully logged out.</p>
+	<a href="{% url 'login'%}" class="btn btn-danger">Click here to login again.</a>
+</div>
 {% endblock %}

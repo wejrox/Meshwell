@@ -1,0 +1,46 @@
+{% extends 'mysite/base_meshwell.html' %}
+{% load static %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="mainContent">
+	<div class="headerContent">
+		Connected Game Accounts
+	</div>
+	<br>
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+				<th scope="col">Game Name</th>
+				<th scope="col">Connected Account</th>
+				<th scope="col">Platform</th>
+				<th scope="col">Casual Rank</th>
+				<th scope="col">Competitive Rank</th>
+					<th scope="col"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+			{% for key, value in accounts.items %}
+				<td>{{ value.game_name }}</td>
+				<td>{{ value.game_player_tag }}</td>
+				<td>{{ value.platform }}</td>
+				<td>{{ value.cas_rank }}</td>
+				<td>{{ value.comp_rank }}</td>
+				{% if value.connected %}
+				<td>
+					<form action="#" method="get">
+						<input type="hidden" name="game" value="{{ value.game.name }}">
+						<input type="submit" class="btn btn-danger btn-sm" value="Remove" name="Unlink Account">
+					</form>
+				</td>
+				{% else %}
+				<td>
+					<a href="{% url 'connect_account' %}" class="btn btn-success" value="Connect Account">Connect Account</a>
+				</td>
+				{% endif %}
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}

@@ -1,15 +1,51 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from apps.api.models import Profile, Feedback
+from apps.api.models import Profile, Feedback, User_Preference, Profile_Connected_Game_Account
 
 #form to create profile
 #RegistrationForm VIEW must be created first as well as URl
 class RegistrationForm(UserCreationForm):
-	first_name = forms.CharField(max_length=30, required = False, help_text='Optional.')
-	last_name = forms.CharField(max_length=30, required = False, help_text='Optional.')
-	email = forms.EmailField(max_length=254, required=True, help_text='Required. Enter a valid email address.')
-	birth_date = forms.DateField(help_text='Required. Format: YYYY-MM-DD')
+	username = forms.CharField(
+		max_length=30,
+		required = True,
+		help_text='Required.',
+		widget=forms.TextInput(attrs={'class':'form-control',}),
+	)
+	first_name = forms.CharField(
+		max_length=30,
+		required = False,
+		help_text='Optional.',
+		widget=forms.TextInput(attrs={'class':'form-control'}),
+	)
+	last_name = forms.CharField(
+		max_length=30,
+		required = False,
+		help_text='Optional.',
+		widget=forms.TextInput(attrs={'class':'form-control'}),
+	)
+	email = forms.EmailField(
+		max_length=254,
+		required=True,
+		help_text='Required. Enter a valid email address.',
+		widget=forms.TextInput(attrs={'class':'form-control', 'type':'text',}),
+	)
+	birth_date = forms.DateField(
+		help_text='Required. Format: YYYY-MM-DD',
+		widget=forms.TextInput(attrs={'class':'form-control', 'type':'date',}),
+	)
+	password1 = forms.CharField(
+		help_text='Required.',
+		required=True,
+		max_length=4096,
+		widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password',}),
+	)
+	password2 = forms.CharField(
+		help_text='Required.',
+		required=True,
+		max_length=4096,
+		widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password',}),
+	)
 	#Class meta will dictate what the form uses for its fields
 	class Meta:
 		model = User
@@ -60,3 +96,18 @@ class FeedbackForm(forms.ModelForm):
 class DeactivateUser(forms.Form):
 	username = forms.CharField(help_text="Enter your username.")
 	password = forms.CharField(help_text="Enter your password.", widget=forms.PasswordInput())
+
+# Connect a user account to a game
+class ConnectAccountForm(forms.ModelForm):
+	class Meta:
+		model=Profile_Connected_Game_Account
+		fields = (
+			'game',
+			'game_player_tag',
+			'platform',
+		)
+
+class UserPreferenceForm(forms.ModelForm):
+	class Meta:
+		model = User_Preference
+		exclude = []

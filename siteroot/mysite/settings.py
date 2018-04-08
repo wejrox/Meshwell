@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -36,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_filters',
     'apps.api',
     'mysite',
 ]
@@ -51,6 +51,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'mysite.urls'
+APPEND_SLASH = True
 
 TEMPLATES = [
     {
@@ -92,7 +93,10 @@ REST_FRAMEWORK = {
 	),
 	'DEFAULT_AUTHENTICATION_CLASSES': (
 		'rest_framework.authentication.TokenAuthentication',
-	)
+	),
+	'DEFAULT_FILTER_BACKENDS': (
+		'django_filters.rest_framework.DjangoFilterBackend',
+	),
 }
 
 # Token authentication
@@ -118,8 +122,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Authentication Backend
 AUTHENTICATION_BACKENDS = (
-        'django.contrib.auth.backends.ModelBackend',
-    )
+	'django.contrib.auth.backends.ModelBackend',
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -138,11 +142,16 @@ USE_TZ = True
 # Static server files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+# Comment out for Local Development
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+# Uncomment for Local Development
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 
 # Media files(images, other) uploaded by the User (admin or non)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 LOGIN_URL = '/account/login'
-LOGIN_REDIRECT_URL = '/account/profile'
+LOGIN_REDIRECT_URL = '/dashboard'
