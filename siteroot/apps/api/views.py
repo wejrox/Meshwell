@@ -7,6 +7,7 @@ from ..api.models import Profile, Availability, Game, Game_Role, Session, Sessio
 class ProfileViewSet(viewsets.ModelViewSet):
 	queryset = Profile.objects.all()
 	serializer_class = serializers.ProfileSerializer
+	filter_backends = (DjangoFilterBackend,)
 
 class AvailabilityViewSet(viewsets.ModelViewSet):
 	queryset = Availability.objects.all()
@@ -36,11 +37,21 @@ class Profile_Connected_Game_AccountViewSet(viewsets.ModelViewSet):
 	queryset = Profile_Connected_Game_Account.objects.all()
 	serializer_class = serializers.Profile_Connected_Game_AccountSerializer
 	def get_queryset(self):
-                queryset = Profile_Connected_Game_Account.objects.all()
-                profile = self.request.query_params.get('profile')
-                if profile is not None:
-                        queryset = queryset.filter(profile__id=profile)
-                return queryset
+		queryset = Profile_Connected_Game_Account.objects.all()
+		profile = self.request.query_params.get('profile')
+		id = self.request.query_params.get('id')
+		game = self.request.query_params.get('game')
+		# If given an id there can only be 1 response
+		if id is not None:
+			queryset = Profile_Connected_Game_Account.get(id=str(id))
+			return queryset
+		# If given a profile there may be many responses
+		if profile is not None:
+			queryset = queryset.filter(profile__id=int(profile))
+		# Ir given a game there may be many responses
+		if game is not None:
+			queryset = queryset.filter(game__name=game)
+		return queryset
 
 
 class Game_Api_ConnectionViewSet(viewsets.ModelViewSet):

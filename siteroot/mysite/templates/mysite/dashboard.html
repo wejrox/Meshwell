@@ -1,4 +1,53 @@
 {% extends 'mysite/base_meshwell.html' %}
 {% load static %}
 {% block title %}{{ title }}{% endblock %}
-{% block content %}{{ message }}{% endblock %}
+{% block content %}
+<div class="mainContent">
+	<div class="headerContent">
+		{{ message }}
+	</div>
+	<br>
+	<div class="imgAndText">
+		<div class="row">
+			<div class="col-sm-8">
+				<div class="guiderContent">
+					This is a header.
+				</div>
+				</br>
+				<div class="headerContent">
+					This is the standardised CSS for Meshwell. Please apply the appropriate tags to your template design.
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="customWidget">
+					<iframe src="https://discordapp.com/widget?id=418990653641588736&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0"></iframe>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<img class="rounded-circle" alt="Profile link image" width="140" height="140">
+				<h2>Profile</h2>
+				<p>View and Edit your profile.</p>
+				<p>
+					<a href="{% url 'profile' %}" class="btn btn-secondary" role="button">Take me there!</a>
+				</p>
+			</div>
+			<div class="col-lg-4">
+				<img class="rounded-circle" alt="Connected Accounts link image" width="140" height="140">
+				<h2>Connected Game Accounts</h2>
+				<p>View and Edit your connected game accounts.</p>
+				<p>
+					<a href="{% url 'connected_accounts' %}" class="btn btn-secondary" role="button">Take me there!</a>
+				</p>
+			</div>
+			<div class="col-lg-4">
+				<img class="rounded=circle" alt="Availability link image" width="140" height="140">
+				<h2>Availability</h2>
+				<p>View and Edit your availability.</p>
+				<p>
+					<a href="#" class="btn btn-secondary" role="button">Take me there!</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

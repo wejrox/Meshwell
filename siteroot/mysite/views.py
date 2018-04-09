@@ -9,7 +9,7 @@ import json
 from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, UserPreferenceForm, ConnectAccountForm
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.views import login
+from django.contrib.auth.views import login as contrib_login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
@@ -24,7 +24,7 @@ def retrieve_data(table, *params):
 	# Add the additional parameters
 	for string in params:
 		url += '&'+string
-	print(url)
+
 	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
 	response = requests.get(url, headers=headers)
 	if response.ok:
@@ -32,17 +32,29 @@ def retrieve_data(table, *params):
 		return data
 	return None
 
+# Deletes data from the database using the INTERNAL API (Meshwell API)
+# Takes an API url address to delete
+def delete_data(url):
+	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
+	response = requests.delete(url, headers=headers)
+
+	if response.ok:
+		print('deleted the entry')
+		return True
+	else:
+		print('couldn\'t unlink the entry')
+		print(response.status_code)
+		return False
+
 # Index page/Landing page
 def index(request):
-	url = 'http://127.0.0.1/api/game/?format=json'
-	headers = {'Authorization':'Token ' + settings.API_TOKEN}
-	response = requests.get(url, headers=headers)
-	data = response.json()
+	data = retrieve_data('game')
 
 	context = {'games':{}}
-	for game in data:
-		g = { 'name':game['name'], 'description':game['description'] }
-		context['games'][game['name']] = g
+	if data:
+		for game in data:
+			g = { 'name':game['name'], 'description':game['description'] }
+			context['games'][game['name']] = g
 
 	# Give back the context to the index page
 	return render(request, 'mysite/index.html', context)
@@ -55,6 +67,8 @@ def dashboard(request):
 		'message':'This is a stub page for the dashboard. No functionality has been added yet.',
 	}
 
+	data = retrieve_data('profile', 'id=2')
+	print(data)
 	return render(request, 'mysite/dashboard.html', context)
 
 #views for the profile page
@@ -69,12 +83,7 @@ def profile(request):
 			profile = Profile.objects.create(user=request.user)
 			profile.save()
 
-		# Get the user's profile
-		headers = { 'Authorization':'Token ' + settings.API_TOKEN }
-		profile = request.user.profile
-		url = 'http://127.0.0.1/api/profile/' + str(profile.id) + '/?format=json'
-		response = requests.get(url, headers=headers)
-		data = response.json()
+		data = retrieve_data('profile/'+str(profile.id))
 
 		context = {
 			'username':data['user']['username'],
@@ -92,6 +101,13 @@ def profile(request):
 	else:
 		context = {'error_title':'Not logged in', 'message':'You must be logged in to view this page'}
 		return render(request, 'mysite/error_page.html', context)
+
+# CSS Standarisation Page
+def css_standard(request):
+	context = {
+		'title':'CSS Standard',
+	}
+	return render(request, 'mysite/css_standard.html', context)
 
 # Catalog of games
 def catalog(request):
@@ -138,7 +154,7 @@ def feedback(request):
 def register(request):
 	# Ensure there is nobody logged in
 	if request.user.is_authenticated:
-		return redirect('index')
+		return redirect('dashboard')
 
 	title = 'Register'
 	form = RegistrationForm(request.POST)
@@ -175,6 +191,7 @@ def edit_profile(request):
 	if request.method == 'POST':
 		form = EditProfileForm(request.POST, instance=request.user)
 		context = {
+			'title':'Edit Profile',
 			'form':form,
 		}
 
@@ -186,8 +203,14 @@ def edit_profile(request):
 			return render(request, 'mysite/edit_profile.html', context)
 	else:
 		form = EditProfileForm(instance=request.user)
-		context = { 'form':form, }
+		context = { 'title': 'Edit Profile', 'form':form, }
 		return render(request, 'mysite/edit_profile.html', context)
+
+# Login. Implemented here to prevent logged in users from accessing the page
+def login(request):
+	if request.user.is_authenticated:
+		return redirect(settings.LOGIN_REDIRECT_URL)
+	return contrib_login(request)
 
 # Logging out. Currently loads a page. Recommend logging out to open a popup box that the user must click 'OK' to and be redirected to index.
 @login_required
@@ -242,7 +265,7 @@ def connect_account(request):
 			ranks = None
 			# Get the rank depending on which game was selected
 			if form.cleaned_data['game'].name == 'Rainbow Six Siege':
-				# Ensure game doesn't already have an account connected to it
+				# Ensure profile's game doesn't already have an account connected to it
 				connected_account = retrieve_data('profile_connected_game_account', 'profile='+str(request.user.profile.id))
 				if not connected_account:
 					ranks = get_r6siege_ranks(request, form.cleaned_data['game_player_tag'])
@@ -270,21 +293,50 @@ def connect_account(request):
 		return render(request, 'registration/connect_account.html', context)
 
 	return render(request, 'registration/connect_account.html', context)
+
 @login_required
 def connected_accounts(request):
-	data = retrieve_data('profile_connected_game_account', 'profile='+str(request.user.profile.id))
+	connected_accounts = retrieve_data('profile_connected_game_account', 'profile='+str(request.user.profile.id))
+	games = retrieve_data('game')
 	# Headers needed since we have to get the game name still
 	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
-	if data is not None:
-		for account in data:
-			response = requests.get(account['game'], headers=headers)
-			game_data = response.json()
-			account['game'] = game_data
 
-	context = { 'accounts':data, }
+	# Pre-create the games that we have
+	final_data = {}
+	for game in games:
+		final_data[game['url']] = {}
+		final_data[game['url']]['game_name'] = game['name']
+		final_data[game['url']]['game_player_tag'] = 'Not Connected!'
+
+	# Set each account to be inside the game if it exists
+	if connected_accounts and games:
+		# Assign each of the accounts by accessing related to game url
+		for account in connected_accounts:
+			final_data[account['game']]['game_player_tag'] = account['game_player_tag']
+			final_data[account['game']]['platform'] = account['platform']
+			final_data[account['game']]['cas_rank'] = account['cas_rank']
+			final_data[account['game']]['comp_rank'] = account['comp_rank']
+			final_data[account['game']]['connected'] = True
+
+
+	context = { 'title':'Connected Accounts', 'accounts':final_data, }
+
+	# User clicks unlink button
+	if(request.GET.get('Unlink Account')):
+		unlink_account(request.user.profile, request.GET.get('game'))
+		return redirect('connected_accounts')
 
 	return render(request, 'mysite/connected_accounts.html', context)
 
+# Remove the record of the connected account
+@login_required
+def unlink_account(profile, game_name):
+	record = retrieve_data('profile_connected_game_account', 'profile='+str(profile.id), 'game='+game_name)
+	if record:
+		delete_data(record[0]['url'])
+
+# Gets the player details specified, or None if there are multiple entries
+# Decides on region based on the profiles region. (Perhaps change later?)
 @login_required
 def get_r6siege_ranks(request, player_tag):
 	url = 'https://r6db.com/api/v2/players?name=' + player_tag

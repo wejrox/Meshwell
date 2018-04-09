@@ -37,7 +37,7 @@
 	<body>
 		<header>
 			<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			  <a class="navbar-brand" href="#">
+			  <a class="navbar-brand" href="{% url 'index' %}">
 			   <img src="{% static "css/images/meshwell_logo.png" %}" width="60" height="60" class="d-inline-block" alt="">
 			    meshwell
 			  </a>
@@ -59,6 +59,9 @@
 			      </li>
 			      <li class="nav-item {% if request.resolver_match.url_name == "about-us" %}active{% endif %}">
 			        <a class="nav-link" href="{% url 'about-us' %}">About Us</a>
+			      </li>
+			      <li class="nav-item {% if request.resolver_match.url_name == "css-standard" %}active{% endif %}">
+			        <a class="nav-link" href="{% url 'css-standard' %}">CSS Standard</a>
 			      </li>
 			    </ul>
 			    <ul class="navbar-nav ml-auto">
@@ -151,10 +154,5 @@
     </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-</body>
-
-
-
-
-	<!--/.Footer-->
+</body><!--/.Footer-->
 </html>

@@ -1,3 +1,82 @@
+/*Content Styling*/
+
+.guiderContent{
+  background-color: #272727;
+  padding: 10px;
+  font-size: 2em;
+  color: white;
+  border-style:  solid;
+  border-width: 0px 0px 4px 0px;
+  border-color: #f44c41;
+}
+
+.mainContent{
+  margin-left: 15%;
+  margin-right: 15%;
+  margin-top: 65px;
+}
+
+.headerContent{
+  font-size: 2em;
+  text-align: center;
+}
+
+.paragraphContent{
+  column-count: 3;
+}
+
+.imgAndText{
+  text-align: center;
+}
+
+.customRow{
+  max-width: 1140px;
+  margin: auto;
+}
+
+.form-control:focus {
+  border-color: #F44C41;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 76, 65, 0.6);
+}
+
+.customWidget{
+  text-align: right;
+}
+
+.footer{
+  background-color: #272727;
+  color: white; 
+}
+
+/*Buttons*/
+
+.btn-danger{
+  color: #fff;
+  background-color: #F44C41;
+  border-color: #F44C41;
+}
+
+.btn-outline-danger{
+  color: #F44C41;
+  background-color: transparent;
+  background-image: none;
+  border-color: #F44C41;
+}
+
+.btn-outline-danger:not(:disabled):not(.disabled).active, .btn-outline-danger:not(:disabled):not(.disabled):active, .show>.btn-outline-danger.dropdown-toggle{
+  color: #fff;
+  background-color: #F44C41;
+  border-color: #F44C41;
+}
+
+.btn-primary{
+  color: #fff;
+  background-color: #419ef4;
+  border-color: #419ef4;
+}
+
+/*Carousel*/
+
 .vertical-center {
   min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
   min-height: 100vh; /* These two lines are counted as one :-)       */
@@ -10,24 +89,26 @@
   margin: auto;
 }
 
+/*Navbar*/
+
 .navbar-light .navbar-nav .nav-link{
-	color: #f44c41;
+  color: #f44c41;
 }
 
 .navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link {
-	color: #ffffff;
+  color: #ffffff;
 }
 
 .bg-light {
-	background-color: #373737 !important;
+  background-color: #373737 !important;
 }
 
 .navbar-light .navbar-brand:focus, .navbar-light .navbar-brand:hover{
-	color: #ffffff;
+  color: #ffffff;
 }
 
 .navbar-light .navbar-brand{
-	color: #f44c41;
+  color: #f44c41;
 }
 
 .navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover{
@@ -35,14 +116,14 @@
 }
 
 .carousel-inner{
-	background:#272727;
+  background:#272727;
 }
 
 .navbar-brand
 {
   font-family: "timeburner";
     src: url("css/fonts/timeburner.eot");
-    src:
+    src: 
     url("css/fonts/timeburner.woff") format("woff"),
     url("css/fonts/timeburner.otf") format("opentype"),
     url("css/fonts/timeburner.svg#filename") format("svg");
@@ -50,9 +131,13 @@
   font-size: 24pt;
 }
 
-.dummyTextClass{
-  padding: 65px;
+.navBorder{
+  border-style:  solid;
+  border-width: 0px 0px 1px 0px;
+  border-color: #f44c41;
 }
+
+/*Mihir's CSS Code*/
 
 #myFooter {
 	background-color: #373a48;
