@@ -223,11 +223,6 @@
 }
 
 
-
-/* CSS used for positioning the footers at the bottom of the page. */
-/* You can remove this. */
-
-
 html{
 	height: 100% !important;
 }
@@ -269,12 +264,12 @@ text-align: left;
 
 }
 
-/*shading*/
+/*shading for table*/
 tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-/*.table-user-information > td {
+.table-user-information > td {
 
   border-top: 0;
   width:500px;
@@ -286,7 +281,7 @@ margin-right: auto;
     top: 2px;
 
 }
-*/
+
 th {
   padding:10px;
   text-align:center
@@ -298,21 +293,28 @@ h1 {
   top: 2px;
 }
 
-.Commendations {
-  border-style: solid;
+h4 {
+  text-align: center;
+  font-size: 80px;
+  line-height: 40px;
+  position: relative;
+  left: 200px;
+  top: 2px;
+}
 
-width: 300%;
+.Commendations {
+border-style: solid;
+
+width: 350%;
 margin-left: auto;
 margin-right: auto;
-
-
 padding: 20px;
-text-align: left;
-    border-top: 3px solid black;
-    position: relative;
-    font-size: 60px;
-    right:420px;
-    top: 2px;
+text-align: center;
+border-top: 3px solid black;
+position: relative;
+font-size: 60px;
+right:575px;
+top: 2px;
 
 }
 
@@ -336,12 +338,5 @@ left: 160px;
 top: 2px;
 border:0px solid black ;}
 
-h4 {
-  text-align: center;
-  font-size: 80px;
-  line-height: 40px;
-  position: relative;
-  left: 200px;
-  top: 2px;
-}
+
 }

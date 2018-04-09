@@ -7,8 +7,7 @@
 
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-    <!------ Include the above in your HEAD tag ---------->
+      <!------ Include the above in your HEAD tag ---------->
 
 
 
@@ -100,13 +99,18 @@
 										<h6> COMMENDATIONS </h6>
 									</th>
 										<tr>
-											<td> Commendation 1 </td>
-											<td> Commendation 2 </td>
-											<td> Commendation 3 </td>
-											<td> Commendation 4 </td>
+											<th> Teamwork </th>
+											<th> Communication </th>
+											<th> Skill </th>
+											<th> Positivity </th>
 										</tr>
 										<tr>
-											<td> {{ commendations }} </td>
+										</tr>
+										<tr>
+											<td> {{ teamwork_commends }} </td>
+											<td> {{ communication_commends }} </td>
+											<td> {{ skill_commends }} </td>
+											<td> {{ positivity_commends }}
 										</tr>
 
 								</table>
@@ -114,9 +118,8 @@
 
 <br>
 
-								<div  align="center"><a href="/account/edit_profile/" class="btn btn-primary">Edit Info</a> </div>
-
-							</div>
+								<div  align="center"><a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Info</a> </div>
+															</div>
 
 
 

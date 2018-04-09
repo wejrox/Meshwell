@@ -13,6 +13,7 @@ from django.contrib.auth.views import login as contrib_login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.urls import reverse
 
 # Import settings
 from django.conf import settings
@@ -194,7 +195,8 @@ def edit_profile(request):
 
 		if form.is_valid():
 			form.save()
-			return redirect('mysite/profile.html')
+			#return HttpResponseRedirect(reverse('registration/login.html'))
+			return redirect('login')
 		else:
 			form = EditProfileForm(instance=request.user)
 			return render(request, 'mysite/edit_profile.html', context)
