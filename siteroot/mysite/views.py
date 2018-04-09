@@ -51,9 +51,10 @@ def index(request):
 	data = retrieve_data('game')
 
 	context = {'games':{}}
-	for game in data:
-		g = { 'name':game['name'], 'description':game['description'] }
-		context['games'][game['name']] = g
+	if data:
+		for game in data:
+			g = { 'name':game['name'], 'description':game['description'] }
+			context['games'][game['name']] = g
 
 	# Give back the context to the index page
 	return render(request, 'mysite/index.html', context)
@@ -295,7 +296,7 @@ def connect_account(request):
 
 @login_required
 def connected_accounts(request):
-	data = retrieve_data('profile_connected_game_account', 'profile='+str(request.user.profile.id))
+	connected_accounts = retrieve_data('profile_connected_game_account', 'profile='+str(request.user.profile.id))
 	games = retrieve_data('game')
 	# Headers needed since we have to get the game name still
 	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
@@ -303,39 +304,39 @@ def connected_accounts(request):
 	# Pre-create the games that we have
 	final_data = {}
 	for game in games:
-		final_data[game['name']] = {}
-		final_data[game['name']]['game_name'] = game['name']
-		final_data[game['name']]['game_player_tag'] = 'Not Connected!'
+		final_data[game['url']] = {}
+		final_data[game['url']]['game_name'] = game['name']
+		final_data[game['url']]['game_player_tag'] = 'Not Connected!'
 
 	# Set each account to be inside the game if it exists
-	if data is not None:
-		for account in data:
-			response = requests.get(account['game'], headers=headers)
-			game_data = response.json()
-			for entry in final_data:
-				print(entry)
-				if game_data['name'] == entry['game_name']:
-					entry['game_player_tag'] = account['game_player_tag']
-					entry['platform'] = account['platform']
-					entry['cas_rank'] = account['cas_rank']
-					entry['comp_rank'] = account['comp_rank']
-					entry['connected'] = True
+	if connected_accounts and games:
+		# Assign each of the accounts by accessing related to game url
+		for account in connected_accounts:
+			final_data[account['game']]['game_player_tag'] = account['game_player_tag']
+			final_data[account['game']]['platform'] = account['platform']
+			final_data[account['game']]['cas_rank'] = account['cas_rank']
+			final_data[account['game']]['comp_rank'] = account['comp_rank']
+			final_data[account['game']]['connected'] = True
+
 
 	context = { 'title':'Connected Accounts', 'accounts':final_data, }
 
 	# User clicks unlink button
 	if(request.GET.get('Unlink Account')):
 		unlink_account(request.user.profile, request.GET.get('game'))
-		return render(request, 'mysite/connected_accounts.html', context)
+		return redirect('connected_accounts')
+
 	return render(request, 'mysite/connected_accounts.html', context)
 
+# Remove the record of the connected account
 @login_required
 def unlink_account(profile, game_name):
-	print('unlinking account')
-	# Get the record to delete
 	record = retrieve_data('profile_connected_game_account', 'profile='+str(profile.id), 'game='+game_name)
-	delete_data(record[0]['url'])
+	if record:
+		delete_data(record[0]['url'])
 
+# Gets the player details specified, or None if there are multiple entries
+# Decides on region based on the profiles region. (Perhaps change later?)
 @login_required
 def get_r6siege_ranks(request, player_tag):
 	url = 'https://r6db.com/api/v2/players?name=' + player_tag
