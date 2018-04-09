@@ -76,15 +76,13 @@ def dashboard(request):
 def profile(request):
 	#reference from index function
 	if request.user.is_authenticated:
-		# Just in case a user somehow doesn't have a profile
-		try:
-			profile = request.user.profile
-		except ObjectDoesNotExist:
-			profile = Profile.objects.create(user=request.user)
-			profile.save()
+		headers = { 'Authorization':'Token ' + settings.API_TOKEN }
+		profile = Profile.objects.get(user=request.user.id)
+		url = 'http://127.0.0.1/api/profile/' + str(profile.id) + '/?format=json'
+		response = requests.get(url, headers=headers)
+		data = response.json()
 
-		data = retrieve_data('profile/'+str(profile.id))
-
+		#Dummy Data
 		context = {
 			'username':data['user']['username'],
 			'first_name':data['user']['first_name'],
@@ -191,19 +189,18 @@ def edit_profile(request):
 	if request.method == 'POST':
 		form = EditProfileForm(request.POST, instance=request.user)
 		context = {
-			'title':'Edit Profile',
 			'form':form,
 		}
 
 		if form.is_valid():
 			form.save()
-			return redirect(reverse('mysite/profile.html'))
+			return redirect('mysite/profile.html')
 		else:
 			form = EditProfileForm(instance=request.user)
 			return render(request, 'mysite/edit_profile.html', context)
 	else:
 		form = EditProfileForm(instance=request.user)
-		context = { 'title': 'Edit Profile', 'form':form, }
+		context = { 'form':form, }
 		return render(request, 'mysite/edit_profile.html', context)
 
 # Login. Implemented here to prevent logged in users from accessing the page
@@ -406,7 +403,7 @@ def enter_queue(request):
 	users_availabilities = Availability.objects.filter(profile=user_profile) #mapping user_avail to user profile
 	if users_availabilities is not None:
 		return HttpResponse("Failed to Join Queue,Set Availability & Try again")
-		return HttpResponseRedirect('/account/profile')
+		return HttpResponseRedirect('//profile')
 	else:
 		#creating an array to store all matching sessions
 		all_matching_sessions = []

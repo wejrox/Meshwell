@@ -2,14 +2,15 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from apps.api.models import Profile, Feedback, User_Preference, Profile_Connected_Game_Account
+from django.forms import ModelForm
 
 #form to create profile
 #RegistrationForm VIEW must be created first as well as URl
 class RegistrationForm(UserCreationForm):
 	username = forms.CharField(
 		max_length=30,
-		required = True,
-		help_text='Required.',
+		required = False,
+		help_text='Optional.',
 		widget=forms.TextInput(attrs={'class':'form-control',}),
 	)
 	first_name = forms.CharField(
@@ -31,8 +32,7 @@ class RegistrationForm(UserCreationForm):
 		widget=forms.TextInput(attrs={'class':'form-control', 'type':'text',}),
 	)
 	birth_date = forms.DateField(
-		help_text='Required. Format: YYYY-MM-DD',
-		widget=forms.TextInput(attrs={'class':'form-control', 'type':'date',}),
+		help_text='Required. Format: YYYY-MM-DD'
 	)
 	password1 = forms.CharField(
 		help_text='Required.',
@@ -51,12 +51,12 @@ class RegistrationForm(UserCreationForm):
 		model = User
 		fields = (
 	        	'username',
-	        	'first_name',
-			'last_name',
-			'email',
+	        	#'first_name',
+			#'last_name',
+			#'email',
 	        	'birth_date',
-			'password1',
-			'password2',
+		#	'password1',
+			#'password2',
 		)
 
 
@@ -70,8 +70,9 @@ class RegistrationForm(UserCreationForm):
 			user.first_name = self.cleaned_data['first_name']
 			user.last_name = self.cleaned_data['last_name']
 			user.email = self.cleaned_data['email']
-			user.birth_date = self.cleaned_data['birth_date']
+			user.profile.birth_date = self.cleaned_data['birth_date']
 			user.save()
+			user.profile.save()
 
 			return user
 
@@ -80,8 +81,8 @@ class EditProfileForm(RegistrationForm):
     class Meta:
         model = User
         fields = (
-            'email',
-            'first_name',
+            #'email',
+            #'first_name',
             'last_name',
             'birth_date',
         )

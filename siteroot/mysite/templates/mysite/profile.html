@@ -1,5 +1,7 @@
 
 
+
+
 <html>
 	<head>
 
@@ -13,28 +15,10 @@
   </head>
   {% extends 'mysite/base_meshwell.html' %}
 {% load static %}
-{% block title %}Profile{% endblock %}
+{% block title %} Profile Page | Meshwell {% endblock %}
 {% block content %}
-<!--<p>Welcome to the Profile Page,here you can edit your personal details for other players to see and get to know you better!</p>
 
- <ul>
-    <li><strong>UserName:</strong> {{ username }}</li>
-
-    <li><strong>First Name:</strong> {{ first_name }}
-
-	 <li><strong>Last Name:</strong> {{ last_name }}</li>
-
-	 <li><strong>email:</strong>  {{ email }}</li>
-
-    <li><strong>Birth_date:</strong> {{ date_birth }}</li>
-
-	<li><strong>Commendations:</strong> {{ commendations }}</li>
-
-  <li><strong>Sessions Played:</strong> {{ sessions_played }}</li>
-
-</ul>
-old code,commented out for testing purposes -->
-<div  align="center"><h1>PROFILE</h1>
+<h1>PROFILE</h1>
 <br>
 <br>
 <body>
@@ -56,13 +40,8 @@ old code,commented out for testing purposes -->
                      <div  align="center"> <img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" id="profile-image1" class="img-circle img-responsive"> </div>
 
                 <input id="profile-image-upload" class="hidden" type="file">
-<div style="color:#999;" >click here to change profile image</div>
+
                 <!--Upload Image Js And Css-->
-
-
-
-
-
 
 
                      </div>
@@ -79,42 +58,14 @@ old code,commented out for testing purposes -->
             <hr style="margin:5px 0 5px 0;">
 
 
-<!--<div class="col-sm-5 col-xs-6 tital " >First Name:</div><div class="col-sm-7 col-xs-6 "><strong> {{ first_name }} </strong></div>
-     <div class="clearfix"></div>
-<div class="bot-border"></div>
 
 
-<div class="col-sm-5 col-xs-6 tital " >Last Name:</div><div class="col-sm-7"><strong> {{ last_name }} </strong></div>
-  <div class="clearfix"></div>
-<div class="bot-border"></div>
-
-<div class="col-sm-5 col-xs-6 tital " >Email:</div><div class="col-sm-7"> {{ email }}</div>
-
-  <div class="clearfix"></div>
-<div class="bot-border"></div>
-
-<div class="col-sm-5 col-xs-6 tital " >Date Of Birth:</div><div class="col-sm-7"> {{ date_birth }}</div>
-
-  <div class="clearfix"></div>
-<div class="bot-border"></div>
-
-<div class="col-sm-5 col-xs-6 tital " >Commendations:</div><div class="col-sm-7"> {{ commendations }}</div>
-<div class="bot-border"></div>
-
-<div class="col-sm-5 col-xs-6 tital " >Sessions PLayed:</div><div class="col-sm-7"> {{ sessions_played }}</div>
-
- <div class="clearfix"></div>
-<div class="bot-border"></div>
-
-OLD CODE EDITED OUT FOR TESTING-->
-
-
-<div class=" col-md-9 col-lg-9 ">
 								<table class="table table-user-information">
+
 									<tbody>
 										<tr>
-											<td>Username:</td>
-											<td> {{ username }}</td>
+											<td><div style="width:800px">Username:</div></td>
+											<td><div style="width:800px"> {{ username }} </div></td>
 										</tr>
 										<tr>
 											<td>First Name:</td>
@@ -131,23 +82,39 @@ OLD CODE EDITED OUT FOR TESTING-->
 											<td>{{ email }}</td>
 										</tr>
 											<tr>
-											<td>Birth Date</td>
-											<td>{{ date_birth }}</td>
+											<td>Birth Date:</td>
+											<td>{{ birth_date }}</td>
 										</tr>
-										<tr>
-											<td>Commendations:</td>
-											<td> {{ commendations }}</td>
-										</tr>
-											<td>Sessions Played</td>
-											<td>{{sessions_played}}
+											<td>Sessions Played:</td>
+											<td>{{ sessions_played }}
 											</td>
 
 										</tr>
 
 									</tbody>
+
+								</table>
+								<table class="Commendations">
+								<tr>
+									<th colspan="4">
+										<h6> COMMENDATIONS </h6>
+									</th>
+										<tr>
+											<td> Commendation 1 </td>
+											<td> Commendation 2 </td>
+											<td> Commendation 3 </td>
+											<td> Commendation 4 </td>
+										</tr>
+										<tr>
+											<td> {{ commendations }} </td>
+										</tr>
+
 								</table>
 
-								<div  align="center"><a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Info</a> </div>
+
+<br>
+
+								<div  align="center"><a href="/account/edit_profile/" class="btn btn-primary">Edit Info</a> </div>
 
 							</div>
 
@@ -162,7 +129,7 @@ OLD CODE EDITED OUT FOR TESTING-->
 
     </div>
     </div>
-</div>
+<!--</div> -->
     <script>
               $(function() {
     $('#profile-image1').on('click', function() {
@@ -180,7 +147,7 @@ OLD CODE EDITED OUT FOR TESTING-->
 
 
    </div>
-</div>
+
 </body>
   {% endblock %}
   </html>

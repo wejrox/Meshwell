@@ -45,7 +45,7 @@
 
 .footer{
   background-color: #272727;
-  color: white; 
+  color: white;
 }
 
 /*Buttons*/
@@ -123,7 +123,7 @@
 {
   font-family: "timeburner";
     src: url("css/fonts/timeburner.eot");
-    src: 
+    src:
     url("css/fonts/timeburner.woff") format("woff"),
     url("css/fonts/timeburner.otf") format("opentype"),
     url("css/fonts/timeburner.svg#filename") format("svg");
@@ -233,7 +233,7 @@ html{
 }
 
 body{
-    display: flex;
+    display: center;
     display: -webkit-flex;
     flex-direction: column;
     -webkit-flex-direction: column;
@@ -251,52 +251,97 @@ body{
     -webkit-flex: 0 0 auto;
 }
 
-.user-row {
-    margin-bottom: 14px;
-}
-
-.user-row:last-child {
-    margin-bottom: 0;
-}
-
-.dropdown-user {
-    margin: 13px 0;
-    padding: 5px;
-    height: 100%;
-}
-
-.dropdown-user:hover {
-    cursor: pointer;
-}
-
-.table-user-information > tbody > tr {
-    border-top: 1px solid rgb(221, 221, 221);
-    font-size: 38px;
-}
-
-.table-user-information > tbody > tr:first-child {
-    border-top: 0;
-}
+/*USER PROFILE CSS*/
+.table-user-information  {
+  border-style: solid;
+width:600%;
+margin-left: auto;
+margin-right: auto;
 
 
-.table-user-information > tbody > tr > td {
-    border-top: 0;
-    margin-left:500px;
+padding: 20px;
+text-align: left;
+    border-top: 3px solid black;
+    position: relative;
+    font-size: 60px;
+    right:310px;
+    top: 2px;
+
 }
-.toppad
-{margin-top:20px;
+
+/*shading*/
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/*.table-user-information > td {
+
+  border-top: 0;
+  width:500px;
+  height:50px;
+margin-left: auto;
+margin-right: auto;
+    position: relative;
+    left: 100px;
+    top: 2px;
+
+}
+*/
+th {
+  padding:10px;
+  text-align:center
+}
+h1 {
+  position: relative;
+  font-size: 100px;
+  left: 1400px;
+  top: 2px;
+}
+
+.Commendations {
+  border-style: solid;
+
+width: 300%;
+margin-left: auto;
+margin-right: auto;
+
+
+padding: 20px;
+text-align: left;
+    border-top: 3px solid black;
+    position: relative;
+    font-size: 60px;
+    right:420px;
+    top: 2px;
+
 }
 
 .hidden {
-position: absolute;
+position: center;
 left: -9999px;
+position: relative;
+left: 160px;
+top: 2px;
 }
+
+
 
 #profile-image1 {
 cursor: pointer;
 
-width: 500px;
-height: 500px;
-border:2px solid #03b1ce ;}
-.tital{ font-size:16px; font-weight:500;}
-.bot-border{ border-bottom:1px #f8f8f8 solid;  margin:5px 0  5px 0}
+width: 600px;
+height: 600px;
+position: relative;
+left: 160px;
+top: 2px;
+border:0px solid black ;}
+
+h4 {
+  text-align: center;
+  font-size: 80px;
+  line-height: 40px;
+  position: relative;
+  left: 200px;
+  top: 2px;
+}
+}
