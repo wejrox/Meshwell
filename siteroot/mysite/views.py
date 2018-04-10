@@ -453,6 +453,9 @@ def availability(request):
 		delete_data(avail[request.GET.get('id')]['url'])
 		return redirect('availability')
 
+	if(request.GET.get('Edit Availability')):
+		# Show edit form? idk
+
 	return render(request, 'mysite/availability.html', context)
 
 @login_required
