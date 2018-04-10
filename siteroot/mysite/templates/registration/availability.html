@@ -1,0 +1,13 @@
+{% extends 'mysite/base_meshwell.html' %}
+{% load static %}
+{% block title %}Add Availability{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<h3>{{ message }}</h3>
+<form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+</form>
+{% endblock %}
+
