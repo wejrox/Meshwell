@@ -394,52 +394,60 @@ def user_preference(request):
 		context = {'error_title':'Not logged in', 'message':'You must be logged in to view this page'}
 		return render(request, 'mysite/error_page.html', context)
 
+# Handles the user entering the queue for a session when the button on the nav bar is pressed
 @login_required
 def enter_queue(request):
-# get the user from the Django request & map to variable
+	# Get user details
 	django_user = request.user
-  #link user_profile to django users profile model & get user's profile
 	user_profile = django_user.profile
-	#user_profile = Profile.objects.get(user=request.user)
-  #Map user_availabilities variable to profile from Availability model
-	users_availabilities = Availability.objects.filter(profile=user_profile) #mapping user_avail to user profile
-	if users_availabilities is not None:
-		return HttpResponse("Failed to Join Queue,Set Availability & Try again")
-		return HttpResponseRedirect('//profile')
+
+	# Ensure player is not already queueing
+	if user_profile.in_queue:
+		redirect('dashboard')
+
+
+	# Create a user session
+	player_session = Session_Profile.objects.create(commit=False)
+	player_session.profile = user_profile
+	player_session.save()
+
+	# Get first suitable session
+	session = get_suitable_session(user_profile)
+	# Suitable session?
+	if session:
+		# Attach a session
+		player_session.session = session
+		player_session.save()
+		return redirect('profile')
 	else:
-		#creating an array to store all matching sessions
-		all_matching_sessions = []
-  # avail is each Availability object
-
-		for avail in users_availabilities:
-			#if avail.end_time is None:
-			#return HttpResponse("FAILED")
-			#return HttpResponseRedirect('account/profile/')
-			#else:
-			matching_sessions = Session.objects.filter(end_time__lte=avail.end_time)#looping through all the sessions end times that match to availability
-    		#adding them to the array
-			all_matching_sessions = all_matching_sessions + matching_sessions
-
-			#If no matching sessions are available
-			if len(all_matching_sessions) == 0:
-				#create a session
-				player_session = Session(
-					#game = 'random_game',
-					start_time = users_availabilities[0].start_time,
-					end_time = users_availabilities[0].end_time,
-				)
-				player_session.save()
-				return  render(request, 'mysite/profile.html')
-
-			else:
-				player_session = Session(
-					session = all_matching_sessions[0],
-					profile = user_profile
-				)
-				player_session.save()
-				#return HttpResponse('Waiting in queue')
-				return  render(request, 'mysite/profile.html')
+		return redirect('create_session', accept=True)
 
 @login_required
+def create_session(request, accept=False):
+	# Create a game session for the user using their availabilities
+	return redirect('index')
+
+# Returns either the first session that a profile can connect to, or return None if sessions aren't available
+@login_required
+def get_suitable_session(profile):
+	users_availabilities = Availability.objects.filter(profile=profile) #mapping user_avail to user profile
+	if not users_availabilities:
+		redirect('index')
+	else:
+  		# Avail is each Availability object
+		for avail in users_availabilities:
+			matching_session = Session.objects.get(end_time__lte=avail.end_time)#looping through all the sessions end times that match to availability
+    		# Return session if it is viable
+			if matching_session:
+				return matching_session
+	# Exhausted all availabilities and no sessions were matching criteria
+	return None
+
+# Removes the authenticated player from the queue
+@login_required
 def exit_queue(request):
-    player_session.delete()
+	if not user_profile.in_queue:
+		redirect('dashboard')
+	player_session = Session_Profile.objects.get(profile=request.user.profile)
+	player_session.delete()
+	return redirect('dashboard')

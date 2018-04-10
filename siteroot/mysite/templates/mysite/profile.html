@@ -1,18 +1,18 @@
 
 
 
-
+<!--
 <html>
 	<head>
 
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-      <!------ Include the above in your HEAD tag ---------->
+    Include the above in your HEAD tag
 
 
 
-  </head>
-  {% extends 'mysite/base_meshwell.html' %}
+  </head>-->
+{% extends 'mysite/base_meshwell.html' %}
 {% load static %}
 {% block title %} Profile Page | Meshwell {% endblock %}
 {% block content %}
@@ -20,54 +20,89 @@
 <h1>PROFILE</h1>
 <br>
 <br>
-<body>
+<div class="mainContent">
+<!--<body>
 <div class="container">
-	<div class="row">
+<div class="row">
+<div class="col-md-7 ">
 
+<div class="box box-info">
 
-       <div class="col-md-7 ">
+<div class="box-body">
+<div class="col-sm-6">
+<div  align="center"> <img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" id="profile-image1" class="img-circle img-responsive"> </div>
 
-				<!-- <div class="card" style="width: 20rem;">
-				             <div class="card-body">
-				               <h3 class="card-title">User Profile</h3>
-				             </div>
--->
-    <div class="box box-info">
-
-            <div class="box-body">
-                     <div class="col-sm-6">
-                     <div  align="center"> <img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" id="profile-image1" class="img-circle img-responsive"> </div>
-
-                <input id="profile-image-upload" class="hidden" type="file">
-
-                <!--Upload Image Js And Css-->
+<input id="profile-image-upload" class="hidden" type="file">
 
 
                      </div>
 
               <br>
 
-              <!-- /input-group -->
-            </div>
+               /input-group -->
+          <!--  </div>
             <div class="col-sm-6">
             <h4 style="color:#00b1b1;"> {{ username }}</h4></span>
               <span><p> {{ Username }}</p></span>
             </div>
             <div class="clearfix"></div>
-            <hr style="margin:5px 0 5px 0;">
+            <hr style="margin:5px 0 5px 0;"> -->
 
 
+<div class="guiderContent">
+	This is a table.
+</div>
+
+</br>
 
 
-								<table class="table table-user-information">
+<table class="table">
+	<thead class="three-dark">
+		<tr>
+			<!--<td><div style="width:800px">Username:</div></td>
+			<td><div style="width:800px"> {{ username }} </div></td>-->
+			<!--<th scope="col">Field</th>
+			<th scope="col">Variable</th>-->
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<!--<th scope="row">1</th>-->
+			<td>First Name:</td>
+			<td>{{ first_name }}</td>
+		</tr>
+		<tr>
+			<!--<th scope="row">1</th>-->
+			<td>Last Name:</td>
+			<td>{{ last_name }}</td>
+		</tr>
+		<tr>
+			<!--<th scope="row">1</th>-->
+			<td>Email:</td>
+			<td>{{ email }}</td>
+		</tr>
+		<tr>
+			<!--<th scope="row">4</th>-->
+			<td>Birth Date:</td>
+			<td>{{ birth_date }}</td>
+		</tr>
+		<tr>
+			<!--<th scope="row">5</th>-->
+			<td>Sessions Played:</td>
+			<td>>{{ sessions_played }}</td>
+		</tr>
+		<tr>
+		<!--	<th scope="row">6</th>-->
+			<td>Commendations:</td>
+			<td>{{ commendations }}</td>
+		</tr>
+	</tbody>
+</table>
 
-									<tbody>
-										<tr>
-											<td><div style="width:800px">Username:</div></td>
-											<td><div style="width:800px"> {{ username }} </div></td>
-										</tr>
-										<tr>
-											<td>First Name:</td>
+<div  align="center"><a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Info</a> </div>
+
+
+											<!--<td>First Name:</td>
 											<td>{{ first_name }}</td>
 										</tr>
 										<tr>
@@ -116,24 +151,24 @@
 								</table>
 
 
-<br>
+                    <br>
 
 								<div  align="center"><a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Info</a> </div>
 															</div>
 
 
-
-            <!-- /.box-body -->
           </div>
-          <!-- /.box -->
+
 
         </div>
 
 
     </div>
-    </div>
-<!--</div> -->
-    <script>
+	</div> -->
+</div> <!--main content-->
+{% endblock %}
+
+  <!--  <script>
               $(function() {
     $('#profile-image1').on('click', function() {
         $('#profile-image-upload').click();
@@ -152,5 +187,5 @@
    </div>
 
 </body>
-  {% endblock %}
+
   </html>
