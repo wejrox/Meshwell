@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 import requests
 import json
-from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, UserPreferenceForm, ConnectAccountForm
+from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, EditAvailabilityForm
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.views import login as contrib_login
@@ -443,3 +443,58 @@ def enter_queue(request):
 @login_required
 def exit_queue(request):
     player_session.delete()
+
+@login_required
+def user_availability(request):
+        form = UserAvailabilityForm()
+        context = {
+                'title': 'User Availability',
+                'message': 'Please enter your Availability details.',
+                'success': 'False',
+                'form': form,
+        }
+
+
+        if request.method == 'POST':
+                form = UserAvailabilityForm(request.POST, instance=request.user)
+                if form.is_valid():
+                        form.save()
+                        context = {
+                                'title': 'Availability created.',
+                                'message': 'Your Availability is created.',
+                                'success': 'True',
+                        }
+                        return render(request, 'registration/availability_success.html', context)
+                else:
+                        form = UserAvailabilityForm()
+                        return render(request, 'registration/availability.html', context)
+        else:
+                form = UserAvailabilityForm()
+                return render(request, 'registration/availability.html', context)
+
+@login_required
+def edit_availability(request):
+        form = EditAvailabilityForm()
+        context = {
+                'title': 'Update Availabilities',
+                'message' : 'Please enter your new Availabilities.',
+                'success' : 'False',
+        }
+
+        if request.method == 'POST':
+                form = EditAvailability(request.POST, instance=request.user)
+                if form.is_valid():
+                        form.save()
+                        context = {
+                                'title' : 'Successfully updated Availabilites.',
+                                'message' : 'Your Availabilites have been updated',
+                                'success' : 'True',
+                        }
+                        return render(request, 'registration/edit_availability_success.html', context)
+                else:
+                        form = EditAvailabilityForm()
+                        return render(request, 'registration/edit_availability.html', context)
+        else:
+                form = EditAvailabilityForm()
+                return render(request, 'registration/edit_availability.html',   context)
+
