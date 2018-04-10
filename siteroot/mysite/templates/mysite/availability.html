@@ -1,4 +1,46 @@
 {% extends 'mysite/base_meshwell.html' %}
 {% load static %}
 {% block title %}{{ title }}{% endblock %}
-{% block content %}{{ message }}{% endblock %}
+{% block content %}<div class="mainContent">
+	<div class="headerContent">
+		{{ message }}
+	</div>
+	<br>
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+				<th scope="col">Day</th>
+				<th scope="col">Start Time</th>
+				<th scope="col">End Time</th>
+				<th scope="col">Competitive</th>
+				<th scope="col"></th>
+        <th scope="col"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+			{% for value in availabilities %}
+				<td>{{ value.pref_day }}</td>
+				<td>{{ value.start_time }}</td>
+				<td>{{ value.end_time }}</td>
+				<td>{{ value.competitive }}</td>
+				<td>
+					<form action="#" method="get">
+						<input type="hidden" name="url" value="{{ value.url }}">
+						<input type="submit" class="btn btn-info btn-sm" value="Edit" name="Edit Availability">
+					</form>
+				</td>
+        <td>
+					<form action="#" method="get">
+						<input type="hidden" name="url" value="{{ value.url }}">
+						<input type="submit" class="btn btn-danger btn-sm" value="Remove" name="Remove Availability">
+					</form>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+  <div
+  <a href="{% url 'add_availability' %}" class="btn btn-success btn-sm" role="button">Add a new availability</a>
+</div>
+{% endblock %}

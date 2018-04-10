@@ -78,7 +78,9 @@ def profile(request):
 	#reference from index function
 	if request.user.is_authenticated:
 		headers = { 'Authorization':'Token ' + settings.API_TOKEN }
-		profile = Profile.objects.get(user=request.user.id)
+		profile = Profile.objects.filter(user=request.user.id).first()
+		if not profile:
+			profile = Profile.objects.create(user=request.user)
 		url = 'http://127.0.0.1/api/profile/' + str(profile.id) + '/?format=json'
 		response = requests.get(url, headers=headers)
 		data = response.json()
@@ -446,44 +448,49 @@ def exit_queue(request):
 
 @login_required
 def availability(request):
-	avail = request.get('availability', 'profile='+str(user.profile.id))
+	avail = retrieve_data('availability', 'profile='+str(request.user.profile.id))
+	print(avail)
 	context = {'title':'Availability', 'Message':'Below is a list of your current availabilities', 'availabilities':avail}
 
+	# Delete data based on the the id provided by the html page
 	if(request.GET.get('Remove Availability')):
-		delete_data(avail[request.GET.get('id')]['url'])
+		delete_data(request.GET.get('url'))
 		return redirect('availability')
 
+	# Redirect to an edit availability page, given the id of the profile to edit
 	if(request.GET.get('Edit Availability')):
+		print("Edit availability Clicked")
 		# Show edit form? idk
 
 	return render(request, 'mysite/availability.html', context)
 
 @login_required
 def add_availability(request):
-        form = UserAvailabilityForm()
-        context = {
-                'title': 'User Availability',
-                'message': 'Please enter your Availability details.',
-                'success': 'False',
-                'form': form,
-        }
+	form = UserAvailabilityForm()
+	context = {
+		'title': 'User Availability',
+		'message': 'Please enter your Availability details.',
+		'success': 'False',
+		'form': form,
+	}
 
-        if request.method == 'POST':
-                form = UserAvailabilityForm(request.POST, instance=request.user)
-                if form.is_valid():
-                        form.save()
-                        context = {
-                                'title': 'Availability created.',
-                                'message': 'Your Availability is created.',
-                                'success': 'True',
-                        }
-                        return redirect('availability')
-                else:
-                        form = UserAvailabilityForm()
-                        return render(request, 'registration/add_availability.html', context)
-        else:
-                form = UserAvailabilityForm()
-                return render(request, 'registration/add_availability.html', context)
+	if request.method == 'POST':
+		form = UserAvailabilityForm(request.POST)
+		if form.is_valid():
+			instance = form.save(commit=False)
+			instance.profile = request.user.profile
+			instance.save()
+			context = {
+				'title': 'Availability created.',
+				'message': 'Your Availability is created.',
+				'success': 'True',
+			}
+			return redirect('availability')
+		else:
+			return render(request, 'registration/add_availability.html', context)
+	else:
+		form = UserAvailabilityForm()
+		return render(request, 'registration/add_availability.html', context)
 
 @login_required
 def edit_availability(request):

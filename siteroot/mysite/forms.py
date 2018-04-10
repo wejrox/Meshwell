@@ -114,13 +114,13 @@ class UserAvailabilityForm(forms.ModelForm):
 			required = True,
 			help_text= 'Required.',
 			widget=forms.TimeInput(attrs={'class':'form-control', 'type':'time'}),
-			input_formats='%I:%M %p',
+			input_formats=['%H:%M'],
 		)
 		end_time = forms.TimeField(
 			required = True,
 			help_text= 'Required.',
 			widget=forms.TimeInput(attrs={'class':'form-control', 'type':'time'}),
-			input_formats='%I:%M %p',
+			input_formats=['%H:%M'],
 		)
 		competitive = forms.BooleanField(
 			required = False,
