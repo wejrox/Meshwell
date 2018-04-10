@@ -129,6 +129,16 @@
   color: #f44c41 !important;
 }
 
+.nav.nav-tabs > li.dropdown.active.open > a, 
+.nav.nav-tabs > li.dropdown.active.open > ul.dropdown-menu a:hover,
+.nav.nav-tabs > li.dropdown.open > a, 
+.nav.nav-tabs > li.dropdown.open > ul.dropdown-menu a:hover
+{
+  color: #f44c41;
+  background-color: #373737;
+  border-color: #f44c41;
+}
+
 .dropdown-item:active{
   color: #fff !important;
   background-color: #373737 !important;
