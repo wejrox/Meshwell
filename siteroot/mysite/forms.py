@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from apps.api.models import Profile, Feedback, User_Preference, Profile_Connected_Game_Account
+from apps.api.models import Profile, Feedback, User_Preference, Profile_Connected_Game_Account, Availability
 from django.forms import ModelForm
 
 #form to create profile
@@ -108,7 +108,23 @@ class ConnectAccountForm(forms.ModelForm):
 			'platform',
 		)
 
-class UserPreferenceForm(forms.ModelForm):
-	class Meta:
-		model = User_Preference
-		exclude = []
+class UserAvailabilityForm(forms.ModelForm):
+        class Meta:
+                model = Availability
+                fields = (
+                'pref_day',
+                'start_time',
+                'end_time',
+                'competitive',
+                )
+
+class EditAvailabilityForm(forms.ModelForm):
+        class Meta:
+                model = Availability
+                fields = (
+                'pref_day',
+                'start_time',
+                'end_time',
+                'competitive',
+                )
+
