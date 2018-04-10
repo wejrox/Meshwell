@@ -85,8 +85,9 @@
   align-items: center;
 }
 
-.carousel-inner img {
+.carousel img {
   margin: auto;
+  min-width: 100%;
 }
 
 /*Navbar*/
