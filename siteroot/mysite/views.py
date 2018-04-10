@@ -409,7 +409,7 @@ def enter_queue(request):
 	else:
 		#creating an array to store all matching sessions
 		all_matching_sessions = []
-  # avail is each Availability object
+		# avail is each Availability object
 
 		for avail in users_availabilities:
 			#if avail.end_time is None:
@@ -445,7 +445,11 @@ def exit_queue(request):
     player_session.delete()
 
 @login_required
-def user_availability(request):
+def availability(request):
+	return render(request, 'mysite/availability.html', {'title':'Availability', 'message':'Page not yet implemented'})
+
+@login_required
+def add_availability(request):
         form = UserAvailabilityForm()
         context = {
                 'title': 'User Availability',
@@ -453,7 +457,6 @@ def user_availability(request):
                 'success': 'False',
                 'form': form,
         }
-
 
         if request.method == 'POST':
                 form = UserAvailabilityForm(request.POST, instance=request.user)
@@ -497,4 +500,3 @@ def edit_availability(request):
         else:
                 form = EditAvailabilityForm()
                 return render(request, 'registration/edit_availability.html',   context)
-
