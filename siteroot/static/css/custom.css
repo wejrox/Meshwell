@@ -90,6 +90,10 @@
   min-width: 100% !important
 }
 
+.carousel-inner{
+  background:#272727;
+}
+
 /*Navbar*/
 
 .navbar-light .navbar-nav .nav-link{
@@ -116,8 +120,23 @@
   color: #f44c41;
 }
 
-.carousel-inner{
-  background:#272727;
+.dropdown-menu{
+  background-color: #373737 !important;
+  border-color: #f44c41 !important;
+}
+
+.dropdown-item{
+  color: #f44c41 !important;
+}
+
+.dropdown-item:active{
+  color: #fff !important;
+  background-color: #373737 !important;
+}
+
+.dropdown-menu > li > a:hover {
+    background-color: red;
+    background-image: none;
 }
 
 .navbar-brand
@@ -126,8 +145,9 @@
     src: url("css/fonts/timeburner.eot");
     src:
     url("css/fonts/timeburner.woff") format("woff"),
-    url("css/fonts/timeburner.otf") format("opentype"),
-    url("css/fonts/timeburner.svg#filename") format("svg");
+    url("{% static "fonts/timeburner.woff" %}") format("woff"),
+    url("{% static "fonts/timeburner.otf" %}") format("opentype"),
+    url("{% static "fonts/timeburner.svg#filename" %}") format("svg"),
 
   font-size: 24pt;
 }
