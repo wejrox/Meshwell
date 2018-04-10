@@ -116,6 +116,33 @@
   color: #f44c41;
 }
 
+.dropdown-menu:show{
+  background-color: #373737;
+  border-color: #fff;
+}
+
+.dropdown-item{
+  color: #f44c41;
+}
+
+.dropdown .dropdown-menu {
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+
+    max-height: 0;
+    display: block;
+    overflow: hidden;
+    opacity: 0;
+}
+
+.dropdown:hover .dropdown-menu {
+    max-height: 200px;
+    opacity: 1;
+}
+
 .carousel-inner{
   background:#272727;
 }

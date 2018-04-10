@@ -70,9 +70,10 @@
 			    		<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			    			{{ user.get_username }}
 			    		</a>
-			    		<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+			    		<div class="dropdown-menu" aria-labelledby="navbarDropdown" style="transform: translateX(50%); margin-top: 5%;">
 			        		<a class="nav-link {% if request.resolver_match.url_name == "dashboard" %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
 			    			<a class="dropdown-item" href="#">Settings</a>
+			    			<a class="dropdown-item" href="#">Test Dropdown Item</a>
 			    			<a class="btn btn-outline-danger" href="{% url 'logout' %}">Logout</a>
 
 			    		</div>
