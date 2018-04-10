@@ -9,7 +9,7 @@ from django.forms import ModelForm
 class RegistrationForm(UserCreationForm):
 	username = forms.CharField(
 		max_length=30,
-		required = False,
+		required = True,
 		help_text='Optional.',
 		widget=forms.TextInput(attrs={'class':'form-control',}),
 	)
@@ -108,15 +108,32 @@ class ConnectAccountForm(forms.ModelForm):
 			'platform',
 		)
 
+# When a user can play games
 class UserAvailabilityForm(forms.ModelForm):
-        class Meta:
-                model = Availability
-                fields = (
-                'pref_day',
-                'start_time',
-                'end_time',
-                'competitive',
-                )
+		start_time = forms.TimeField(
+			required = True,
+			help_text= 'Required.',
+			widget=forms.TimeInput(attrs={'class':'form-control', 'type':'time'}),
+			input_formats='%I:%M %p',
+		)
+		end_time = forms.TimeField(
+			required = True,
+			help_text= 'Required.',
+			widget=forms.TimeInput(attrs={'class':'form-control', 'type':'time'}),
+			input_formats='%I:%M %p',
+		)
+		competitive = forms.BooleanField(
+			required = False,
+			widget=forms.CheckboxInput(attrs={'class':'form-check', 'type':'checkbox'}),
+		)
+		class Meta:
+				model = Availability
+				fields = (
+				'pref_day',
+				'start_time',
+				'end_time',
+				'competitive',
+				)
 
 class EditAvailabilityForm(forms.ModelForm):
         class Meta:
@@ -127,4 +144,3 @@ class EditAvailabilityForm(forms.ModelForm):
                 'end_time',
                 'competitive',
                 )
-

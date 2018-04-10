@@ -409,7 +409,7 @@ def enter_queue(request):
 	else:
 		#creating an array to store all matching sessions
 		all_matching_sessions = []
-  # avail is each Availability object
+		# avail is each Availability object
 
 		for avail in users_availabilities:
 			#if avail.end_time is None:
@@ -429,7 +429,7 @@ def enter_queue(request):
 					end_time = users_availabilities[0].end_time,
 				)
 				player_session.save()
-				return  render(request, 'mysite/profile.html')
+				return render(request, 'mysite/profile.html')
 
 			else:
 				player_session = Session(
@@ -438,14 +438,25 @@ def enter_queue(request):
 				)
 				player_session.save()
 				#return HttpResponse('Waiting in queue')
-				return  render(request, 'mysite/profile.html')
+				return render(request, 'mysite/profile.html')
 
 @login_required
 def exit_queue(request):
     player_session.delete()
 
 @login_required
-def user_availability(request):
+def availability(request):
+	avail = request.get('availability', 'profile='+str(user.profile.id))
+	context = {'title':'Availability', 'Message':'Below is a list of your current availabilities', 'availabilities':avail}
+
+	if(request.GET.get('Remove Availability')):
+		delete_data(avail[request.GET.get('id')]['url'])
+		return redirect('availability')
+
+	return render(request, 'mysite/availability.html', context)
+
+@login_required
+def add_availability(request):
         form = UserAvailabilityForm()
         context = {
                 'title': 'User Availability',
@@ -453,7 +464,6 @@ def user_availability(request):
                 'success': 'False',
                 'form': form,
         }
-
 
         if request.method == 'POST':
                 form = UserAvailabilityForm(request.POST, instance=request.user)
@@ -464,13 +474,13 @@ def user_availability(request):
                                 'message': 'Your Availability is created.',
                                 'success': 'True',
                         }
-                        return render(request, 'registration/availability_success.html', context)
+                        return redirect('availability')
                 else:
                         form = UserAvailabilityForm()
-                        return render(request, 'registration/availability.html', context)
+                        return render(request, 'registration/add_availability.html', context)
         else:
                 form = UserAvailabilityForm()
-                return render(request, 'registration/availability.html', context)
+                return render(request, 'registration/add_availability.html', context)
 
 @login_required
 def edit_availability(request):
@@ -490,11 +500,10 @@ def edit_availability(request):
                                 'message' : 'Your Availabilites have been updated',
                                 'success' : 'True',
                         }
-                        return render(request, 'registration/edit_availability_success.html', context)
+                        return redirect('availability')
                 else:
                         form = EditAvailabilityForm()
                         return render(request, 'registration/edit_availability.html', context)
         else:
                 form = EditAvailabilityForm()
                 return render(request, 'registration/edit_availability.html',   context)
-
