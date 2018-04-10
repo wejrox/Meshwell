@@ -12,3 +12,4 @@ siteroot/mysite/static/* linguist-vendored
 
 # Ignore any database changes
 migrations/
+__pycache__/

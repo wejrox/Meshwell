@@ -45,6 +45,7 @@ class Profile(models.Model):
 	communication_commends = models.IntegerField(null=False, blank=False, default='0',)
 	skill_commends = models.IntegerField(null=False, blank=False, default='0',)
 	positivity_commends = models.IntegerField(null=False, blank=False, default='0',)
+	in_queue = models.BooleanField(null=False, blank=False, default=False,)
 
 	# The users name on discord, which is limited by them to 32 chars, plus 5 for id. e.g. myname#1205
 	discord_name = models.CharField(max_length=37, null=True, blank=True,)
@@ -250,8 +251,8 @@ class Session_Profile(models.Model):
 	game_role = models.ForeignKey(
 		'Game_Role',
 		on_delete=models.PROTECT,
-		blank=False,
-		null=False,
+		blank=True,
+		null=True,
 	)
 
 # An entry for a report that a player has made.

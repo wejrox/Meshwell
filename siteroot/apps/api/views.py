@@ -13,6 +13,14 @@ class AvailabilityViewSet(viewsets.ModelViewSet):
 	queryset = Availability.objects.all()
 	serializer_class = serializers.AvailabilitySerializer
 
+	def get_queryset(self):
+		queryset = Availability.objects.all()
+		profile = self.request.query_params.get('profile')
+		if profile is not None:
+			queryset = queryset.filter(profile__id=int(profile))
+
+		return queryset
+
 class GameViewSet(viewsets.ModelViewSet):
 	queryset = Game.objects.all()
 	serializer_class = serializers.GameSerializer

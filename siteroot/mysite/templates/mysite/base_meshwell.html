@@ -39,7 +39,6 @@
 			<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			  <a class="navbar-brand" href="{% url 'index' %}">
 			   <img src="{% static "css/images/meshwell_logo.png" %}" width="60" height="60" class="d-inline-block" alt="">
-			    meshwell
 			  </a>
 			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			    <span class="navbar-toggler-icon"></span>
@@ -68,12 +67,13 @@
 			    	{% if user.is_authenticated %}
 			    	<li class="nav-item dropdown">
 			    		<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			    			{{ Username }}
+			    			{{ user.get_username }}
 			    		</a>
-			    		<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-			        		<a class="nav-link {% if request.resolver_match.url_name == "dashboard" %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
+			    		<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+			        		<a class="dropdown-item {% if request.resolver_match.url_name == "dashboard" %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
 			    			<a class="dropdown-item" href="#">Settings</a>
-			    			<a class="btn btn-outline-danger" href="{% url 'logout' %}">Logout</a>
+			    			<a class="dropdown-item" href="#">Test Dropdown Item</a>
+			    			<a class="btn btn-outline-danger" href="{% url 'logout' %}" style="margin-top: 10%; margin-left: 27%;">Logout</a>
 
 			    		</div>
 			    	</li>
@@ -81,8 +81,7 @@
 
 			    	<li class="nav-item">
 			    		{% if user.is_authenticated %}
-			    		<a class="btn btn-outline-danger" href="{% url 'logout' %}">Logout</a>
-							<a class="btn btn-outline-danger" href="{% url 'enter_queue' %}">Queue</a>
+						<a class="btn btn-primary" href="{% url 'enter_queue' %}">Queue</a>
 			    		{% else %}
 			    		<a class="btn btn-danger" href="{% url 'login' %}">Login</a>
 			    		{% endif %}

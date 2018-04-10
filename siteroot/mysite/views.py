@@ -400,7 +400,6 @@ def enter_queue(request):
 	# Get user details
 	django_user = request.user
 	user_profile = django_user.profile
-
 	# Ensure player is not already queueing
 	if user_profile.in_queue:
 		redirect('dashboard')
