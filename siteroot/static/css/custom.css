@@ -129,14 +129,14 @@
   color: #f44c41 !important;
 }
 
-.dropdown-item:active{
+.dropdown-item.active, .dropdown-item:active{
   color: #fff !important;
   background-color: #373737 !important;
 }
 
-.dropdown-menu > li > a:hover {
-    background-color: red;
-    background-image: none;
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+    background-color: #373737 !important;
+    color: #FFFFFF;
 }
 
 .navbar-brand
