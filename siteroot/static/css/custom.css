@@ -87,7 +87,7 @@
 
 .carousel img {
   margin: auto;
-  min-width: 100%;
+  min-width: 100% !important
 }
 
 /*Navbar*/
