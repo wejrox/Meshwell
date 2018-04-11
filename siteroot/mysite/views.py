@@ -1,22 +1,33 @@
-from django.contrib.auth.models import User, Group
 from apps.api.models import Profile, Availability, Session
 from rest_framework import viewsets
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+<<<<<<< HEAD
 import requests
 import json
 from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, UserPreferenceForm, ConnectAccountForm
+=======
+import requests, json, urllib.parse
+from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, EditAvailabilityForm
+>>>>>>> 8bf3c4580ee297836bbe2c6b4fc21d5692c60804
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.views import login as contrib_login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.urls import reverse
+from django.urls import reverse, resolve
 
 # Import settings
 from django.conf import settings
+
+# Gets the object representation of a given url
+def retrieve_obj(url):
+	path = urllib.parse.urlparse(url).path
+	resolved_func, unused_args, resolved_kwargs = resolve(path)
+	return resolved_func.cls().get_queryset().get(id=resolved_kwargs['pk'])
 
 # Method to get data from INTERNAL API (Meshwell API)
 # Takes a table name, and parameters in the form of 'username=root' or similar
@@ -26,6 +37,15 @@ def retrieve_data(table, *params):
 	for string in params:
 		url += '&'+string
 
+	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
+	response = requests.get(url, headers=headers)
+	if response.ok:
+		data = response.json()
+		return data
+	return None
+
+# Gets data from API given the direct URL
+def retrieve_data_url(url):
 	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
 	response = requests.get(url, headers=headers)
 	if response.ok:
@@ -428,6 +448,7 @@ def create_session(request, accept=False):
 
 # Returns either the first session that a profile can connect to, or return None if sessions aren't available
 @login_required
+<<<<<<< HEAD
 def get_suitable_session(profile):
 	users_availabilities = Availability.objects.filter(profile=profile) #mapping user_avail to user profile
 	if not users_availabilities:
@@ -450,3 +471,93 @@ def exit_queue(request):
 	player_session = Session_Profile.objects.get(profile=request.user.profile)
 	player_session.delete()
 	return redirect('dashboard')
+=======
+def availability(request):
+	avail = retrieve_data('availability', 'profile='+str(request.user.profile.id))
+	print(avail)
+	context = {'title':'Availability', 'Message':'Below is a list of your current availabilities', 'availabilities':avail}
+
+	# Delete data based on the the id provided by the html page
+	if(request.GET.get('Remove Availability')):
+		delete_availability(request.GET.get('url'))
+		return redirect('availability')
+
+	# Redirect to an edit availability page, given the id of the profile to edit
+	if(request.GET.get('Edit Availability')):
+		request.session['avail_url'] = request.GET.get('url')
+		return redirect('edit_availability')
+		#edit_availability(request, request.GET.get('url'))
+		#print("Edit availability Clicked")
+		# Show edit form? idk
+
+	return render(request, 'mysite/availability.html', context)
+
+# Handles anything that must happen when availability is removed
+@login_required
+def delete_availability(url):
+	delete_data(url)
+
+# Adds an availability, must not intersect with any current availabilities
+@login_required
+def add_availability(request):
+	form = UserAvailabilityForm()
+	context = {
+		'title': 'User Availability',
+		'message': 'Please enter your Availability details.',
+		'success': 'False',
+		'form': form,
+	}
+
+	if request.method == 'POST':
+		form = UserAvailabilityForm(request.POST)
+		if form.is_valid():
+			instance = form.save(commit=False)
+			instance.profile = request.user.profile
+			instance.save()
+			context = {
+				'title': 'Availability created.',
+				'message': 'Your Availability is created.',
+				'success': 'True',
+			}
+			return redirect('availability')
+	else:
+		form = UserAvailabilityForm()
+	return render(request, 'registration/add_availability.html', context)
+
+# Takes a url, gets the primary key from it, grabs the object from the database, puts it into the form
+@login_required
+def edit_availability(request):
+		# Get the id from the url
+		url_parts = request.session['avail_url'].split('/')
+		print(url_parts)
+		#print(url_parts)
+		#print(url_parts[5])
+		id = int(url_parts[5])
+
+		# Get the availability, or send to availability page
+		try:
+			obj = Availability.objects.get(pk=id)
+		except model.DoesNotExist:
+			return redirect('availability')
+		context = {
+		    'title': 'Update Availabilities',
+		    'message' : 'Please enter your new Availabilities.',
+		    'success' : 'False',
+		}
+
+		if request.method == 'POST':
+			form = EditAvailabilityForm(request.POST, instance=obj)
+			if form.is_valid():
+				form.save()
+				context = {
+					'title' : 'Successfully updated Availabilites.',
+					'message' : 'Your Availabilites have been updated',
+					'success' : 'True',
+		        }
+				return redirect('availability')
+		else:
+			context['form'] = EditAvailabilityForm(instance=obj)
+
+		print("Sending you to the edit_availability page")
+		return render(request, 'registration/edit_availability.html', context)
+>>>>>>> 8bf3c4580ee297836bbe2c6b4fc21d5692c60804
