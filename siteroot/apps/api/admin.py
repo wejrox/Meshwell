@@ -22,10 +22,6 @@ admin.site.register(Report, ReportAdmin)
 class ProfileAdmin(admin.ModelAdmin):
 	#pass
     list_display = ('id', 'birth_date', 'sessions_played','user_report')
-	#def user_ban(modeladmin, request):
-		#user = request.user
-		#user.is_active = false
-		#user.save()
 
 
     def user_report(self, obj):

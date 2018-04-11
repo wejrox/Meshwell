@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm,ConnectAccountForm
+from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, EditAvailabilityForm
 import requests, json, urllib.parse
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
