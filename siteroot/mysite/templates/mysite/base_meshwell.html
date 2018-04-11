@@ -98,9 +98,9 @@
 						        </button>
 						      </div>
 						      <div class="modal-body">
-					        	<form method="post">
+					        	<form method="post" action="{% url 'login' %}">
 									{% csrf_token %}
-									{% for field in form %}
+									{% for field in login_form %}
 									<div class="form-group row">
 										<label class="col-sm-2 col-form-label" for="{{ field.name }}">
 											{{ field.label_tag }}
@@ -115,11 +115,11 @@
 										{{ field.errors }}
 									</div>
 									{% endfor %}
-								</form>
 						      </div>
 						      <div class="modal-footer">
 						        <button class="btn btn-danger" type="submit">Login</button>
 						      </div>
+						  		</form>
 						    </div>
 						  </div>
 						</div>
