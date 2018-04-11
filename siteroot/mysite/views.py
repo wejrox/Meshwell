@@ -3,14 +3,8 @@ from rest_framework import viewsets
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-<<<<<<< HEAD
-import requests
-import json
-from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, UserPreferenceForm, ConnectAccountForm
-=======
+from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm,ConnectAccountForm
 import requests, json, urllib.parse
-from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, EditAvailabilityForm
->>>>>>> 8bf3c4580ee297836bbe2c6b4fc21d5692c60804
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User, Group
@@ -448,7 +442,7 @@ def create_session(request, accept=False):
 
 # Returns either the first session that a profile can connect to, or return None if sessions aren't available
 @login_required
-<<<<<<< HEAD
+
 def get_suitable_session(profile):
 	users_availabilities = Availability.objects.filter(profile=profile) #mapping user_avail to user profile
 	if not users_availabilities:
@@ -471,7 +465,6 @@ def exit_queue(request):
 	player_session = Session_Profile.objects.get(profile=request.user.profile)
 	player_session.delete()
 	return redirect('dashboard')
-=======
 def availability(request):
 	avail = retrieve_data('availability', 'profile='+str(request.user.profile.id))
 	print(avail)
@@ -560,4 +553,3 @@ def edit_availability(request):
 
 		print("Sending you to the edit_availability page")
 		return render(request, 'registration/edit_availability.html', context)
->>>>>>> 8bf3c4580ee297836bbe2c6b4fc21d5692c60804
