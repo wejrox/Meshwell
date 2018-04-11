@@ -1,7 +1,8 @@
 {% extends 'mysite/base_meshwell.html' %}
 {% load static %}
 {% block title %}{{ title }}{% endblock %}
-{% block content %}<div class="mainContent">
+{% block content %}
+<div class="mainContent">
 	<div class="headerContent">
 		{{ message }}
 	</div>
@@ -40,7 +41,8 @@
 			{% endfor %}
 		</tbody>
 	</table>
-  <div
+  <div>
   <a href="{% url 'add_availability' %}" class="btn btn-success btn-sm" role="button">Add a new availability</a>
+	</div>
 </div>
 {% endblock %}
