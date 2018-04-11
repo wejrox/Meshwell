@@ -1,14 +1,26 @@
 {% extends 'mysite/base_meshwell.html' %}
 {% load static %}
-{% block title %}Edit Availability{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 {% block content %}
-<h1>{{ title }}</h1>
-<h3>{{ message }}</h3>
-<form method="post">
+<div class="mainContent">
+  <div class="headerContent">
+    {{ message }}
+  </div>
+  <br>
+  <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-</form>
+        {% for field in form %}
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="{{ field.name }}">
+            {{ field.label_tag }}
+          </label>
+          <div class="col-sm-10">
+            {{ field }}
+          </div>
+          {{ field.errors }}
+        </div>
+        {% endfor %}
+        <button class="btn btn-danger" type="submit">Submit</button>
+  </form>
+</div>
 {% endblock %}
-
-
