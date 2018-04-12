@@ -93,6 +93,11 @@ class FeedbackForm(forms.ModelForm):
 		model=Feedback
 		exclude=[]
 
+# User login
+class LoginForm(forms.Form):
+	username = forms.CharField(help_text="Enter your username.")
+	password = forms.CharField(help_text="Enter your password.", widget=forms.PasswordInput())
+
 # User deactivation
 class DeactivateUser(forms.Form):
 	username = forms.CharField(help_text="Enter your username.")
