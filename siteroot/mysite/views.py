@@ -1,9 +1,9 @@
-from apps.api.models import Profile, Availability, Session
+from apps.api.models import Profile, Availability, Session, Session_Profile, Game
 from rest_framework import viewsets
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from django.shortcuts import render, redirect
 import requests, json, urllib.parse
-from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm
+from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, RateSessionForm
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User, Group
@@ -149,7 +149,7 @@ def feedback(request):
 	context = {
 		'title': title,
 		'form': form,
-		'message': 'Please enter your details and feedback below. Your feedack is greatly appreciated, and helps us to provide a better service!',
+		'message': 'Please enter your details and feedback below. Your feedback is greatly appreciated, and helps us to provide a better service!',
 		'success': 'False',
 	}
 	if request.method == 'POST':
@@ -412,55 +412,67 @@ def user_preference(request):
 		context = {'error_title':'Not logged in', 'message':'You must be logged in to view this page'}
 		return render(request, 'mysite/error_page.html', context)
 
+# Handles the user entering the queue for a session when the button on the nav bar is pressed
 @login_required
 def enter_queue(request):
-# get the user from the Django request & map to variable
-	django_user = request.user
-  #link user_profile to django users profile model & get user's profile
-	user_profile = django_user.profile
-	#user_profile = Profile.objects.get(user=request.user)
-  #Map user_availabilities variable to profile from Availability model
-	users_availabilities = Availability.objects.filter(profile=user_profile) #mapping user_avail to user profile
-	if users_availabilities is not None:
-		return HttpResponse("Failed to Join Queue,Set Availability & Try again")
-		return HttpResponseRedirect('//profile')
-	else:
-		#creating an array to store all matching sessions
-		all_matching_sessions = []
-		# avail is each Availability object
+    # Get user details
+    django_user = request.user
+    user_profile = django_user.profile
+    # Ensure player is not already queueing
+    if user_profile.in_queue:
+        return redirect('dashboard')
 
-		for avail in users_availabilities:
-			#if avail.end_time is None:
-			#return HttpResponse("FAILED")
-			#return HttpResponseRedirect('account/profile/')
-			#else:
-			matching_sessions = Session.objects.filter(end_time__lte=avail.end_time)#looping through all the sessions end times that match to availability
-    		#adding them to the array
-			all_matching_sessions = all_matching_sessions + matching_sessions
+    # Create a user session
+    player_session = Session_Profile.objects.create(profile=user_profile)
+    player_session.save()
 
-			#If no matching sessions are available
-			if len(all_matching_sessions) == 0:
-				#create a session
-				player_session = Session(
-					#game = 'random_game',
-					start_time = users_availabilities[0].start_time,
-					end_time = users_availabilities[0].end_time,
-				)
-				player_session.save()
-				return render(request, 'mysite/profile.html')
+    # Get first suitable session
+    session = get_suitable_session(user_profile)
+    # Suitable session?
+    if session:
+        # Attach a session
+        player_session.session = session
+        player_session.save()
+    else:
+        # Create a session and add the user
+        game = Game.objects.get(pk=1)
+        session = Session.objects.create(game=game)
+        player_session.session = session
+        player_session.save()
+        user_profile.in_queue = True
+        user_profile.save()
 
-			else:
-				player_session = Session(
-					session = all_matching_sessions[0],
-					profile = user_profile
-				)
-				player_session.save()
-				#return HttpResponse('Waiting in queue')
-				return render(request, 'mysite/profile.html')
+    return redirect('dashboard')
 
+# Returns either the first session that a profile can connect to, or return None if sessions aren't available
+@login_required
+def get_suitable_session(profile):
+    users_availabilities = Availability.objects.filter(profile=profile) #mapping user_avail to user profile
+    if not users_availabilities:
+        redirect('availability')
+    else:
+          # Avail is each Availability object
+        for avail in users_availabilities:
+            #matching_session = Session.objects.filter(end_time__lte=avail.end_time, start_time__gte=avail.start_time).first()#looping through all the sessions end times that match to availability
+            matching_session = Session.objects.get(pk=1)
+			# Return session if it is viable
+            if matching_session:
+				# <DO OTHER CHECKS>
+                return matching_session
+    # Exhausted all availabilities and no sessions were matching criteria
+    return None
+
+# Removes the authenticated player from the queue
 @login_required
 def exit_queue(request):
+    if not request.user.profile.in_queue:
+        redirect('dashboard')
+    player_session = Session_Profile.objects.get(profile=request.user.profile)
     player_session.delete()
+    request.user.profile.in_queue = False
+    request.user.profile.save()
+    return redirect('dashboard')
+
 
 @login_required
 def availability(request):
@@ -528,8 +540,7 @@ def edit_availability(request):
 			return redirect('availability')
 		context = {
 		    'title': 'Update Availability',
-		    'message' : 'Please enter the new details for this availability.',
-		    'editing' : True
+		    'message' : 'Please enter the new details for this availability.'
 		}
 	# Not editing an entry
 	else:
@@ -552,6 +563,29 @@ def edit_availability(request):
 	# If user just entered page, generate the correct form to display
 	else:
 		form = UserAvailabilityForm(instance=obj)
+	# Set the form to whichever form we are using
+	context['form'] = form
+	return render(request, 'registration/availability_form.html', context)
+
+# User rating a sessions
+@login_required
+def rate_session(request):
+	context = {
+	    'title': 'Rate Session',
+	    'message' : 'We hope you\'ve enjoyed your session! Please rate how well it was matched below.',
+	}
+
+	# Dummy
+	user_session = Session.objects.get(pk=1)
+	# Creae a new entry, or edit the existing one if it has been given
+	if request.method == 'POST':
+		form = RateSessionForm(request.POST, session=user_session)
+		if form.is_valid():
+			form.save()
+			return redirect('availability')
+	else:
+		form = RateSessionForm(session=user_session)
+
 	# Set the form to whichever form we are using
 	context['form'] = form
 	return render(request, 'registration/availability_form.html', context)

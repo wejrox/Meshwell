@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from apps.api.models import Profile, Feedback, User_Preference, Profile_Connected_Game_Account, Availability
+from apps.api.models import Profile, Feedback, User_Preference, Profile_Connected_Game_Account, Availability, Session, Session_Profile
 from django.forms import ModelForm
 
 #form to create profile
@@ -202,3 +202,26 @@ class UserAvailabilityForm(forms.ModelForm):
 					raise forms.ValidationError("An availability already exists for this time and day, or you are overlapping.")
 		# Always return the cleaned data!
 		return cleaned_data
+
+class RateSessionForm(forms.Form):
+	# Add player fields
+	def __init__(self, *args, **kwargs):
+		self.session = kwargs.pop('session', None)
+		super(RateSessionForm, self).__init__(*args, **kwargs)
+		# Get all the users connected to the session
+		players = Session_Profile.objects.filter(session=self.session)
+		for i, player in enumerate(players):
+			self.fields['player_%s_id' % i] = forms.CharField(initial=player.profile.id, label='')
+			self.fields['player_%s_id' % i].widget = forms.HiddenInput()
+			self.fields['player_%s_name' % i] = forms.CharField(disabled=True, label='Player', initial=player.profile.user.username)
+			self.fields['player_%s_skill' % i] = forms.BooleanField(label='Skill', required=False)
+			self.fields['player_%s_positivity' % i] = forms.BooleanField(label='Positivity', required=False)
+			self.fields['player_%s_communication' % i] = forms.BooleanField(label='Communication', required=False)
+			self.fields['player_%s_teamwork' % i] = forms.BooleanField(label='Teamwork', required=False)
+
+	def clean(self):
+		cleaned_data = super().clean()
+		return cleaned_data
+
+	def save(self):
+		print("Saving")

@@ -216,7 +216,7 @@ class Profile_Connected_Game_Account(models.Model):
 # An entry for a Session, created when two players queue that could match, then players that match are added when possible
 class Session(models.Model):
 	def __str__(self):
-		return str(self.start_time)
+		return str.join(', ', (str(self.game.name), str(datetime_created), str(self.start_time)))
 
 	game = models.ForeignKey(
 		'Game',
@@ -359,3 +359,36 @@ class User_Preference(models.Model):
 	)
 	start_time = models.TimeField(null=True, blank=False)
 	end_time = models.TimeField(null=True, blank=False)
+
+class Rate_Session(models.Model):
+	def __str__(self):
+		return str.join('. ', (str(self.profile), str(self.session)))
+
+	ONE = '1'
+	TWO = '2'
+	THREE = '3'
+	FOUR = '4'
+	FIVE = '5'
+
+	RATING_CHOICES = (
+		(ONE, '1'),
+		(TWO, '2'),
+		(THREE, '3'),
+		(FOUR, '4'),
+		(FIVE, '5'),
+	)
+
+	session = models.ForeignKey(
+		'Session',
+		on_delete=models.PROTECT,
+		blank=False,
+		null=False,
+	)
+	profile = models.ForeignKey(
+		'Profile',
+		on_delete=models.PROTECT,
+		blank=False,
+		null=False,
+	)
+	rating = models.IntegerField(null=True, blank=True, default=3,)
+	comments = models.TextField(null=True, blank=True, max_length=500)
