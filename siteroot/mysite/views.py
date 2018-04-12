@@ -1,21 +1,29 @@
 from apps.api.models import Profile, Availability, Session
 from rest_framework import viewsets
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from django.shortcuts import render, redirect
 import requests, json, urllib.parse
-from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, EditAvailabilityForm
+from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.views import login as contrib_login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.signals import user_logged_in
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.signals import request_finished
+from django.dispatch import receiver
 from django.urls import reverse, resolve
-
 # Import settings
 from django.conf import settings
+
+# Receiver to create a profile if the user doesn't have one for some reason
+@receiver(user_logged_in)
+def auto_profile(sender, request, user, **kwargs):
+	profile = Profile.objects.filter(user=user.id).first()
+	if not profile:
+		profile = Profile.objects.create(user=user)
 
 # Gets the object representation of a given url
 def retrieve_obj(url):
@@ -82,40 +90,34 @@ def dashboard(request):
 		'message':'This is a stub page for the dashboard. No functionality has been added yet.',
 	}
 
-	data = retrieve_data('profile', 'id=2')
-	print(data)
+	data = retrieve_data('profile', 'id='+str(request.user.profile.id))
 	return render(request, 'mysite/dashboard.html', context)
 
 #views for the profile page
 @login_required
 def profile(request):
-	#reference from index function
-	if request.user.is_authenticated:
-		headers = { 'Authorization':'Token ' + settings.API_TOKEN }
-		profile = Profile.objects.filter(user=request.user.id).first()
-		if not profile:
-			profile = Profile.objects.create(user=request.user)
-		url = 'http://127.0.0.1/api/profile/' + str(profile.id) + '/?format=json'
-		response = requests.get(url, headers=headers)
-		data = response.json()
+	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
+	profile = Profile.objects.filter(user=request.user.id).first()
+	if not profile:
+		profile = Profile.objects.create(user=request.user)
+	url = 'http://127.0.0.1/api/profile/' + str(profile.id) + '/?format=json'
+	response = requests.get(url, headers=headers)
+	data = response.json()
 
-		#Dummy Data
-		context = {
-			'username':data['user']['username'],
-			'first_name':data['user']['first_name'],
-			'last_name':data['user']['last_name'],
-			'pref_server':data['pref_server'],
-			'birth_date':data['birth_date'],
-			'sessions_played':data['sessions_played'],
-			'teamwork_commends':data['teamwork_commends'],
-			'positivity_commends':data['positivity_commends'],
-			'skill_commends':data['skill_commends'],
-			'communication_commends':data['communication_commends'],
-		}
-		return render(request, 'mysite/profile.html', context)
-	else:
-		context = {'error_title':'Not logged in', 'message':'You must be logged in to view this page'}
-		return render(request, 'mysite/error_page.html', context)
+	#Dummy Data
+	context = {
+		'username':data['user']['username'],
+		'first_name':data['user']['first_name'],
+		'last_name':data['user']['last_name'],
+		'pref_server':data['pref_server'],
+		'birth_date':data['birth_date'],
+		'sessions_played':data['sessions_played'],
+		'teamwork_commends':data['teamwork_commends'],
+		'positivity_commends':data['positivity_commends'],
+		'skill_commends':data['skill_commends'],
+		'communication_commends':data['communication_commends'],
+	}
+	return render(request, 'mysite/profile.html', context)
 
 # CSS Standarisation Page
 def css_standard(request):
@@ -462,8 +464,11 @@ def exit_queue(request):
 
 @login_required
 def availability(request):
+	# Remove the reference to an editable availability if it exists.
+	if 'avail_url' in request.session:
+		del request.session['avail_url']
+
 	avail = retrieve_data('availability', 'profile='+str(request.user.profile.id))
-	print(avail)
 	context = {'title':'Availability', 'Message':'Below is a list of your current availabilities', 'availabilities':avail}
 
 	# Delete data based on the the id provided by the html page
@@ -475,77 +480,78 @@ def availability(request):
 	if(request.GET.get('Edit Availability')):
 		request.session['avail_url'] = request.GET.get('url')
 		return redirect('edit_availability')
-		#edit_availability(request, request.GET.get('url'))
-		#print("Edit availability Clicked")
-		# Show edit form? idk
 
 	return render(request, 'mysite/availability.html', context)
 
-# Handles anything that must happen when availability is removed
-@login_required
+# Handles anything that must happen when availability is removed via API
 def delete_availability(url):
 	delete_data(url)
 
-# Adds an availability, must not intersect with any current availabilities
+# Handles new availabilities and editable availabilities
 @login_required
 def add_availability(request):
-	form = UserAvailabilityForm()
 	context = {
-		'title': 'User Availability',
-		'message': 'Please enter your Availability details.',
-		'success': 'False',
-		'form': form,
+	    'title': 'New Availability',
+	    'message' : 'Please enter the details for your new availability.',
+	    'editing' : False
 	}
 
+	# Creae a new entry, or edit the existing one if it has been given
 	if request.method == 'POST':
-		form = UserAvailabilityForm(request.POST)
+		form = UserAvailabilityForm(request.POST, user=request.user)
+
 		if form.is_valid():
 			instance = form.save(commit=False)
 			instance.profile = request.user.profile
 			instance.save()
-			context = {
-				'title': 'Availability created.',
-				'message': 'Your Availability is created.',
-				'success': 'True',
-			}
+
 			return redirect('availability')
 	else:
 		form = UserAvailabilityForm()
-	return render(request, 'registration/add_availability.html', context)
 
-# Takes a url, gets the primary key from it, grabs the object from the database, puts it into the form
+	# Set the form to whichever form we are using
+	context['form'] = form
+	return render(request, 'registration/availability_form.html', context)
+
+# Handles new availabilities and editable availabilities
 @login_required
 def edit_availability(request):
-		# Get the id from the url
+	# Get a potentially editable object from a given url
+	if 'avail_url' in request.session:
 		url_parts = request.session['avail_url'].split('/')
-		print(url_parts)
-		#print(url_parts)
-		#print(url_parts[5])
+		# Get the id, which is located at the 6th element in the split list
 		id = int(url_parts[5])
-
-		# Get the availability, or send to availability page
+		# Get the availability, or send to availability page if it doesnt exist
 		try:
 			obj = Availability.objects.get(pk=id)
 		except model.DoesNotExist:
 			return redirect('availability')
 		context = {
-		    'title': 'Update Availabilities',
-		    'message' : 'Please enter your new Availabilities.',
-		    'success' : 'False',
+		    'title': 'Update Availability',
+		    'message' : 'Please enter the new details for this availability.',
+		    'editing' : True
 		}
+	# Not editing an entry
+	else:
+		redirect('add_availability')
 
-		if request.method == 'POST':
-			form = EditAvailabilityForm(request.POST, instance=obj)
-			if form.is_valid():
-				form.save()
-				context = {
-					'title' : 'Successfully updated Availabilites.',
-					'message' : 'Your Availabilites have been updated',
-					'success' : 'True',
-		        }
-				return redirect('availability')
-		else:
-			context['form'] = EditAvailabilityForm(instance=obj)
+	# Creae a new entry, or edit the existing one if it has been given
+	if request.method == 'POST':
+		form = UserAvailabilityForm(request.POST, instance=obj, user=request.user)
 
-		print("Sending you to the edit_availability page")
-		return render(request, 'registration/edit_availability.html', context)
+		if form.is_valid():
+			instance = form.save(commit=False)
+			instance.profile = request.user.profile
+			instance.save()
+
+			# Remove the availability url so that the form doesn't default to it
+			if 'avail_url' in request.session:
+				del request.session['avail_url']
+
+			return redirect('availability')
+	# If user just entered page, generate the correct form to display
+	else:
+		form = UserAvailabilityForm(instance=obj)
+	# Set the form to whichever form we are using
+	context['form'] = form
+	return render(request, 'registration/availability_form.html', context)

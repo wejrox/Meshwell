@@ -41,8 +41,8 @@ urlpatterns = [
     path('dashboard/preference/', site_views.user_preference, name='user_preference'),
     path('dashboard/enter_queue/', site_views.enter_queue, name='enter_queue'),
     path('dashboard/availability/', site_views.availability, name='availability'),
-    path('dashboard/add_availability/', site_views.add_availability, name='add_availability'),
-    path('dashboard/edit_availability/', site_views.edit_availability, name='edit_availability'),
+    path('dashboard/availability/add', site_views.add_availability, name='add_availability'),
+    path('dashboard/availability/edit', site_views.edit_availability, name='edit_availability'),
     # Admin
     url(r'^admin/', admin.site.urls),
     # API

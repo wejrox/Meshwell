@@ -18,9 +18,9 @@
             {{ field }}
           </div>
           {{ field.errors }}
-          {{ field.form_errors }}
         </div>
         {% endfor %}
+        {{ form.non_field_errors}}
         <button class="btn btn-danger" type="submit">Submit</button>
   </form>
 </div>
