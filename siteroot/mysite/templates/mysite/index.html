@@ -29,6 +29,40 @@
 		Welcome to Meshwell
 	</div>
 	<br>
+	<div class="headerContent">
+		What is Meshwell?
+	</div>
+	<br>
+	<div class="headerContent">
+		How it works
+	</div>
+	<br>
+	<div class="paragraphContent">
+	Meshwell is a smart matchmaking system designed for gamers who want to find other like-minded individuals who want to play games. Through the use of various preferences and weighting, Meshwell will attempt to find players with similiar and complimenting skills to ensure you have the best gaming experience.
+	</div>
+	<br>
+	<div class="imgAndText">
+	<div class="row">
+		<div class="col-lg-4">
+			<img class="rounded-circle" src="https://i.imgur.com/DzSLYiQ.png" alt="Generic placeholder image" width="140" height="140">
+			<h2>Register!</h2>
+			<p>Register your account. Add your availabilities, games played, connect your account, and game roles.</p>
+			<p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+		</div><!-- /.col-lg-4 -->
+		<div class="col-lg-4">
+			<img class="rounded-circle" src="https://i.imgur.com/c3hLj2z.png" alt="Generic placeholder image" width="140" height="140">
+			<h2>Matchmake!</h2>
+			<p>Using our algorithm, we'll find other gamers who match your preferences.</p>
+			<p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+		</div><!-- /.col-lg-4 -->
+		<div class="col-lg-4">
+			<img class="rounded-circle" src="https://i.imgur.com/PMg9ohs.jpg" alt="Generic placeholder image" width="140" height="140">
+			<h2>Meshwell!</h2>
+			<p>Play together and have fun!</p>
+			<p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+		</div><!-- /.col-lg-4 -->
+	</div>
+</div>
 	<div class="guiderContent">Currently supported games</div>
 	<br>
 	<table class="table">
@@ -42,7 +76,8 @@
 		<tbody>
 			{% for key, value in games.items %}
 			<tr>
-				<td>{% if value.image_url %} <img src="{% static value.image_url %}" alt="{{ value.name }}" width="200" height="200">{% endif %}</td>
+				<!-- <td>{% if value.image_url %} <img src="{% static value.image_url %}" alt="{{ value.name }}" width="200" height="200">{% endif %}</td> -->
+				<td><img class="rounded-circle" src="https://i.imgur.com/CXO7SzZ.jpg" alt="Siege Icon" width="140" height="140"></td>
 				<td>{{ value.name }}</td>
 				<td>{{ value.description }}</td>
 			</tr>
