@@ -29,7 +29,7 @@
 		Welcome to Meshwell
 	</div>
 	<br>
-	<div class="headerContent" style="background: #f44c41; border-radius: 10px; color: white; width: 100%;">
+	<div class="headerContent" style="background: #373737; border-radius: 10px; color: white; width: 100%;">
 		What is Meshwell?
 	</div>
 	<br>
@@ -37,7 +37,7 @@
 		Meshwell is a smart matchmaking system designed for gamers who want to find other like-minded individuals who want to play games. Through the use of various preferences and weighting, Meshwell will attempt to find players with similiar and complimenting skills to ensure you have the best gaming experience.
 	</div>
 	<br>
-	<div class="headerContent" style="background: #f44c41; border-radius: 10px; color: white; width: 100%;">
+	<div class="headerContent" style="background: #373737; border-radius: 10px; color: white; width: 100%;">
 		How it works
 	</div>
 	<br>
@@ -66,8 +66,31 @@
 
 	<hr>
 
-	<div class="headerContent" style="background: #f44c41; border-radius: 10px; color: white; width: 100%;">Currently supported games</div>
+	<div class="headerContent" style="background: #373737; border-radius: 10px; color: white; width: 100%;">Currently supported games</div>
 	<br>
+
+	<div class="customRow">
+	<div class="row">
+	    <div class="col-md-4">
+	      <div class="card mb-4 box-shadow">
+	        <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="https://i.imgur.com/CXO7SzZ.jpg" data-holder-rendered="true">
+	        <div class="card-body">
+	        	<p class="card-text" style="font-size: 2em">Tom Clancy's Rainbow Six Siege</p>
+	          <p class="card-text">Tom Clancy's Rainbow Six Siege is a tactical shooter video game developed by Ubisoft Montreal and published by Ubisoft.</p>
+	          <div class="d-flex justify-content-between align-items-center">
+	            <div class="btn-group">
+	              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+	              <button type="button" class="btn btn-sm btn-outline-secondary" style="background-color: #f44c41; color: white; border-color: #f44c41;">Edit</button>
+	            </div>
+	            <small class="text-muted">9 mins</small>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+	<!--
 	<table class="table">
 		<thead class="thead-dark">
 			<tr>
@@ -79,7 +102,7 @@
 		<tbody>
 			{% for key, value in games.items %}
 			<tr>
-				<!-- <td>{% if value.image_url %} <img src="{% static value.image_url %}" alt="{{ value.name }}" width="200" height="200">{% endif %}</td> -->
+				 <td>{% if value.image_url %} <img src="{% static value.image_url %}" alt="{{ value.name }}" width="200" height="200">{% endif %}</td>
 				<td><img class="rounded-circle" src="https://i.imgur.com/CXO7SzZ.jpg" alt="Siege Icon" width="140" height="140"></td>
 				<td>{{ value.name }}</td>
 				<td>{{ value.description }}</td>
@@ -87,6 +110,8 @@
 			{% endfor %}
 		</tbody>
 	</table>
+	-->
+
 	<br>
 </div>
 {% endblock %}
