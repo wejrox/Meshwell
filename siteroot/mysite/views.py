@@ -475,6 +475,10 @@ def exit_queue(request):
 
 @login_required
 def availability(request):
+	# Ensure that user is not queued!
+	if request.user.profile.in_queue:
+		redirect('dashboard');
+
 	# Remove the reference to an editable availability if it exists.
 	if 'avail_url' in request.session:
 		del request.session['avail_url']
@@ -501,6 +505,10 @@ def delete_availability(url):
 # Handles new availabilities and editable availabilities
 @login_required
 def add_availability(request):
+	# Ensure that user is not queued!
+	if request.user.profile.in_queue:
+		redirect('dashboard');
+
 	context = {
 	    'title': 'New Availability',
 	    'message' : 'Please enter the details for your new availability.',
@@ -527,6 +535,10 @@ def add_availability(request):
 # Handles new availabilities and editable availabilities
 @login_required
 def edit_availability(request):
+	# Ensure that user is not queued!
+	if request.user.profile.in_queue:
+		redirect('dashboard');
+
 	# Get a potentially editable object from a given url
 	if 'avail_url' in request.session:
 		url_parts = request.session['avail_url'].split('/')
