@@ -426,7 +426,7 @@ def enter_queue(request):
     player_session = Session_Profile.objects.create(profile=user_profile)
     player_session.save()
 
-    # Get first suitable session
+    # Get first suitable session, or send to availability page
     session = get_suitable_session(user_profile)
     # Suitable session?
     if session:
@@ -449,7 +449,7 @@ def enter_queue(request):
 def get_suitable_session(profile):
     users_availabilities = Availability.objects.filter(profile=profile) #mapping user_avail to user profile
     if not users_availabilities:
-        redirect('availability')
+        return redirect('availability')
     else:
           # Avail is each Availability object
         for avail in users_availabilities:
@@ -477,7 +477,7 @@ def exit_queue(request):
 def availability(request):
 	# Ensure that user is not queued!
 	if request.user.profile.in_queue:
-		redirect('dashboard');
+		return redirect('dashboard');
 
 	# Remove the reference to an editable availability if it exists.
 	if 'avail_url' in request.session:
@@ -507,7 +507,7 @@ def delete_availability(url):
 def add_availability(request):
 	# Ensure that user is not queued!
 	if request.user.profile.in_queue:
-		redirect('dashboard');
+		return redirect('dashboard');
 
 	context = {
 	    'title': 'New Availability',
@@ -537,7 +537,7 @@ def add_availability(request):
 def edit_availability(request):
 	# Ensure that user is not queued!
 	if request.user.profile.in_queue:
-		redirect('dashboard');
+		return redirect('dashboard');
 
 	# Get a potentially editable object from a given url
 	if 'avail_url' in request.session:
