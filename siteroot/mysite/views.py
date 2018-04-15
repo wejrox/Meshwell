@@ -362,7 +362,7 @@ def get_r6siege_ranks(request, player_tag):
 	data = response.json()
 	print(player_tag)
 	# Cancel the check if the user was not found or too many were found
-	if not response.ok or len(data) > 1:
+	if not response.ok or len(data) != 1:
 		return None
 
 	# Decide which region to check
@@ -475,9 +475,12 @@ def exit_queue(request):
     request.user.profile.save()
     return redirect('dashboard')
 
-
 @login_required
 def availability(request):
+	# Ensure that user is not queued!
+	if request.user.profile.in_queue:
+		redirect('dashboard');
+
 	# Remove the reference to an editable availability if it exists.
 	if 'avail_url' in request.session:
 		del request.session['avail_url']
@@ -504,6 +507,10 @@ def delete_availability(url):
 # Handles new availabilities and editable availabilities
 @login_required
 def add_availability(request):
+	# Ensure that user is not queued!
+	if request.user.profile.in_queue:
+		redirect('dashboard');
+
 	context = {
 	    'title': 'New Availability',
 	    'message' : 'Please enter the details for your new availability.',
@@ -530,6 +537,10 @@ def add_availability(request):
 # Handles new availabilities and editable availabilities
 @login_required
 def edit_availability(request):
+	# Ensure that user is not queued!
+	if request.user.profile.in_queue:
+		redirect('dashboard');
+
 	# Get a potentially editable object from a given url
 	if 'avail_url' in request.session:
 		url_parts = request.session['avail_url'].split('/')
