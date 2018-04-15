@@ -362,7 +362,7 @@ def get_r6siege_ranks(request, player_tag):
 	data = response.json()
 	print(player_tag)
 	# Cancel the check if the user was not found or too many were found
-	if not response.ok or len(data) > 1:
+	if not response.ok or len(data) != 1:
 		return None
 
 	# Decide which region to check
@@ -472,7 +472,6 @@ def exit_queue(request):
     request.user.profile.in_queue = False
     request.user.profile.save()
     return redirect('dashboard')
-
 
 @login_required
 def availability(request):
