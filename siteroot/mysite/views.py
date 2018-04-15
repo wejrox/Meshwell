@@ -1,4 +1,4 @@
-from apps.api.models import Profile, Availability, Session, Session_Profile, Game
+from apps.api.models import Profile, Profile_Connected_Game_Account, Availability, Session, Session_Profile, Game
 from rest_framework import viewsets
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from django.shortcuts import render, redirect
@@ -89,6 +89,12 @@ def dashboard(request):
 		'title':'Dashboard',
 		'message':'Play Together. Mesh Well.',
 	}
+
+	context['connected_accounts'] = Profile_Connected_Game_Account.objects.filter(profile=request.user.profile)
+	context['availabilities'] = Availability.objects.filter(profile=request.user.profile)
+	context['prev_sessions'] = Session_Profile.objects.filter(profile=request.user.profile).exclude(session__isnull=True).order_by('-session__start')
+
+	print(context['prev_sessions'])
 
 	data = retrieve_data('profile', 'id='+str(request.user.profile.id))
 	return render(request, 'mysite/dashboard.html', context)
@@ -426,8 +432,12 @@ def enter_queue(request):
     player_session = Session_Profile.objects.create(profile=user_profile)
     player_session.save()
 
-    # Get first suitable session, or send to availability page
-    session = get_suitable_session(user_profile)
+    # Get user's availabilities, or send to availability page
+    user_availabilities = Availability.objects.filter(profile=user_profile) #mapping user_avail to user profile
+    if not user_availabilities:
+        return redirect('availability')
+    else:
+    	session = get_suitable_session(user_profile, user_availabilities)
     # Suitable session?
     if session:
         # Attach a session
@@ -448,19 +458,15 @@ def enter_queue(request):
 
 # Returns either the first session that a profile can connect to, or return None if sessions aren't available
 @login_required
-def get_suitable_session(profile):
-    users_availabilities = Availability.objects.filter(profile=profile) #mapping user_avail to user profile
-    if not users_availabilities:
-        return redirect('availability')
-    else:
-          # Avail is each Availability object
-        for avail in users_availabilities:
-            #matching_session = Session.objects.filter(end_time__lte=avail.end_time, start_time__gte=avail.start_time).first()#looping through all the sessions end times that match to availability
-            matching_session = Session.objects.get(pk=1)
-			# Return session if it is viable
-            if matching_session:
-				# <DO OTHER CHECKS>
-                return matching_session
+def get_suitable_session(profile, user_availabilities):
+    # Avail is each Availability object
+    for avail in user_availabilities:
+        #matching_session = Session.objects.filter(end_time__lte=avail.end_time, start_time__gte=avail.start_time).first()#looping through all the sessions end times that match to availability
+        matching_session = Session.objects.get(pk=1)
+		# Return session if it is viable
+        if matching_session:
+			# <DO OTHER CHECKS>
+            return matching_session
     # Exhausted all availabilities and no sessions were matching criteria
     return None
 
@@ -469,7 +475,9 @@ def get_suitable_session(profile):
 def exit_queue(request):
     if not request.user.profile.in_queue:
         redirect('dashboard')
-    player_session = Session_Profile.objects.get(profile=request.user.profile)
+
+	# Get the most recent queue and delete it (as we can have many sessions)
+    player_session = Session_Profile.objects.filter(profile=request.user.profile).order_by('-datetime_started').first()
     player_session.delete()
     request.user.profile.in_queue = False
     request.user.profile.save()
