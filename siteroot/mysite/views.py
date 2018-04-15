@@ -87,7 +87,7 @@ def index(request):
 def dashboard(request):
 	context = {
 		'title':'Dashboard',
-		'message':'This is a stub page for the dashboard. No functionality has been added yet.',
+		'message':'Play Together. Mesh Well.',
 	}
 
 	data = retrieve_data('profile', 'id='+str(request.user.profile.id))
@@ -433,6 +433,8 @@ def enter_queue(request):
         # Attach a session
         player_session.session = session
         player_session.save()
+        user_profile.in_queue = True
+        user_profile.save()
     else:
         # Create a session and add the user
         game = Game.objects.get(pk=1)
