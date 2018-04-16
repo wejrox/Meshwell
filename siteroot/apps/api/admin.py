@@ -17,20 +17,7 @@ class ReportAdmin(admin.ModelAdmin):
 admin.site.register(Report, ReportAdmin)
 
 class ProfileAdmin(admin.ModelAdmin):
-<<<<<<< HEAD
-	#pass
-    list_display = ('id', 'birth_date', 'sessions_played','user_report')
-
-
-    def user_report(self, obj):
-	#def user_report(self, obj)
-		#all_matching_sessions = []
-        total = Report.report_reason
-        return total
-
-=======
     list_display = ('id', 'birth_date', 'sessions_played','total_reports')
     def total_reports(self, obj):
         return Report.objects.filter(user_reported=obj).count()
->>>>>>> 7b61725c6c091f34bc82b9edef41f5d9d728836c
 admin.site.register(Profile, ProfileAdmin)

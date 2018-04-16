@@ -2,13 +2,8 @@ from apps.api.models import Profile, Profile_Connected_Game_Account, Availabilit
 from rest_framework import viewsets
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from django.shortcuts import render, redirect
-<<<<<<< HEAD
-from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, EditAvailabilityForm
-import requests, json, urllib.parse
-=======
 import requests, json, urllib.parse
 from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, RateSessionForm
->>>>>>> 7b61725c6c091f34bc82b9edef41f5d9d728836c
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User, Group
@@ -107,15 +102,6 @@ def dashboard(request):
 #views for the profile page
 @login_required
 def profile(request):
-<<<<<<< HEAD
-	#reference from index function
-	if request.user.is_authenticated:
-		headers = { 'Authorization':'Token ' + settings.API_TOKEN }
-		profile = Profile.objects.get(user=request.user.id)
-		url = 'http://127.0.0.1/api/profile/' + str(profile.id) + '/?format=json'
-		response = requests.get(url, headers=headers)
-		data = response.json()
-=======
 	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
 	profile = Profile.objects.filter(user=request.user.id).first()
 	if not profile:
@@ -123,7 +109,6 @@ def profile(request):
 	url = 'http://127.0.0.1/api/profile/' + str(profile.id) + '/?format=json'
 	response = requests.get(url, headers=headers)
 	data = response.json()
->>>>>>> 7b61725c6c091f34bc82b9edef41f5d9d728836c
 
 	#Dummy Data
 	context = {
@@ -436,39 +421,6 @@ def user_preference(request):
 # Handles the user entering the queue for a session when the button on the nav bar is pressed
 @login_required
 def enter_queue(request):
-<<<<<<< HEAD
-	# Get user details
-	django_user = request.user
-	user_profile = django_user.profile
-	# Ensure player is not already queueing
-	if user_profile.in_queue:
-		redirect('dashboard')
-
-
-	# Create a user session
-	player_session = Session_Profile.objects.create(commit=False)
-	player_session.profile = user_profile
-	player_session.save()
-
-	# Get first suitable session
-	session = get_suitable_session(user_profile)
-	# Suitable session?
-	if session:
-		# Attach a session
-		player_session.session = session
-		player_session.save()
-		return redirect('profile')
-	else:
-		return redirect('create_session', accept=True)
-
-@login_required
-def create_session(request, accept=False):
-	# Create a game session for the user using their availabilities
-	return redirect('index')
-
-# Returns either the first session that a profile can connect to, or return None if sessions aren't available
-@login_required
-=======
     # Get user details
     django_user = request.user
     user_profile = django_user.profile
@@ -530,7 +482,6 @@ def exit_queue(request):
     request.user.profile.in_queue = False
     request.user.profile.save()
     return redirect('dashboard')
->>>>>>> 7b61725c6c091f34bc82b9edef41f5d9d728836c
 
 def get_suitable_session(profile):
 	users_availabilities = Availability.objects.filter(profile=profile) #mapping user_avail to user profile
