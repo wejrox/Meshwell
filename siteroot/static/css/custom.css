@@ -295,17 +295,17 @@ tr:nth-child(even) {
   border-top: 0;
   width:500px;
   height:50px;
-margin-left: auto;
-margin-right: auto;
-    position: relative;
-    left: 100px;
-    top: 2px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  left: 100px;
+  top: 2px;
 
 }
 
 th {
   padding:10px;
-  text-align:center
+  text-align:left !important;
 }
 h1 {
   position: relative;

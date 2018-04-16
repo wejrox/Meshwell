@@ -1,0 +1,1 @@
+$('link[type*=icon]').detach().appendTo('head');
