@@ -600,12 +600,12 @@ def rate_session(request):
 	user_session = Session.objects.get(pk=1)
 	# Creae a new entry, or edit the existing one if it has been given
 	if request.method == 'POST':
-		form = RateSessionForm(request.POST, session=user_session)
+		form = RateSessionForm(request.POST, session=user_session, profile=request.user.profile)
 		if form.is_valid():
 			form.save()
 			return redirect('availability')
 	else:
-		form = RateSessionForm(session=user_session)
+		form = RateSessionForm(session=user_session, profile=request.user.profile)
 
 	# Set the form to whichever form we are using
 	context['form'] = form

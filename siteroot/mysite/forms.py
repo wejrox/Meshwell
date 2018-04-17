@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from apps.api.models import Profile, Feedback, User_Preference, Profile_Connected_Game_Account, Availability, Session, Session_Profile
+from apps.api.models import Profile, Feedback, Profile_Connected_Game_Account, Availability, Session, Session_Profile
 from django.forms import ModelForm
 
 #form to create profile
@@ -171,7 +171,7 @@ class UserAvailabilityForm(forms.ModelForm):
 					avail_pk = self.instance.pk
 				else:
 					avail_pk = -1
-				# Check availability already existing
+				# Check availability existence
 				avail_start = Availability.objects.filter(
 					profile=self.user.profile,
 					start_time__range=(
@@ -204,12 +204,25 @@ class UserAvailabilityForm(forms.ModelForm):
 		return cleaned_data
 
 class RateSessionForm(forms.Form):
-	# Add player fields
+	# A tuple for rating numbers user can give
+	RATINGS=((0, '0'),(1, '1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'))
+	# Create fields for rating
+	rating = forms.ChoiceField(
+		choices=RATINGS,
+		widget=forms.RadioSelect(
+			attrs={'class':'form-check-input form-check-inline', 'type':'radio'},
+		),
+	)
+
+	# Run when form is created
 	def __init__(self, *args, **kwargs):
 		self.session = kwargs.pop('session', None)
+		self.profile = kwargs.pop('profile', None)
 		super(RateSessionForm, self).__init__(*args, **kwargs)
-		# Get all the users connected to the session
-		players = Session_Profile.objects.filter(session=self.session)
+		# Get our current profile
+		# Get all the users connected to the session and add them
+		players = Session_Profile.objects.filter(session=self.session).exclude(profile=self.profile.id)
+		self.player_count = len(players)
 		for i, player in enumerate(players):
 			self.fields['player_%s_id' % i] = forms.CharField(initial=player.profile.id, label='')
 			self.fields['player_%s_id' % i].widget = forms.HiddenInput()
@@ -218,10 +231,47 @@ class RateSessionForm(forms.Form):
 			self.fields['player_%s_positivity' % i] = forms.BooleanField(label='Positivity', required=False)
 			self.fields['player_%s_communication' % i] = forms.BooleanField(label='Communication', required=False)
 			self.fields['player_%s_teamwork' % i] = forms.BooleanField(label='Teamwork', required=False)
+			self.fields['player_%s_report' % i] = forms.BooleanField(label='Report', required=False)
 
 	def clean(self):
 		cleaned_data = super().clean()
+		# Custom cleaning
+
 		return cleaned_data
 
 	def save(self):
-		print("Saving")
+		# Get their session Details
+		session_profile = Session_Profile.objects.filter(profile=self.profile, session=self.session).first()
+		# Save rating
+		session_profile.rating = self.cleaned_data.get('rating')
+		session_profile.save()
+
+		# Apply commendations and reports
+		for i in range(0, self.player_count):
+			# Get profile
+			profile = Profile.objects.get(pk=self.cleaned_data['player_%s_id' % i])
+			# Apply commendations and reports
+			if self.cleaned_data['player_%s_skill' % i]:
+				profile.skill_commends += 1
+			if self.cleaned_data['player_%s_positivity' % i]:
+				profile.positivity_commends += 1
+			if self.cleaned_data['player_%s_communication' % i]:
+				profile.communication_commends += 1
+			if self.cleaned_data['player_%s_teamwork' % i]:
+				profile.teamwork_commends += 1
+			if self.cleaned_data['player_%s_report' % i]:
+				report = Report.objects.create(session=self.session, user_reported=profile, sent_by=self.profile, report_reason='toxic')
+				report.save()
+			profile.save()
+
+
+
+
+
+
+
+
+
+
+
+#a
