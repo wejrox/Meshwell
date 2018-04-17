@@ -372,7 +372,8 @@ th {
   text-align:left !important;
 }
 h1 {
-  position: relative;
+  /* Note: Renable this when your tags are seperated with it's their own unique class/id.
+  position: relative; */
   font-size: 100px;
   left: 1400px;
   top: 2px;
