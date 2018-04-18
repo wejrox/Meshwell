@@ -40,6 +40,11 @@ class RegistrationForm(UserCreationForm):
 		label='Password (again)',
 		widget=forms.PasswordInput(),
 	)
+	pref_server = forms.ChoiceField(
+		choices=Profile.PREF_SERVER_CHOICES,
+		widget=forms.Select(),
+	)
+
 	tos = forms.BooleanField(
 		label=mark_safe('I have read and agree to the <a href="/tos/" target="_blank">Terms of Service</a>')
 	)
@@ -72,6 +77,7 @@ class RegistrationForm(UserCreationForm):
 			if not profile:
 				profile = Profile.objects.create(user=user)
 			profile.birth_date = self.cleaned_data['birth_date']
+			profile.pref_server = self.cleaned_data['pref_server']
 			profile.save()
 
 			return user
@@ -85,12 +91,16 @@ class EditProfileForm(forms.ModelForm):
 		required=True,
 		widget=forms.TextInput(attrs={'type':'date'})
 	)
-
+	pref_server = forms.ChoiceField(
+		choices=Profile.PREF_SERVER_CHOICES,
+		widget=forms.Select(),
+	)
 	# Get the profile to edit too
 	def __init__(self, *args, **kwargs):
 		self.profile = kwargs.pop('profile', None)
 		super(EditProfileForm, self).__init__(*args, **kwargs)
 		self['birth_date'].initial = self.profile.birth_date
+		self['pref_server'].initial = [self.profile.pref_server]
 
 	class Meta:
 		model = User
@@ -104,6 +114,7 @@ class EditProfileForm(forms.ModelForm):
 	def save(self):
 		user = super(EditProfileForm, self).save(commit=False)
 		user.profile.birth_date = self.cleaned_data['birth_date']
+		user.profile.pref_server = self.cleaned_data['pref_server']
 		user.profile.save()
 		return user.profile
 

@@ -1,156 +1,83 @@
-
-
-
-
-<html>
-	<head>
-
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-      <!------ Include the above in your HEAD tag ---------->
-
-
-
-  </head>
-  {% extends 'mysite/base_meshwell.html' %}
+{% extends 'mysite/base_meshwell.html' %}
 {% load static %}
 {% block title %} Profile Page | Meshwell {% endblock %}
 {% block content %}
 
-<h1>PROFILE</h1>
-<br>
-<br>
-<body>
-<div class="container">
-	<div class="row">
-
-
-       <div class="col-md-7 ">
-
-				<!-- <div class="card" style="width: 20rem;">
-				             <div class="card-body">
-				               <h3 class="card-title">User Profile</h3>
-				             </div>
--->
-    <div class="box box-info">
-
-            <div class="box-body">
-                     <div class="col-sm-6">
-                     <div  align="center"> <img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" id="profile-image1" class="img-circle img-responsive"> </div>
-
-                <input id="profile-image-upload" class="hidden" type="file">
-
-                <!--Upload Image Js And Css-->
-
-
-                     </div>
-
-              <br>
-
-              <!-- /input-group -->
-            </div>
-            <div class="col-sm-6">
-            <h4 style="color:#00b1b1;"> {{ username }}</h4></span>
-              <span><p> {{ Username }}</p></span>
-            </div>
-            <div class="clearfix"></div>
-            <hr style="margin:5px 0 5px 0;">
-
-
-
-
-								<table class="table table-user-information">
-
-									<tbody>
-										<tr>
-											<td><div style="width:800px">Username:</div></td>
-											<td><div style="width:800px"> {{ username }} </div></td>
-										</tr>
-										<tr>
-											<td>First Name:</td>
-											<td>{{ first_name }}</td>
-										</tr>
-										<tr>
-											<td>Last Name</td>
-											<td>{{ last_name }}</td>
-										</tr>
-
-											 <tr>
-													 <tr>
-											<td>Email:</td>
-											<td>{{ email }}</td>
-										</tr>
-											<tr>
-											<td>Birth Date:</td>
-											<td>{{ birth_date }}</td>
-										</tr>
-											<td>Sessions Played:</td>
-											<td>{{ sessions_played }}
-											</td>
-
-										</tr>
-
-									</tbody>
-
-								</table>
-								<table class="Commendations">
-								<tr>
-									<th colspan="4">
-										<h6> COMMENDATIONS </h6>
-									</th>
-										<tr>
-											<th> Teamwork </th>
-											<th> Communication </th>
-											<th> Skill </th>
-											<th> Positivity </th>
-										</tr>
-										<tr>
-										</tr>
-										<tr>
-											<td> {{ teamwork_commends }} </td>
-											<td> {{ communication_commends }} </td>
-											<td> {{ skill_commends }} </td>
-											<td> {{ positivity_commends }}
-										</tr>
-
-								</table>
-
-
-<br>
-
-								<div  align="center"><a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Info</a> </div>
-															</div>
-
-
-
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-
-        </div>
-
-
-    </div>
-    </div>
-<!--</div> -->
-    <script>
-              $(function() {
-    $('#profile-image1').on('click', function() {
-        $('#profile-image-upload').click();
-    });
-});
-              </script>
-
-
-
-
-
-
-
-
-
-   </div>
-
-</body>
-  {% endblock %}
-  </html>
+<div class='headerContent'>
+	{{ title }}
+</div>
+<div class="mainContent">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-7 ">
+				<div class="box box-info">
+	  			<div class="box-body">
+	           <div class="col-sm-6">
+	            	<div  align="center"> <img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" id="profile-image1" class="center">
+								</div>
+	      				<input id="profile-image-upload" class="hidden" type="file">
+							</div>
+	    				<br>
+	  			</div>
+	        <table class="table table-user-information">
+	          <h6>User Details</h6>
+	          <tbody>
+	            <tr>
+	              <td><div style="width:800px">Username:</div></td>
+	              <td><div style="width:800px">{{ username }}</div></td>
+	            </tr>
+	            <tr>
+	              <td>First Name:</td>
+	              <td>{{ first_name }}</td>
+	            </tr>
+	            <tr>
+	              <td>Last Name</td>
+	              <td>{{ last_name }}</td>
+	            </tr>
+	            <tr>
+	              <td>Email:</td>
+	              <td>{{ email }}</td>
+	            </tr>
+	            <tr>
+	              <td>Birth Date:</td>
+	              <td>{{ birth_date }}</td>
+	            </tr>
+	            <tr>
+	              <td>Sessions Played:</td>
+	              <td>{{ sessions_played }}</td>
+	            </tr>
+	            <tr>
+	              <td>Region</td>
+	              <td>{{ pref_server }}</td>
+	            </tr>
+	          </tbody>
+	        </table>
+				  <table class="Commendations">
+		        <tbody>
+	            <th colspan="4">
+	                <h6> COMMENDATIONS </h6>
+	            </th>
+	            <tr>
+	              <th>Teamwork</th>
+	              <th>Communication</th>
+	              <th>Skill</th>
+	              <th>Positivity</th>
+	            </tr>
+	            <tr>
+	              <td>{{ teamwork_commends }}</td>
+	              <td>{{ communication_commends }}</td>
+	              <td>{{ skill_commends }}</td>
+	              <td>{{ positivity_commends }}</td>
+	        		</tr>
+		        </tbody>
+			    </table>
+					<br>
+	        <div align="center">
+						<a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Info</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
