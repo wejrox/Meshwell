@@ -4,7 +4,7 @@ from django.contrib.auth import validators
 from django.forms import ValidationError
 from django.db import IntegrityError
 from django.utils.translation import gettext as _
-from ..api.models import Profile, Availability, Game, Game_Role, Session, Session_Profile, Report, Profile_Connected_Game_Account, Game_Api_Connection, Feedback
+from ..api.models import Profile, Availability, Game, Game_Role, Session, Session_Profile, Report, Profile_Connected_Game_Account, Feedback
 from django.contrib.auth.hashers import check_password, make_password
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -120,11 +120,6 @@ class Session_ProfileSerializer(serializers.HyperlinkedModelSerializer):
 class ReportSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Report
-		fields = '__all__'
-
-class Game_Api_ConnectionSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = Game_Api_Connection
 		fields = '__all__'
 
 class Profile_Connected_Game_AccountSerializer(serializers.HyperlinkedModelSerializer):

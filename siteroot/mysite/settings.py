@@ -33,9 +33,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Third Party
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
+    'crispy_forms',
+    # Our apps
     'apps.api',
     'mysite',
 ]
@@ -156,3 +159,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 LOGIN_URL = '/account/login'
 LOGIN_REDIRECT_URL = '/dashboard'
+
+# Crispy Forms
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

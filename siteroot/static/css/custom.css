@@ -30,7 +30,6 @@
 }
 
 .customRow{
-  max-width: 1140px;
   margin: auto;
 }
 
@@ -156,6 +155,70 @@
   border-style:  solid;
   border-width: 0px 0px 1px 0px;
   border-color: #f44c41;
+}
+
+/*----About Us CSS----*/
+.headerContent.aboutMe{
+  text-align: center;
+  font-size: 3em;
+  font-weight: 100;
+  color: #373737;
+}
+
+.paragraphContent.aboutMe{
+  column-count: 1;
+  margin-left: 20%;
+  margin-right: 20%;
+  text-align: center;
+  font-weight: 100;
+  font-size: 19pt;
+}
+
+.h2.aboutMe {
+  margin-top: 5%;
+  font-weight: 100;
+}
+
+.hr.devTeam {
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+/* Shine */
+.hover14 figure {
+  position: relative;
+}
+
+.hover14 figure::before {
+  position: absolute;
+  top: 0;
+  left: -75%;
+  z-index: 2;
+  display: block;
+  content: '';
+  width: 50%;
+  height: 100%;
+  background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,.3) 100%);
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,.3) 100%);
+  -webkit-transform: skewX(-25deg);
+  transform: skewX(-25deg);
+}
+
+.hover14 figure:hover::before {
+  -webkit-animation: shine 1.75s;
+  animation: shine 1.75s;
+}
+
+@-webkit-keyframes shine {
+  100% {
+    left: 125%;
+  }
+}
+
+@keyframes shine {
+  100% {
+    left: 125%;
+  }
 }
 
 /*Mihir's CSS Code*/
@@ -306,12 +369,20 @@ th {
   text-align:left !important;
 }
 h1 {
+<<<<<<< HEAD
   /*position: relative;*/
   font-size: 500%;
   font-style: oblique;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+=======
+  /* Note: Renable this when your tags are seperated with it's their own unique class/id.
+  position: relative; */
+  font-size: 100px;
+  left: 1400px;
+  top: 2px;
+>>>>>>> 285c00ae1fd983a4d801459e1103cad850806f16
 }
 
 h6 {

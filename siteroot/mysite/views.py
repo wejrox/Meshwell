@@ -82,6 +82,10 @@ def index(request):
 	# Give back the context to the index page
 	return render(request, 'mysite/index.html', context)
 
+# Terms of Service
+def tos(request):
+	return render(request, 'mysite/tos.html')
+
 # User dashboard
 @login_required
 def dashboard(request):
@@ -180,33 +184,19 @@ def register(request):
 		return redirect('dashboard')
 
 	title = 'Register'
-	form = RegistrationForm(request.POST)
-
 	if request.method =='POST':
+		form = RegistrationForm(request.POST)
 		# Create the user
 		if form.is_valid():
-			user = form.save()
-			user.refresh_from_db() #load profile created by register
-			user.save()
-			user.refresh_from_db()
-			# Get username and password to log in with
-			username = form.cleaned_data.get('username')
-			raw_password = form.cleaned_data.get('password1')
-			# Set the profile birth_date to the one given
-			profile = Profile.objects.get(user=user)
-			profile.birth_date = form.cleaned_data.get('birth_date')
-			profile.save()
-
+			form.save()
 			# Redirect to login page
 			return redirect('login')
 	else:
 		# Recreate the form since we aren't posting
 		form = RegistrationForm()
-		# Send the form to the page and render it
-		return render(request, 'registration/register.html', {'form':form})
 
-	# Return the form if the form isn't valid but post was specified
-	return render(request, 'registration/register.html', {'form':form})
+	# Return the form if the form isn't valid or user just entered page
+	return render(request, 'registration/register.html', {'form':form, 'title':title})
 
 #Views for Edit Profile page
 @login_required
@@ -621,12 +611,12 @@ def rate_session(request):
 	user_session = Session.objects.get(pk=1)
 	# Creae a new entry, or edit the existing one if it has been given
 	if request.method == 'POST':
-		form = RateSessionForm(request.POST, session=user_session)
+		form = RateSessionForm(request.POST, session=user_session, profile=request.user.profile)
 		if form.is_valid():
 			form.save()
 			return redirect('availability')
 	else:
-		form = RateSessionForm(session=user_session)
+		form = RateSessionForm(session=user_session, profile=request.user.profile)
 
 	# Set the form to whichever form we are using
 	context['form'] = form

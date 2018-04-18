@@ -1,50 +1,47 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from apps.api.models import Profile, Feedback, User_Preference, Profile_Connected_Game_Account, Availability, Session, Session_Profile
+from apps.api.models import Profile, Feedback, Profile_Connected_Game_Account, Availability, Session, Session_Profile
 from django.forms import ModelForm
+from django.utils.safestring import mark_safe
 
 #form to create profile
 #RegistrationForm VIEW must be created first as well as URl
 class RegistrationForm(UserCreationForm):
 	username = forms.CharField(
 		max_length=30,
-		required = True,
-		help_text='Optional.',
-		widget=forms.TextInput(attrs={'class':'form-control',}),
+		required=True,
 	)
 	first_name = forms.CharField(
 		max_length=30,
-		required = False,
-		help_text='Optional.',
-		widget=forms.TextInput(attrs={'class':'form-control'}),
+		required=False,
 	)
 	last_name = forms.CharField(
 		max_length=30,
-		required = False,
-		help_text='Optional.',
-		widget=forms.TextInput(attrs={'class':'form-control'}),
+		required=False,
 	)
 	email = forms.EmailField(
 		max_length=254,
 		required=True,
-		help_text='Required. Enter a valid email address.',
-		widget=forms.TextInput(attrs={'class':'form-control', 'type':'text',}),
 	)
 	birth_date = forms.DateField(
-		help_text='Required. Format: YYYY-MM-DD'
+		required=True,
+		widget=forms.TextInput(attrs={'type':'date'})
 	)
 	password1 = forms.CharField(
-		help_text='Required.',
 		required=True,
 		max_length=4096,
-		widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password',}),
+		label='Password',
+		widget=forms.PasswordInput(),
 	)
 	password2 = forms.CharField(
-		help_text='Required.',
 		required=True,
 		max_length=4096,
-		widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password',}),
+		label='Password (again)',
+		widget=forms.PasswordInput(),
+	)
+	tos = forms.BooleanField(
+		label=mark_safe('I have read and agree to the <a href="/tos/">Terms of Service</a>')
 	)
 	pref_server = forms.ChoiceField(
 		choices=Profile.PREF_SERVER_CHOICES,
@@ -54,15 +51,23 @@ class RegistrationForm(UserCreationForm):
 	class Meta:
 		model = User
 		fields = (
+<<<<<<< HEAD
 	        	'username',
 	        	'first_name',
 			'last_name',
 			'email',
 	        	'birth_date',
 		'password1',
+=======
+	        'username',
+	        'first_name',
+			'last_name',
+			'email',
+	        'birth_date',
+			'password1',
+>>>>>>> 285c00ae1fd983a4d801459e1103cad850806f16
 			'password2',
 		)
-
 
 	#Function to save form details
 	def save(self,commit=True):
@@ -74,10 +79,18 @@ class RegistrationForm(UserCreationForm):
 			user.first_name = self.cleaned_data['first_name']
 			user.last_name = self.cleaned_data['last_name']
 			user.email = self.cleaned_data['email']
+<<<<<<< HEAD
 			user.profile.birth_date = self.cleaned_data['birth_date']
 			user.profile.pref_server = self.cleaned_data['pref_server']
+=======
+>>>>>>> 285c00ae1fd983a4d801459e1103cad850806f16
 			user.save()
-			user.profile.save()
+			# Get the profile if it's somehow attached, or create one
+			profile = user.profile
+			if not profile:
+				profile = Profile.objects.create(user=user)
+			profile.birth_date = self.cleaned_data['birth_date']
+			profile.save()
 
 			return user
 

@@ -70,13 +70,13 @@ class Availability(models.Model):
 	def __str__(self):
 		return str.join(str(self.start_time), str(self.end_time))
 
-	MONDAY = 'mon'
-	TUESDAY = 'tue'
-	WEDNESDAY = 'wed'
-	THURSDAY = 'thu'
-	FRIDAY = 'fri'
-	SATURDAY = 'sat'
-	SUNDAY = 'sun'
+	MONDAY = 'Monday'
+	TUESDAY = 'Tuesday'
+	WEDNESDAY = 'Wednesday'
+	THURSDAY = 'Thursday'
+	FRIDAY = 'Friday'
+	SATURDAY = 'Saturday'
+	SUNDAY = 'Sunday'
 
 	PREF_DAY_CHOICES = (
 		(MONDAY, 'Monday'),
@@ -99,7 +99,7 @@ class Availability(models.Model):
 	end_time = models.TimeField(null=False, blank=False)
 
 	pref_day = models.CharField(
-		max_length=3,
+		max_length=10,
 		choices=PREF_DAY_CHOICES,
 		default=MONDAY,
 	)
@@ -129,22 +129,7 @@ class Game(models.Model):
 		blank=False,
 		default='No description provided.',
 	)
-
-# OBSELETE (NO LONGER IN USE, MANUALLY ADDED INSTEAD)
-# Each game we have needs a standard method of getting rank.
-class Game_Api_Connection(models.Model):
-	game = models.OneToOneField('Game', on_delete=models.PROTECT,)
-
-	def __str__(self):
-		return self.game.name
-
-	# This url should contain a tag that includes <User_ID> that will be replaced when making a request.
-	api_url = models.CharField(max_length=255, null=False, blank=False,)
-	# What the JSON representation of competitive rank is called for this API
-	comp_json = models.CharField(max_length=15, null=False, blank=False,)
-	# What the JSON representation of casual rank is called for this API
-	cas_json = models.CharField(max_length=15, null=False, blank=False,)
-
+	# ADD IMAGE SUPPORT
 
 # An entry for a Role that has a connected game
 class Game_Role(models.Model):
@@ -216,7 +201,7 @@ class Profile_Connected_Game_Account(models.Model):
 # An entry for a Session, created when two players queue that could match, then players that match are added when possible
 class Session(models.Model):
 	def __str__(self):
-		return str.join(', ', (str(self.game.name), str(datetime_created), str(self.start_time)))
+		return str.join(', ', (str(self.game.name), str(self.datetime_created), str(self.start_time)))
 
 	game = models.ForeignKey(
 		'Game',
@@ -228,7 +213,6 @@ class Session(models.Model):
 	datetime_created = models.DateTimeField(auto_now_add=True,)
 	start = models.DateTimeField(blank=True, null=True,)
 	end_time = models.TimeField(blank=True, null=True,)
-	competitive = models.BooleanField(default=False,)
 
 # An entry for a profile's session, connected with a Session when it is found
 class Session_Profile(models.Model):
@@ -255,9 +239,6 @@ class Session_Profile(models.Model):
 		blank=True,
 		null=True,
 	)
-
-	rating = models.IntegerField(blank=True, null=True)
-	datetime_started = models.DateTimeField(auto_now_add=True,)
 
 # An entry for a report that a player has made.
 class Report(models.Model):
@@ -296,7 +277,7 @@ class Report(models.Model):
 	)
 
 	report_reason = models.CharField(
-		max_length=15,
+		max_length=255,
 		choices=REPORT_REASON_CHOICES,
 		default=TOXICITY,
 	)
@@ -312,87 +293,3 @@ class Feedback(models.Model):
 	email = models.EmailField()
 	title = models.CharField(max_length=254)
 	message = models.TextField()
-
-class User_Preference(models.Model):
-	def __str__(self):
-		return str.join(str(self.start_time), str(self.end_time))
-
-	MONDAY = 'mon'
-	TUESDAY = 'tue'
-	WEDNESDAY = 'wed'
-	THURSDAY = 'thu'
-	FRIDAY = 'fri'
-	SATURDAY = 'sat'
-	SUNDAY = 'sun'
-
-	PREFE_DAY_CHOICES = (
-		(MONDAY, 'Monday'),
-		(TUESDAY, 'Tuesday'),
-		(WEDNESDAY, 'Wednesday'),
-		(THURSDAY, 'Thursday'),
-		(FRIDAY, 'Friday'),
-		(SATURDAY, 'Saturday'),
-		(SUNDAY, 'Sunday'),
-	)
-
-	game = models.ForeignKey(
-		'Game',
-		on_delete=models.PROTECT,
-		blank=False,
-		null=False,
-	)
-
-	game_role = models.ForeignKey(
-		'Game_Role',
-		on_delete=models.PROTECT,
-		blank=False,
-		null=False,
-	)
-
-	session = models.ForeignKey(
-		'Session',
-		on_delete=models.PROTECT,
-		blank=True,
-		null=True,
-	)
-
-	pref_days = models.CharField(
-		max_length=3,
-		choices=PREFE_DAY_CHOICES,
-		default=MONDAY,
-	)
-	start_time = models.TimeField(null=True, blank=False)
-	end_time = models.TimeField(null=True, blank=False)
-
-class Rate_Session(models.Model):
-	def __str__(self):
-		return str.join('. ', (str(self.profile), str(self.session)))
-
-	ONE = '1'
-	TWO = '2'
-	THREE = '3'
-	FOUR = '4'
-	FIVE = '5'
-
-	RATING_CHOICES = (
-		(ONE, '1'),
-		(TWO, '2'),
-		(THREE, '3'),
-		(FOUR, '4'),
-		(FIVE, '5'),
-	)
-
-	session = models.ForeignKey(
-		'Session',
-		on_delete=models.PROTECT,
-		blank=False,
-		null=False,
-	)
-	profile = models.ForeignKey(
-		'Profile',
-		on_delete=models.PROTECT,
-		blank=False,
-		null=False,
-	)
-	rating = models.IntegerField(null=True, blank=True, default=3,)
-	comments = models.TextField(null=True, blank=True, max_length=500)

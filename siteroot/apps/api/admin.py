@@ -1,5 +1,5 @@
 from django.contrib import admin
-from ..api.models import Profile, Availability, Game, Game_Role, Session, Session_Profile, Report, Profile_Connected_Game_Account, Game_Api_Connection, Feedback
+from ..api.models import Profile, Availability, Game, Game_Role, Session, Session_Profile, Report, Profile_Connected_Game_Account, Feedback
 from django.db.models import Count
 
 # Register your models here.
@@ -9,7 +9,6 @@ admin.site.register(Game_Role)
 admin.site.register(Session)
 admin.site.register(Session_Profile)
 admin.site.register(Profile_Connected_Game_Account)
-admin.site.register(Game_Api_Connection)
 admin.site.register(Feedback)
 
 class ReportAdmin(admin.ModelAdmin):
