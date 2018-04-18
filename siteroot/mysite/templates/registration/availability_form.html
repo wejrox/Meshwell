@@ -1,5 +1,6 @@
 {% extends 'mysite/base_meshwell.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
 <div class="mainContent">
@@ -9,6 +10,8 @@
   <br>
   <form method="post">
         {% csrf_token %}
+        {% form|crispy %}
+        <!-- OLD (just kept for testing crispy_forms)
         {% for field in form %}
         <div class="form-group row">
           <label class="col-sm-2 col-form-label" for="{{ field.name }}">
@@ -22,6 +25,7 @@
         {% endfor %}
         {{ form.non_field_errors}}
         <button class="btn btn-danger" type="submit">Submit</button>
+      -->
   </form>
 </div>
 {% endblock %}

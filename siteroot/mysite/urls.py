@@ -28,6 +28,7 @@ urlpatterns = [
     path('feedback/', site_views.feedback, name='feedback'),
     path('catalog/', site_views.catalog, name='catalog'),
     path('about-us/', site_views.about_us, name='about-us'),
+    path('tos/', site_views.tos, name='tos'),
     # Account pages
     path('dashboard/', site_views.dashboard, name='dashboard'),
     path('dashboard/profile/', site_views.profile, name='profile'),
