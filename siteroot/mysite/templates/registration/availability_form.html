@@ -10,7 +10,7 @@
   <br>
   <form method="post">
     {% csrf_token %}
-    {% form|crispy %}
+    {{ form|crispy }}
     <!-- OLD (just kept for testing crispy_forms)
     {% for field in form %}
     <div class="form-group row">
