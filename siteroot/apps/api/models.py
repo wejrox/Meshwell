@@ -129,22 +129,7 @@ class Game(models.Model):
 		blank=False,
 		default='No description provided.',
 	)
-
-# OBSELETE (NO LONGER IN USE, MANUALLY ADDED INSTEAD)
-# Each game we have needs a standard method of getting rank.
-class Game_Api_Connection(models.Model):
-	game = models.OneToOneField('Game', on_delete=models.PROTECT,)
-
-	def __str__(self):
-		return self.game.name
-
-	# This url should contain a tag that includes <User_ID> that will be replaced when making a request.
-	api_url = models.CharField(max_length=255, null=False, blank=False,)
-	# What the JSON representation of competitive rank is called for this API
-	comp_json = models.CharField(max_length=15, null=False, blank=False,)
-	# What the JSON representation of casual rank is called for this API
-	cas_json = models.CharField(max_length=15, null=False, blank=False,)
-
+	# ADD IMAGE SUPPORT
 
 # An entry for a Role that has a connected game
 class Game_Role(models.Model):
@@ -292,7 +277,7 @@ class Report(models.Model):
 	)
 
 	report_reason = models.CharField(
-		max_length=15,
+		max_length=255,
 		choices=REPORT_REASON_CHOICES,
 		default=TOXICITY,
 	)
@@ -308,36 +293,3 @@ class Feedback(models.Model):
 	email = models.EmailField()
 	title = models.CharField(max_length=254)
 	message = models.TextField()
-
-class Rate_Session(models.Model):
-	def __str__(self):
-		return str.join('. ', (str(self.profile), str(self.session)))
-
-	ONE = '1'
-	TWO = '2'
-	THREE = '3'
-	FOUR = '4'
-	FIVE = '5'
-
-	RATING_CHOICES = (
-		(ONE, '1'),
-		(TWO, '2'),
-		(THREE, '3'),
-		(FOUR, '4'),
-		(FIVE, '5'),
-	)
-
-	session = models.ForeignKey(
-		'Session',
-		on_delete=models.PROTECT,
-		blank=False,
-		null=False,
-	)
-	profile = models.ForeignKey(
-		'Profile',
-		on_delete=models.PROTECT,
-		blank=False,
-		null=False,
-	)
-	rating = models.IntegerField(null=True, blank=True, default=3,)
-	comments = models.TextField(null=True, blank=True, max_length=500)
