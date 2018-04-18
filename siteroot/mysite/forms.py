@@ -41,7 +41,7 @@ class RegistrationForm(UserCreationForm):
 		widget=forms.PasswordInput(),
 	)
 	tos = forms.BooleanField(
-		label=mark_safe('I have read and agree to the <a href="/tos/">Terms of Service</a>')
+		label=mark_safe('I have read and agree to the <a href="/tos/" target="_blank">Terms of Service</a>')
 	)
 	#Class meta will dictate what the form uses for its fields
 	class Meta:
@@ -77,15 +77,35 @@ class RegistrationForm(UserCreationForm):
 			return user
 
 # User editing profile details
-class EditProfileForm(RegistrationForm):
-    class Meta:
-        model = User
-        fields = (
-            #'email',
-            #'first_name',
-            'last_name',
-            'birth_date',
-        )
+class EditProfileForm(forms.ModelForm):
+	username = forms.CharField(
+		disabled=True
+	)
+	birth_date = forms.DateField(
+		required=True,
+		widget=forms.TextInput(attrs={'type':'date'})
+	)
+
+	# Get the profile to edit too
+	def __init__(self, *args, **kwargs):
+		self.profile = kwargs.pop('profile', None)
+		super(EditProfileForm, self).__init__(*args, **kwargs)
+		self['birth_date'].initial = self.profile.birth_date
+
+	class Meta:
+		model = User
+		fields = (
+			'username',
+			'email',
+			'first_name',
+			'last_name',
+		)
+
+	def save(self):
+		user = super(EditProfileForm, self).save(commit=False)
+		user.profile.birth_date = self.cleaned_data['birth_date']
+		user.profile.save()
+		return user.profile
 
 # User feedback
 class FeedbackForm(forms.ModelForm):

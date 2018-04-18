@@ -1,19 +1,19 @@
 {% extends 'mysite/base_meshwell.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block title %}Edit Profile{% endblock %}
 {% block content %}
-<h1>Edit Profile</h1>
-
-
-<div class="container">
-
+<div class='mainContent'>
+  <div class='headerContent'>
+    {{ title }}
+  </div>
+  <div class='col-md-3'>
    <form method="post">
       {% csrf_token %}
-
-      {{ form.as_p }}
+      {{ form|crispy }}
       <br>
-	  <input type="submit" class="btn btn-info" value="Submit Button">
+	  <input type="submit" class="btn btn-info" value="Apply Changes">
    </form>
-   </div>
- </html>
+ </div>
+</div>
 {% endblock %}
