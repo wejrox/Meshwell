@@ -270,18 +270,16 @@ body{
 /*USER PROFILE CSS*/
 .table-user-information  {
   border-style: solid;
-width:600%;
+width:100%;
 margin-left: auto;
 margin-right: auto;
-
-
-padding: 20px;
+padding: 20%;
 text-align: left;
-    border-top: 3px solid black;
+    border-top: 3% solid black;
     position: relative;
-    font-size: 60px;
-    right:310px;
-    top: 2px;
+    font-size: 100%;
+    right:50%;
+    top: 2%;
 
 }
 
@@ -293,13 +291,13 @@ tr:nth-child(even) {
 .table-user-information > td {
 
   border-top: 0;
-  width:500px;
-  height:50px;
+  width:20%;
+  height:50%;
   margin-left: auto;
   margin-right: auto;
   position: relative;
-  left: 100px;
-  top: 2px;
+  left: 100%;
+  top: 1%;
 
 }
 
@@ -308,56 +306,59 @@ th {
   text-align:left !important;
 }
 h1 {
-  position: relative;
-  font-size: 100px;
-  left: 1400px;
-  top: 2px;
+  /*position: relative;*/
+  font-size: 500%;
+  font-style: oblique;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
-h4 {
+h6 {
+ /*text-align: center;
+  font-size: 300%;
+  font-style: oblique;
+  margin-left: auto;
+  margin-right: auto;*/
+  font-size: 200%;
+  font-style: oblique;
+  margin-left: auto;
+  margin-right: auto;
   text-align: center;
-  font-size: 80px;
-  line-height: 40px;
-  position: relative;
-  left: 200px;
-  top: 2px;
 }
 
 .Commendations {
-border-style: solid;
-
-width: 350%;
+  border-style: solid;
+width:261%;
 margin-left: auto;
 margin-right: auto;
-padding: 20px;
-text-align: center;
-border-top: 3px solid black;
-position: relative;
-font-size: 60px;
-right:575px;
-top: 2px;
+text-align: left;
+    border-top: 3% solid black;
+    position: relative;
+    font-size: 100%;
+    right:50%;
+    padding:100%
+    top: 100%
+
 
 }
 
 .hidden {
 position: center;
-left: -9999px;
-position: relative;
-left: 160px;
-top: 2px;
+display: block;
+text-align: center;
+margin-left: auto;
+margin-right: auto;
+width: 100%;
 }
 
 
 
-#profile-image1 {
-cursor: pointer;
 
-width: 600px;
-height: 600px;
-position: relative;
-left: 160px;
-top: 2px;
-border:0px solid black ;}
-
-
+.center {
+  display: block;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  /*width: 100%;*/
 }

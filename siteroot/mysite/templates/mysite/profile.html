@@ -1,191 +1,105 @@
 
+	{% extends 'mysite/base_meshwell.html' %}
+	{% load static %}
+	{% block title %} Profile Page | Meshwell {% endblock %}
+	{% block content %}
 
-
-<!--
-<html>
-	<head>
-
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    Include the above in your HEAD tag
-
-
-
-  </head>-->
-{% extends 'mysite/base_meshwell.html' %}
-{% load static %}
-{% block title %} Profile Page | Meshwell {% endblock %}
-{% block content %}
-
-<h1>PROFILE</h1>
-<br>
-<br>
-<div class="mainContent">
-<!--<body>
+	<h1>PROFILE</h1>
+	<br>
+	<br>
+	<!--<body>-->
 <div class="container">
 <div class="row">
-<div class="col-md-7 ">
 
+
+<div class="col-md-7 ">
 <div class="box box-info">
 
-<div class="box-body">
-<div class="col-sm-6">
-<div  align="center"> <img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" id="profile-image1" class="img-circle img-responsive"> </div>
+  <div class="box-body">
+           <div class="col-sm-6">
+           <!--<div align="center"> <img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jp" class="center"> </div>-->
+					 <div  align="center"> <img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" id="profile-image1" class="center"> </div>
 
-<input id="profile-image-upload" class="hidden" type="file">
-
-
-                     </div>
-
-              <br>
-
-               /input-group -->
-          <!--  </div>
-            <div class="col-sm-6">
-            <h4 style="color:#00b1b1;"> {{ username }}</h4></span>
-              <span><p> {{ Username }}</p></span>
-            </div>
-            <div class="clearfix"></div>
-            <hr style="margin:5px 0 5px 0;"> -->
-
-
-<div class="guiderContent">
-	This is a table.
+      <input id="profile-image-upload" class="hidden" type="file">
 </div>
 
-</br>
+    <br>
+  </div>
+  <!--<div class="center">-->
 
 
-<table class="table">
-	<thead class="three-dark">
-		<tr>
-			<!--<td><div style="width:800px">Username:</div></td>
-			<td><div style="width:800px"> {{ username }} </div></td>-->
-			<!--<th scope="col">Field</th>
-			<th scope="col">Variable</th>-->
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<!--<th scope="row">1</th>-->
-			<td>First Name:</td>
-			<td>{{ first_name }}</td>
-		</tr>
-		<tr>
-			<!--<th scope="row">1</th>-->
-			<td>Last Name:</td>
-			<td>{{ last_name }}</td>
-		</tr>
-		<tr>
-			<!--<th scope="row">1</th>-->
-			<td>Email:</td>
-			<td>{{ email }}</td>
-		</tr>
-		<tr>
-			<!--<th scope="row">4</th>-->
-			<td>Birth Date:</td>
-			<td>{{ birth_date }}</td>
-		</tr>
-		<tr>
-			<!--<th scope="row">5</th>-->
-			<td>Sessions Played:</td>
-			<td>>{{ sessions_played }}</td>
-		</tr>
-		<tr>
-		<!--	<th scope="row">6</th>-->
-			<td>Commendations:</td>
-			<td>{{ commendations }}</td>
-		</tr>
-	</tbody>
-</table>
-
-<div  align="center"><a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Info</a> </div>
+    <!--<span><p> {{ Username }}</p></span>-->
+ 	<!--</div>-->
 
 
-											<!--<td>First Name:</td>
-											<td>{{ first_name }}</td>
-										</tr>
-										<tr>
-											<td>Last Name</td>
-											<td>{{ last_name }}</td>
-										</tr>
+			<table class="table table-user-information">
+				<h6>User Details</h6>
+				<tbody>
+					<tr>
+						<td><div style="width:800px">Username:</div></td>
+						<td><div style="width:800px"> {{ username }} </div></td>
+					</tr>
+					<tr>
+						<td>First Name:</td>
+						<td>{{ first_name }}</td>
+					</tr>
+					<tr>
+						<td>Last Name</td>
+						<td>{{ last_name }}</td>
+					</tr>
+					<tr>
+					<tr>
+						<td>Email:</td>
+						<td>{{ email }}</td>
+					</tr>
+					<tr>
+						<td>Birth Date:</td>
+						<td>{{ birth_date }}</td>
+					</tr>
+					<tr>
+						<td>Sessions Played:</td>
+						<td>{{ sessions_played }}</td>
+					</tr>
+					<tr>
+						<td>Region</td>
+						<td>{{ pref_server }}</td>
+					</tr>
 
-											 <tr>
-													 <tr>
-											<td>Email:</td>
-											<td>{{ email }}</td>
-										</tr>
-											<tr>
-											<td>Birth Date:</td>
-											<td>{{ birth_date }}</td>
-										</tr>
-											<td>Sessions Played:</td>
-											<td>{{ sessions_played }}
-											</td>
+				</tbody>
 
-										</tr>
-
-									</tbody>
-
-								</table>
-								<table class="Commendations">
-								<tr>
-									<th colspan="4">
-										<h6> COMMENDATIONS </h6>
-									</th>
-										<tr>
-											<th> Teamwork </th>
-											<th> Communication </th>
-											<th> Skill </th>
-											<th> Positivity </th>
-										</tr>
-										<tr>
-										</tr>
-										<tr>
-											<td> {{ teamwork_commends }} </td>
-											<td> {{ communication_commends }} </td>
-											<td> {{ skill_commends }} </td>
-											<td> {{ positivity_commends }}
-										</tr>
-
-								</table>
+			</table>
 
 
-                    <br>
+	<table class="Commendations">
+		<tbody>
+			<tr>
+				<th colspan="4">
+					<h6> COMMENDATIONS </h6>
+				</th>
+					<tr>
+						<th> Teamwork </th>
+						<th> Communication </th>
+						<th> Skill </th>
+						<th> Positivity </th>
+					</tr>
+					<tr>
+					</tr>
+					<tr>
+						<td> {{ teamwork_commends }} </td>
+						<td> {{ communication_commends }} </td>
+						<td> {{ skill_commends }} </td>
+						<td> {{ positivity_commends }}
+					</tr>
+			</tbody>
+		</table>
 
-								<div  align="center"><a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Info</a> </div>
-															</div>
 
+<br>
 
-          </div>
+			<div  align="center"><a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Info</a> </div>
+										</div>
 
-
-        </div>
-
-
-    </div>
-	</div> -->
-</div> <!--main content-->
+</div>
+</div>
+</div>
 {% endblock %}
-
-  <!--  <script>
-              $(function() {
-    $('#profile-image1').on('click', function() {
-        $('#profile-image-upload').click();
-    });
-});
-              </script>
-
-
-
-
-
-
-
-
-
-   </div>
-
-</body>
-
-  </html>

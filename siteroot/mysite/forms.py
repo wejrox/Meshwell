@@ -46,6 +46,10 @@ class RegistrationForm(UserCreationForm):
 		max_length=4096,
 		widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password',}),
 	)
+	pref_server = forms.ChoiceField(
+		choices=Profile.PREF_SERVER_CHOICES,
+		widget=forms.Select(attrs={'class':'form-control'})
+	)
 	#Class meta will dictate what the form uses for its fields
 	class Meta:
 		model = User
@@ -71,6 +75,7 @@ class RegistrationForm(UserCreationForm):
 			user.last_name = self.cleaned_data['last_name']
 			user.email = self.cleaned_data['email']
 			user.profile.birth_date = self.cleaned_data['birth_date']
+			user.profile.pref_server = self.cleaned_data['pref_server']
 			user.save()
 			user.profile.save()
 
@@ -85,6 +90,7 @@ class EditProfileForm(RegistrationForm):
             #'first_name',
             'last_name',
             'birth_date',
+			'pref_server'
         )
 
 # User feedback
