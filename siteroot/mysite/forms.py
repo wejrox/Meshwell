@@ -40,13 +40,21 @@ class RegistrationForm(UserCreationForm):
 		label='Password (again)',
 		widget=forms.PasswordInput(),
 	)
-	tos = forms.BooleanField(
-		label=mark_safe('I have read and agree to the <a href="/tos/">Terms of Service</a>')
+	pref_server = forms.ChoiceField(
+		choices=Profile.PREF_SERVER_CHOICES,
+		widget=forms.Select(),
 	)
+	tos = forms.BooleanField(
+		label=mark_safe('I have read and agree to the <a href="/tos/" target="_blank">Terms of Service</a>')
+	)
+<<<<<<< HEAD
 	pref_server = forms.ChoiceField(
 		choices=Profile.PREF_SERVER_CHOICES,
 		widget=forms.Select(attrs={'class':'form-control'})
 	)
+=======
+	
+>>>>>>> a4874f2d8b55135225f48617fc87a599f4015dd3
 	#Class meta will dictate what the form uses for its fields
 	class Meta:
 		model = User
@@ -90,11 +98,13 @@ class RegistrationForm(UserCreationForm):
 			if not profile:
 				profile = Profile.objects.create(user=user)
 			profile.birth_date = self.cleaned_data['birth_date']
+			profile.pref_server = self.cleaned_data['pref_server']
 			profile.save()
 
 			return user
 
 # User editing profile details
+<<<<<<< HEAD
 class EditProfileForm(RegistrationForm):
     class Meta:
         model = User
@@ -105,6 +115,42 @@ class EditProfileForm(RegistrationForm):
             'birth_date',
 			'pref_server'
         )
+=======
+class EditProfileForm(forms.ModelForm):
+	username = forms.CharField(
+		disabled=True
+	)
+	birth_date = forms.DateField(
+		required=True,
+		widget=forms.TextInput(attrs={'type':'date'})
+	)
+	pref_server = forms.ChoiceField(
+		choices=Profile.PREF_SERVER_CHOICES,
+		widget=forms.Select(),
+	)
+	# Get the profile to edit too
+	def __init__(self, *args, **kwargs):
+		self.profile = kwargs.pop('profile', None)
+		super(EditProfileForm, self).__init__(*args, **kwargs)
+		self['birth_date'].initial = self.profile.birth_date
+		self['pref_server'].initial = [self.profile.pref_server]
+
+	class Meta:
+		model = User
+		fields = (
+			'username',
+			'email',
+			'first_name',
+			'last_name',
+		)
+
+	def save(self):
+		user = super(EditProfileForm, self).save(commit=False)
+		user.profile.birth_date = self.cleaned_data['birth_date']
+		user.profile.pref_server = self.cleaned_data['pref_server']
+		user.profile.save()
+		return user.profile
+>>>>>>> a4874f2d8b55135225f48617fc87a599f4015dd3
 
 # User feedback
 class FeedbackForm(forms.ModelForm):
@@ -223,24 +269,62 @@ class UserAvailabilityForm(forms.ModelForm):
 		return cleaned_data
 
 class RateSessionForm(forms.Form):
-	# Add player fields
-	def __init__(self, *args, **kwargs):
-		self.session = kwargs.pop('session', None)
-		super(RateSessionForm, self).__init__(*args, **kwargs)
-		# Get all the users connected to the session
-		players = Session_Profile.objects.filter(session=self.session)
-		for i, player in enumerate(players):
-			self.fields['player_%s_id' % i] = forms.CharField(initial=player.profile.id, label='')
-			self.fields['player_%s_id' % i].widget = forms.HiddenInput()
-			self.fields['player_%s_name' % i] = forms.CharField(disabled=True, label='Player', initial=player.profile.user.username)
-			self.fields['player_%s_skill' % i] = forms.BooleanField(label='Skill', required=False)
-			self.fields['player_%s_positivity' % i] = forms.BooleanField(label='Positivity', required=False)
-			self.fields['player_%s_communication' % i] = forms.BooleanField(label='Communication', required=False)
-			self.fields['player_%s_teamwork' % i] = forms.BooleanField(label='Teamwork', required=False)
+    # A tuple for rating numbers user can give
+    RATINGS=((0, '0'),(1, '1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'))
+    # Create fields for rating
+    rating = forms.ChoiceField(
+        choices=RATINGS,
+        widget=forms.RadioSelect(
+        ),
+		initial=[2]
+    )
 
-	def clean(self):
-		cleaned_data = super().clean()
-		return cleaned_data
+    # Run when form is created
+    def __init__(self, *args, **kwargs):
+        self.session = kwargs.pop('session', None)
+        self.profile = kwargs.pop('profile', None)
+        super(RateSessionForm, self).__init__(*args, **kwargs)
+        # Get our current profile
+        # Get all the users connected to the session and add them
+        players = Session_Profile.objects.filter(session=self.session).exclude(profile=self.profile.id)
+        self.player_count = len(players)
+        for i, player in enumerate(players):
+            self.fields['player_%s_id' % i] = forms.CharField(initial=player.profile.id, label='')
+            self.fields['player_%s_id' % i].widget = forms.HiddenInput()
+            self.fields['player_%s_name' % i] = forms.CharField(disabled=True, label='Player', initial=player.profile.user.username)
+            self.fields['player_%s_skill' % i] = forms.BooleanField(label='Skill', required=False)
+            self.fields['player_%s_positivity' % i] = forms.BooleanField(label='Positivity', required=False)
+            self.fields['player_%s_communication' % i] = forms.BooleanField(label='Communication', required=False)
+            self.fields['player_%s_teamwork' % i] = forms.BooleanField(label='Teamwork', required=False)
+            self.fields['player_%s_report' % i] = forms.BooleanField(label='Report', required=False)
 
-	def save(self):
-		print("Saving")
+    def clean(self):
+        cleaned_data = super().clean()
+        # Custom cleaning
+
+        return cleaned_data
+
+    def save(self):
+        # Get their session Details
+        session_profile = Session_Profile.objects.filter(profile=self.profile, session=self.session).first()
+        # Save rating
+        session_profile.rating = self.cleaned_data.get('rating')
+        session_profile.save()
+
+        # Apply commendations and reports
+        for i in range(0, self.player_count):
+            # Get profile
+            profile = Profile.objects.get(pk=self.cleaned_data['player_%s_id' % i])
+            # Apply commendations and reports
+            if self.cleaned_data['player_%s_skill' % i]:
+                profile.skill_commends += 1
+            if self.cleaned_data['player_%s_positivity' % i]:
+                profile.positivity_commends += 1
+            if self.cleaned_data['player_%s_communication' % i]:
+                profile.communication_commends += 1
+            if self.cleaned_data['player_%s_teamwork' % i]:
+                profile.teamwork_commends += 1
+            if self.cleaned_data['player_%s_report' % i]:
+                report = Report.objects.create(session=self.session, user_reported=profile, sent_by=self.profile, report_reason='toxic')
+                report.save()
+            profile.save()
