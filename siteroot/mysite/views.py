@@ -215,15 +215,26 @@ def edit_profile(request):
 	return render(request, 'mysite/edit_profile.html', context)
 
 # Login. Implemented here to prevent logged in users from accessing the page
-def login(request):
-	if request.user.is_authenticated:
-		return redirect(settings.LOGIN_REDIRECT_URL)
-	return contrib_login(request)
-
+def a_login(request):
+	if request.method == 'POST':
+		username = request.POST['username']
+		password = request.POST['password']
+		user = authenticate(username=username, password=password)
+		if user is not None:
+			if user.is_active:
+				login(request, user)
+				return render(request, 'mysite/dashboard.html', {})
+			else:
+				return render(request, 'mysite/about_us.html', {})
+		else:
+			return render(request, 'registration/login.html', {})
+	else:
+		return render(request, 'registration/login.html', {})
 # Logging out. Currently loads a page. Recommend logging out to open a popup box that the user must click 'OK' to and be redirected to index.
 @login_required
-def logout(request):
+def a_logout(request):
 	logout(request)
+	return redirect(reverse('index'))
 
 @login_required
 def deactivate_user(request):
