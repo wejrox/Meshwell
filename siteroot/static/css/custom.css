@@ -157,70 +157,7 @@
   border-color: #f44c41;
 }
 
-/*----About Us CSS----*/
-.headerContent.aboutMe{
-  text-align: center;
-  font-size: 3em;
-  font-weight: 100;
-  color: #373737;
-}
-
-.paragraphContent.aboutMe{
-  column-count: 1;
-  margin-left: 20%;
-  margin-right: 20%;
-  text-align: center;
-  font-weight: 100;
-  font-size: 19pt;
-}
-
-.h2.aboutMe {
-  margin-top: 5%;
-  font-weight: 100;
-}
-
-.hr.devTeam {
-  margin-left: 20%;
-  margin-right: 20%;
-}
-
-/* Shine */
-.hover14 figure {
-  position: relative;
-}
-
-.hover14 figure::before {
-  position: absolute;
-  top: 0;
-  left: -75%;
-  z-index: 2;
-  display: block;
-  content: '';
-  width: 50%;
-  height: 100%;
-  background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,.3) 100%);
-  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,.3) 100%);
-  -webkit-transform: skewX(-25deg);
-  transform: skewX(-25deg);
-}
-
-.hover14 figure:hover::before {
-  -webkit-animation: shine 1.75s;
-  animation: shine 1.75s;
-}
-
-@-webkit-keyframes shine {
-  100% {
-    left: 125%;
-  }
-}
-
-@keyframes shine {
-  100% {
-    left: 125%;
-  }
-}
-/*----About Us CSS----*/
+/*About Us CSS*/
 .headerContent.aboutMe{
   text-align: center;
   font-size: 3em;
@@ -285,7 +222,11 @@
 }
 
 /*Mihir's CSS Code*/
+/*Please dont use the HTML and BODY tags unless it is extremely necessary, as this will overwrite the entire website.
+Use bootstrap tags whenever possible as this will reduce any scaling problems you will run into.
+USe the standardised CSS tags I have created if possible.*/
 
+/*Footer*/
 #myFooter {
 	background-color: #373a48;
 	color:white;
@@ -369,19 +310,6 @@
 	}
 }
 
-
-html{
-	height: 100% !important;
-}
-
-body{
-    display: center;
-    display: -webkit-flex;
-    flex-direction: column;
-    -webkit-flex-direction: column;
-    height: 100%;
-}
-
 .content{
 	flex: 1 0 auto;
 	-webkit-flex: 1 0 auto;
@@ -393,12 +321,13 @@ body{
     -webkit-flex: 0 0 auto;
 }
 
-/*USER PROFILE CSS*/
-.table-user-information  {
+/*User Profile*/
+.table-user-information{
   border-style: solid;
 width:100%;
 margin-left: auto;
 margin-right: auto;
+<<<<<<< HEAD
 padding: 20%;
 text-align: left;
     border-top: 3% solid black;
@@ -406,31 +335,45 @@ text-align: left;
     font-size: 100%;
     right:50%;
     top: 2%;
+=======
+padding: 20px;
+text-align: left;
+border-top: 3px solid black;
+position: relative;
+font-size: 60px;
+right:310px;
+top: 2px;
+>>>>>>> 072e2e14f400714e0811cbdac914696f3ec1ebcc
 
 }
 
-/*shading for table*/
-tr:nth-child(even) {
+/*Shading for Table*/
+tr:nth-child(even){
   background-color: #f2f2f2;
 }
 
-.table-user-information > td {
-
+.table-user-information > td{
   border-top: 0;
   width:20%;
   height:50%;
   margin-left: auto;
   margin-right: auto;
   position: relative;
+<<<<<<< HEAD
   left: 100%;
   top: 1%;
 
+=======
+  left: 100px;
+  top: 2px;
+>>>>>>> 072e2e14f400714e0811cbdac914696f3ec1ebcc
 }
 
-th {
+.th.Custom{
   padding:10px;
   text-align:left !important;
 }
+<<<<<<< HEAD
 h1 {
 <<<<<<< HEAD
   /*position: relative;*/
@@ -440,6 +383,10 @@ h1 {
   margin-right: auto;
   text-align: center;
 =======
+=======
+
+.h1.Custom{
+>>>>>>> 072e2e14f400714e0811cbdac914696f3ec1ebcc
   /* Note: Renable this when your tags are seperated with it's their own unique class/id.
   position: relative; */
   font-size: 100px;
@@ -448,6 +395,7 @@ h1 {
 >>>>>>> 285c00ae1fd983a4d801459e1103cad850806f16
 }
 
+<<<<<<< HEAD
 h6 {
  /*text-align: center;
   font-size: 300%;
@@ -458,9 +406,13 @@ h6 {
   font-style: oblique;
   margin-left: auto;
   margin-right: auto;
+=======
+.h4.Custom{
+>>>>>>> 072e2e14f400714e0811cbdac914696f3ec1ebcc
   text-align: center;
 }
 
+<<<<<<< HEAD
 .Commendations {
   border-style: solid;
 width:261%;
@@ -475,9 +427,23 @@ text-align: left;
     top: 100%
 
 
+=======
+.Commendations{
+border-style: solid;
+width: 350%;
+margin-left: auto;
+margin-right: auto;
+padding: 20px;
+text-align: center;
+border-top: 3px solid black;
+position: relative;
+font-size: 60px;
+right:575px;
+top: 2px;
+>>>>>>> 072e2e14f400714e0811cbdac914696f3ec1ebcc
 }
 
-.hidden {
+.hidden{
 position: center;
 display: block;
 text-align: center;
@@ -486,6 +452,7 @@ margin-right: auto;
 width: 100%;
 }
 
+<<<<<<< HEAD
 
 
 
@@ -495,4 +462,14 @@ width: 100%;
   margin-left: auto;
   margin-right: auto;
   /*width: 100%;*/
+=======
+#profile-image1{
+cursor: pointer;
+width: 600px;
+height: 600px;
+position: relative;
+left: 160px;
+top: 2px;
+border:0px solid black ;}
+>>>>>>> 072e2e14f400714e0811cbdac914696f3ec1ebcc
 }
