@@ -223,9 +223,9 @@ def a_login(request):
 		if user is not None:
 			if user.is_active:
 				login(request, user)
-				return render(request, 'mysite/dashboard.html', {})
+				return redirect('dashboard')
 			else:
-				return render(request, 'mysite/about_us.html', {})
+				return redirect('about-us')
 		else:
 			return render(request, 'registration/login.html', {})
 	else:
