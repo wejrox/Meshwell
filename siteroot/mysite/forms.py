@@ -47,33 +47,17 @@ class RegistrationForm(UserCreationForm):
 	tos = forms.BooleanField(
 		label=mark_safe('I have read and agree to the <a href="/tos/" target="_blank">Terms of Service</a>')
 	)
-<<<<<<< HEAD
-	pref_server = forms.ChoiceField(
-		choices=Profile.PREF_SERVER_CHOICES,
-		widget=forms.Select(attrs={'class':'form-control'})
-	)
-=======
-	
->>>>>>> a4874f2d8b55135225f48617fc87a599f4015dd3
+
 	#Class meta will dictate what the form uses for its fields
 	class Meta:
 		model = User
 		fields = (
-<<<<<<< HEAD
-	        	'username',
-	        	'first_name',
-			'last_name',
-			'email',
-	        	'birth_date',
-		'password1',
-=======
 	        'username',
 	        'first_name',
 			'last_name',
 			'email',
 	        'birth_date',
 			'password1',
->>>>>>> 285c00ae1fd983a4d801459e1103cad850806f16
 			'password2',
 		)
 
@@ -87,11 +71,6 @@ class RegistrationForm(UserCreationForm):
 			user.first_name = self.cleaned_data['first_name']
 			user.last_name = self.cleaned_data['last_name']
 			user.email = self.cleaned_data['email']
-<<<<<<< HEAD
-			user.profile.birth_date = self.cleaned_data['birth_date']
-			user.profile.pref_server = self.cleaned_data['pref_server']
-=======
->>>>>>> 285c00ae1fd983a4d801459e1103cad850806f16
 			user.save()
 			# Get the profile if it's somehow attached, or create one
 			profile = user.profile
@@ -104,18 +83,6 @@ class RegistrationForm(UserCreationForm):
 			return user
 
 # User editing profile details
-<<<<<<< HEAD
-class EditProfileForm(RegistrationForm):
-    class Meta:
-        model = User
-        fields = (
-            #'email',
-            #'first_name',
-            'last_name',
-            'birth_date',
-			'pref_server'
-        )
-=======
 class EditProfileForm(forms.ModelForm):
 	username = forms.CharField(
 		disabled=True
@@ -150,7 +117,6 @@ class EditProfileForm(forms.ModelForm):
 		user.profile.pref_server = self.cleaned_data['pref_server']
 		user.profile.save()
 		return user.profile
->>>>>>> a4874f2d8b55135225f48617fc87a599f4015dd3
 
 # User feedback
 class FeedbackForm(forms.ModelForm):

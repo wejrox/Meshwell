@@ -1,6 +1,10 @@
 from django.contrib import admin
 from ..api.models import Profile, Availability, Game, Game_Role, Session, Session_Profile, Report, Profile_Connected_Game_Account, Feedback
 from django.db.models import Count
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 
 # Register your models here.
 admin.site.register(Availability)
@@ -16,7 +20,25 @@ class ReportAdmin(admin.ModelAdmin):
 admin.site.register(Report, ReportAdmin)
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('id', 'birth_date', 'sessions_played','total_reports')
-    def total_reports(self, obj):
-        return Report.objects.filter(user_reported=obj).count()
+	list_display = ['id', 'birth_date', 'sessions_played']#,'total_reports')
+	actions = ['ban_users']
+	#def total_reports(self, obj):
+		#return Report.objects.filter(user_reported=obj).count()
+
+	def ban_users(self, request, queryset):
+		#User.Profile.objects.update(is_active = False)
+		User.is_active = False
+		User.save()
+	ban_users.short_description = "Ban & Email"
+
+
 admin.site.register(Profile, ProfileAdmin)
+
+#class MyUserAdmin(UserAdmin):
+	#UserAdmin.list_display = ('username', 'first_name', 'last_name')
+#admin.site.register(User, MyUserAdmin)
+
+#def banning(self, request, queryset):
+#	self.user.objects.all().update(is_active=false)
+	#self.message_user(request, "BANNED")
+	#user.save()
