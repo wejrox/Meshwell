@@ -20,14 +20,14 @@ class ReportAdmin(admin.ModelAdmin):
 admin.site.register(Report, ReportAdmin)
 
 class ProfileAdmin(admin.ModelAdmin):
-	list_display = ['id', 'birth_date', 'sessions_played']#,'total_reports')
+	list_display = ['user', 'birth_date', 'sessions_played']#,'total_reports')
 	actions = ['ban_users']
 	#def total_reports(self, obj):
 		#return Report.objects.filter(user_reported=obj).count()
 
 	def ban_users(self, request, queryset):
-		#User.Profile.objects.update(is_active = False)
-		User.is_active = False
+		self.user.objects.update(is_active = False)
+		self.message_user(request, "Banned and Sent Email")
 		User.save()
 	ban_users.short_description = "Ban & Email"
 
