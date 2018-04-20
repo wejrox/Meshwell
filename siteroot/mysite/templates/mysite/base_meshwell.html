@@ -53,11 +53,6 @@
 			      <li class="nav-item {% if request.resolver_match.url_name == "index" %}active{% endif %}">
 			        <a class="nav-link" href="{% url 'index' %}">Home<span class="sr-only">(current)</span></a>
 			      </li>
-			      <li class="nav-item {% if request.resolver_match.url_name == "dashboard" %}active{% endif %}">
-			      	{% if user.is_authenticated %}
-			        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-			        {% endif %}
-			      </li>
 			      <li class="nav-item {% if request.resolver_match.url_name == "catalog" %}active{% endif %}">
 			        <a class="nav-link" href="{% url 'catalog' %}">Catalog</a>
 			      </li>
@@ -76,10 +71,6 @@
 			    		</a>
 			    		<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 			        		<a class="dropdown-item {% if request.resolver_match.url_name == "dashboard" %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
-			    			<a class="dropdown-item" href="#">Settings</a>
-			    			<a class="dropdown-item" href="#">Test Dropdown Item</a>
-			    			<a class="btn btn-outline-danger" href="{% url 'logout' %}" style="margin-top: 10%; margin-left: 27%;">Logout</a>
-
 			    		</div>
 			    	</li>
 			    	{% endif %}
@@ -96,7 +87,7 @@
 						<a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
 						{% else %}
 						<!-- Button trigger modal -->
-						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Login Modal</button>
+						<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">Login</button>
 			    	{% endif %}
 						<!-- Modal -->
 						<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
