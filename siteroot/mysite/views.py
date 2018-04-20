@@ -230,6 +230,7 @@ def a_login(request):
 			return render(request, 'registration/login.html', {})
 	else:
 		return render(request, 'registration/login.html', {})
+
 # Logging out. Currently loads a page. Recommend logging out to open a popup box that the user must click 'OK' to and be redirected to index.
 @login_required
 def a_logout(request):

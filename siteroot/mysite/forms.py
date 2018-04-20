@@ -47,7 +47,7 @@ class RegistrationForm(UserCreationForm):
 	tos = forms.BooleanField(
 		label=mark_safe('I have read and agree to the <a href="/tos/" target="_blank">Terms of Service</a>')
 	)
-	
+
 	#Class meta will dictate what the form uses for its fields
 	class Meta:
 		model = User
@@ -153,12 +153,14 @@ class UserAvailabilityForm(forms.ModelForm):
 	start_time = forms.TimeField(
 		required = True,
 		help_text= 'Required.',
+		initial='00:00',
 		widget=forms.TimeInput(attrs={'class':'form-control', 'type':'time'}),
 		input_formats=['%H:%M', '%H:%M:%S'],
 	)
 	end_time = forms.TimeField(
 		required = True,
 		help_text= 'Required.',
+		initial='01:00',
 		widget=forms.TimeInput(attrs={'class':'form-control', 'type':'time'}),
 		input_formats=['%H:%M', '%H:%M:%S'],
 	)
@@ -180,6 +182,10 @@ class UserAvailabilityForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user', None)
 		super(UserAvailabilityForm, self).__init__(*args, **kwargs)
+		if 'start_time' in self.initial:
+			self.initial['start_time'] = self.initial['start_time'].strftime('%H:%M')
+		if 'end_time' in self.initial:
+			self.initial['end_time'] = self.initial['end_time'].strftime('%H:%M')
 
 	# Don't allow start time after end time
 	def clean(self):
