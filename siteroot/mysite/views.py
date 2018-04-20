@@ -473,7 +473,7 @@ def exit_queue(request):
         redirect('dashboard')
 
 	# Get the most recent queue and delete it (as we can have many sessions)
-    player_session = Session_Profile.objects.filter(profile=request.user.profile).order_by('-datetime_started').first()
+    player_session = Session_Profile.objects.filter(profile=request.user.profile).order_by('-session__start').first()
     player_session.delete()
     request.user.profile.in_queue = False
     request.user.profile.save()
