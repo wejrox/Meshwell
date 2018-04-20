@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from apps.api.models import Profile, Feedback, Profile_Connected_Game_Account, Availability, Session, Session_Profile
+from apps.api.models import Profile, Feedback, Profile_Connected_Game_Account, Availability, Session, Session_Profile, Report
 from django.forms import ModelForm
 from django.utils.safestring import mark_safe
 
@@ -261,6 +261,8 @@ class RateSessionForm(forms.Form):
         players = Session_Profile.objects.filter(session=self.session).exclude(profile=self.profile.id)
         self.player_count = len(players)
         for i, player in enumerate(players):
+#            # Get their ign so the user knows who they are (DISABLED RIGHT NOW AS WE ARE TESTING)
+#            ign = Profile_Connected_Game_Account.filter(game=self.session.game.id, profile=player.profile.id).first()
             self.fields['player_%s_id' % i] = forms.CharField(initial=player.profile.id, label='')
             self.fields['player_%s_id' % i].widget = forms.HiddenInput()
             self.fields['player_%s_name' % i] = forms.CharField(disabled=True, label='Player', initial=player.profile.user.username)
