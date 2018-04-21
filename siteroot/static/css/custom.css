@@ -247,9 +247,9 @@ Use the standardised CSS tags I have created if possible.*/
 
 #myFooter ul{
   list-style-type: none;
-    padding-left: 0;
-    line-height: 1.7;
-
+  padding-left: 0;
+  line-height: 1.7;
+  font-size: 13pt;
 }
 
 .myFooter.title{
