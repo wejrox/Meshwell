@@ -224,100 +224,96 @@
 /*Mihir's CSS Code*/
 /*Please dont use the HTML and BODY tags unless it is extremely necessary, as this will overwrite the entire website.
 Use bootstrap tags whenever possible as this will reduce any scaling problems you will run into.
-USe the standardised CSS tags I have created if possible.*/
+Use the standardised CSS tags I have created if possible.*/
 
 /*Footer*/
 #myFooter {
-	background-color: #373a48;
-	color:white;
+  background-color: #373737;
+  color:white;
 }
 
 #myFooter .footer-copyright{
-	background-color: #383737;
-	padding-top:3px;
-	padding-bottom:3px;
-	text-align: center;
+  background-color: #373737;
+  padding-top:3px;
+  padding-bottom:3px;
+  text-align: center;
 }
 
 #myFooter .footer-copyright p{
-	margin:10px;
-	color: #ccc;
+  margin:10px;
+  color: #ccc;
+  font-weight: 100;
 }
 
 #myFooter ul{
-	list-style-type: none;
+  list-style-type: none;
     padding-left: 0;
     line-height: 1.7;
 
 }
 
-#myFooter h5{
-	font-size: 18px;
-    color: white;
-    font-weight: bold;
-    margin-top: 30px;
+.myFooter.title{
+  font-size: 16pt;
+  font-weight: 100 !important;
+  color: white;
+  font-weight: bold;
+  margin-top: 30px;
 }
 
 #myFooter a{
-	color:#d2d1d1;
-	text-decoration: none;
+  color:#fff;
+  font-weight: 100;
+  text-decoration: none;
 }
 
 #myFooter a:hover, #myFooter a:focus{
-	text-decoration: none;
-	color:white;
+  color:#F44C41;
+  text-decoration: none;
 }
 
 #myFooter .myCols{
-	text-align: center;
+  text-align: center;
 }
 
 #myFooter .social-networks{
-	text-align: center;
-	padding-top: 30px;
-	padding-bottom: 38px;
+  text-align: center;
+  padding-top: 30px;
+  padding-bottom: 38px;
 }
 
 #myFooter .social-networks a{
-    font-size: 32px;
-    margin-right: 5px;
-    margin-left: 5px;
-    color: #f9f9f9;
-    padding: 10px;
-    transition: 0.2s;
+  font-size: 32px;
+  margin-right: 5px;
+  margin-left: 5px;
+  color: #f9f9f9;
+  padding: 10px;
+  transition: 0.2s;
 }
 
 #myFooter .social-networks a:hover{
-	text-decoration: none;
-
+  text-decoration: none;
 }
 
 #myFooter .facebook:hover{
-	color:#0077e2;
+  color:#3B5998;
 }
 
 #myFooter .google:hover{
-	color:#ef1a1a;
+  color:#DB4437;
 }
 
 #myFooter .twitter:hover{
-	color: #00aced;
+  color: #1DA1F2;
 }
 
 @media screen and (max-width: 767px){
-	#myFooter {
-		text-align: center;
-	}
-}
-
-.content{
-	flex: 1 0 auto;
-	-webkit-flex: 1 0 auto;
-	min-height: 200px;
+  #myFooter {
+    text-align: center;
+  }
 }
 
 #myFooter{
-	flex: 0 0 auto;
+  flex: 0 0 auto;
     -webkit-flex: 0 0 auto;
 }
 
