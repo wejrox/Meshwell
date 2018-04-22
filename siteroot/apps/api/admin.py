@@ -20,24 +20,32 @@ class ReportAdmin(admin.ModelAdmin):
 admin.site.register(Report, ReportAdmin)
 
 class ProfileAdmin(admin.ModelAdmin):
-	list_display = ['user', 'birth_date', 'sessions_played']#,'total_reports')
-	actions = ['ban_users']
+	list_display = ('user', 'birth_date', 'sessions_played')
+	readonly_fields = (('sessions_played'),('birth_date'),('user'),('pref_server'),('teamwork_commends'),('skill_commends'),('positivity_commends'),('communication_commends'),('discord_name'))#,'total_reports')
+
+#USER BANNING FUNCTION, CURRENTLY UNDER DEVELOPMENT
+	#readonly_fields = (('user'), ('birth_date'), ('sessions_played') , ('commendations'))
+	#actions = ['ban_users']
 	#def total_reports(self, obj):
 		#return Report.objects.filter(user_reported=obj).count()
 
-	def ban_users(self, request, queryset):
-		self.user.objects.update(is_active = False)
-		self.message_user(request, "Banned and Sent Email")
-		User.save()
-	ban_users.short_description = "Ban & Email"
+	#def ban_users(self, request, queryset):
+		#self.user.objects.update(is_active = False)
+		#self.message_user(request, "Banned and Sent Email")
+		#User.save()
+	#ban_users.short_description = "Ban & Email"
 
 
 admin.site.register(Profile, ProfileAdmin)
 
-#class MyUserAdmin(UserAdmin):
-	#UserAdmin.list_display = ('username', 'first_name', 'last_name')
-#admin.site.register(User, MyUserAdmin)
+class MyUserAdmin(UserAdmin):
+	list_display = ('username', 'first_name', 'last_name' , 'email')
+	readonly_fields = ('first_name' , ('last_name') , ('email') , ('username'))
 
+admin.site.unregister(User)
+admin.site.register(User, MyUserAdmin)
+
+#USER BANNING FUNCTION, CURRENTLY UNDER DEVELOPMENT
 #def banning(self, request, queryset):
 #	self.user.objects.all().update(is_active=false)
 	#self.message_user(request, "BANNED")
