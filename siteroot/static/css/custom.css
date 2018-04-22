@@ -1,5 +1,4 @@
 /*Content Styling*/
-
 .guiderContent{
   background-color: #272727;
   padding: 10px;
@@ -48,7 +47,6 @@
 }
 
 /*Buttons*/
-
 .btn-danger{
   color: #fff;
   background-color: #F44C41;
@@ -75,7 +73,6 @@
 }
 
 /*Carousel*/
-
 .vertical-center {
   min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
   min-height: 100vh; /* These two lines are counted as one :-)       */
@@ -94,7 +91,6 @@
 }
 
 /*Navbar*/
-
 .navbar-light .navbar-nav .nav-link{
   color: #f44c41;
 }
@@ -119,6 +115,26 @@
   color: #f44c41;
 }
 
+.navbar-brand
+{
+  font-family: "timeburner";
+    src: url("css/fonts/timeburner.eot");
+    src:
+    url("css/fonts/timeburner.woff") format("woff"),
+    url("{% static "fonts/timeburner.woff" %}") format("woff"),
+    url("{% static "fonts/timeburner.otf" %}") format("opentype"),
+    url("{% static "fonts/timeburner.svg#filename" %}") format("svg"),
+
+  font-size: 24pt;
+}
+
+.navBorder{
+  border-style:  solid;
+  border-width: 0px 0px 1px 0px;
+  border-color: #f44c41;
+}
+
+/*Dropdown Styles*/
 .dropdown-menu{
   background-color: #373737 !important;
   border-color: #f44c41 !important;
@@ -138,23 +154,34 @@
     color: #FFFFFF;
 }
 
-.navbar-brand
-{
-  font-family: "timeburner";
-    src: url("css/fonts/timeburner.eot");
-    src:
-    url("css/fonts/timeburner.woff") format("woff"),
-    url("{% static "fonts/timeburner.woff" %}") format("woff"),
-    url("{% static "fonts/timeburner.otf" %}") format("opentype"),
-    url("{% static "fonts/timeburner.svg#filename" %}") format("svg"),
-
-  font-size: 24pt;
+.dropdown-menu.customFooterDropdown{
+  background-color: #373737 !important;
+  border-color: #696969 !important;
+  top: 135% !important;
+  left: 50% !important;
+  right: auto !important;
+  text-align: center !important;
+  transform: translate(-50%, 0) !important;
 }
 
-.navBorder{
-  border-style:  solid;
-  border-width: 0px 0px 1px 0px;
-  border-color: #f44c41;
+.dropdown-item.customItem{
+  color: #fff !important;
+}
+
+.dropdown-item:hover{
+  color: #fff !important;
+}
+
+.dropdown-item:focus, .dropdown-item:hover {
+  background-color: #F44C41;
+}
+
+.btn.btn-secondary.btn-lg.dropdown-toggle.customFooterButton{
+  color: #fff !important;
+  background:  transparent;
+  border: transparent;
+  font-weight:  100;
+  margin-top: 30px;
 }
 
 /*About Us CSS*/
