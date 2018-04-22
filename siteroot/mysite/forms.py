@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from apps.api.models import Profile, Feedback, Profile_Connected_Game_Account, Availability, Session, Session_Profile
+from apps.api.models import Profile, Feedback, Profile_Connected_Game_Account, Availability, Session, Session_Profile, Report
 from django.forms import ModelForm
 from django.utils.safestring import mark_safe
 
@@ -153,12 +153,14 @@ class UserAvailabilityForm(forms.ModelForm):
 	start_time = forms.TimeField(
 		required = True,
 		help_text= 'Required.',
+		initial='00:00',
 		widget=forms.TimeInput(attrs={'class':'form-control', 'type':'time'}),
 		input_formats=['%H:%M', '%H:%M:%S'],
 	)
 	end_time = forms.TimeField(
 		required = True,
 		help_text= 'Required.',
+		initial='01:00',
 		widget=forms.TimeInput(attrs={'class':'form-control', 'type':'time'}),
 		input_formats=['%H:%M', '%H:%M:%S'],
 	)
@@ -180,6 +182,10 @@ class UserAvailabilityForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user', None)
 		super(UserAvailabilityForm, self).__init__(*args, **kwargs)
+		if 'start_time' in self.initial:
+			self.initial['start_time'] = self.initial['start_time'].strftime('%H:%M')
+		if 'end_time' in self.initial:
+			self.initial['end_time'] = self.initial['end_time'].strftime('%H:%M')
 
 	# Don't allow start time after end time
 	def clean(self):
@@ -255,6 +261,8 @@ class RateSessionForm(forms.Form):
         players = Session_Profile.objects.filter(session=self.session).exclude(profile=self.profile.id)
         self.player_count = len(players)
         for i, player in enumerate(players):
+#            # Get their ign so the user knows who they are (DISABLED RIGHT NOW AS WE ARE TESTING)
+#            ign = Profile_Connected_Game_Account.filter(game=self.session.game.id, profile=player.profile.id).first()
             self.fields['player_%s_id' % i] = forms.CharField(initial=player.profile.id, label='')
             self.fields['player_%s_id' % i].widget = forms.HiddenInput()
             self.fields['player_%s_name' % i] = forms.CharField(disabled=True, label='Player', initial=player.profile.user.username)
