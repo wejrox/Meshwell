@@ -13,13 +13,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.conf.urls import url, include
+from django.conf.urls.static import static
 from django.urls import path
 from mysite import views as site_views
 from apps.api.urls import router as api_router
 from rest_framework.authtoken import views as token_views
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
+
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
@@ -53,3 +56,6 @@ urlpatterns = [
     # Temporary Development
     path('css-standard/', site_views.css_standard, name='css-standard'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

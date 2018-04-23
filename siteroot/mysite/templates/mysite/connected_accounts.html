@@ -10,17 +10,19 @@
 	<table class="table">
 		<thead class="thead-dark">
 			<tr>
+				<th scope="col"></th>
 				<th scope="col">Game Name</th>
 				<th scope="col">Connected Account</th>
 				<th scope="col">Platform</th>
 				<th scope="col">Casual Rank</th>
 				<th scope="col">Competitive Rank</th>
-					<th scope="col"></th>
+				<th scope="col"></th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 			{% for key, value in accounts.items %}
+				<td><img class="img-fluid rounded img-thumbnail" src="{{ value.image }}" height=50pt width=50pt /></td>
 				<td>{{ value.game_name }}</td>
 				<td>{{ value.game_player_tag }}</td>
 				<td>{{ value.platform }}</td>

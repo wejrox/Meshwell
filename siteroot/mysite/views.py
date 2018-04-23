@@ -98,8 +98,6 @@ def dashboard(request):
 	context['availabilities'] = Availability.objects.filter(profile=request.user.profile)
 	context['prev_sessions'] = Session_Profile.objects.filter(profile=request.user.profile).exclude(session__isnull=True).order_by('-session__start')
 
-	print(context['prev_sessions'])
-
 	data = retrieve_data('profile', 'id='+str(request.user.profile.id))
 	return render(request, 'mysite/dashboard.html', context)
 
@@ -326,6 +324,7 @@ def connected_accounts(request):
 	for game in games:
 		final_data[game['url']] = {}
 		final_data[game['url']]['game_name'] = game['name']
+		final_data[game['url']]['image'] = game['image']
 		final_data[game['url']]['game_player_tag'] = 'Not Connected!'
 
 	# Set each account to be inside the game if it exists
@@ -505,7 +504,7 @@ def exit_queue(request):
 def availability(request):
 	# Ensure that user is not queued!
 	if request.user.profile.in_queue:
-		return redirect('dashboard');
+		return redirect('dashboard')
 
 	# Remove the reference to an editable availability if it exists.
 	if 'avail_url' in request.session:
@@ -535,7 +534,7 @@ def delete_availability(url):
 def add_availability(request):
 	# Ensure that user is not queued!
 	if request.user.profile.in_queue:
-		return redirect('dashboard');
+		return redirect('dashboard')
 
 	context = {
 	    'title': 'New Availability',
@@ -565,7 +564,7 @@ def add_availability(request):
 def edit_availability(request):
 	# Ensure that user is not queued!
 	if request.user.profile.in_queue:
-		return redirect('dashboard');
+		return redirect('dashboard')
 
 	# Get a potentially editable object from a given url
 	if 'avail_url' in request.session:
