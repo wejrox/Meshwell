@@ -4,8 +4,7 @@ from django.db.models import Count
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.contrib import messages
-#from django.contrib.auth.models import User
-#from django.contrib.auth.models import User
+
 
 # Register your models here.
 admin.site.register(Availability)
@@ -16,6 +15,8 @@ admin.site.register(Session_Profile)
 admin.site.register(Profile_Connected_Game_Account)
 admin.site.register(Feedback)
 
+
+#Admin functions will be created here,as well as registration  of their specific models
 class ReportAdmin(admin.ModelAdmin):
 	list_display = ('user_reported', 'report_reason', 'sent_by', 'session')
 admin.site.register(Report, ReportAdmin)
