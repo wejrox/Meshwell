@@ -2,7 +2,7 @@ from apps.api.models import Profile, Profile_Connected_Game_Account, Availabilit
 from rest_framework import viewsets
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from django.shortcuts import render, redirect
-import requests, json, urllib.parse
+import requests, json, urllib.parse, datetime
 from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, RateSessionForm
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
@@ -383,37 +383,6 @@ def get_r6siege_ranks(request, player_tag):
 
 	return ranks
 
-@login_required
-def user_preference(request):
-	form = UserPreferenceForm()
-	context = {
-		'title': 'User Preference',
-		'message': 'Please enter your preference details.',
-		'success': 'False',
-		'form': form,
-	}
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			form = UserPreferenceForm(request.POST)
-
-			if form.is_valid():
-				form.save()
-				context = {
-					'title': 'Preference created.',
-					'message': 'Your preference is created.',
-					'success': 'True',
-				}
-				return render(request, 'registration/preference_success.html', context)
-			else:
-				form = UserPreferenceForm()
-				return render(request, 'registration/preference.html', context)
-		else:
-			form = UserPreferenceForm()
-			return render(request, 'registration/preference.html', context)
-	else:
-		context = {'error_title':'Not logged in', 'message':'You must be logged in to view this page'}
-		return render(request, 'mysite/error_page.html', context)
-
 # Handles the user entering the queue for a session when the button on the nav bar is pressed
 @login_required
 def enter_queue(request):
@@ -452,20 +421,6 @@ def enter_queue(request):
 
     return redirect('dashboard')
 
-# Returns either the first session that a profile can connect to, or return None if sessions aren't available
-@login_required
-def get_suitable_session(profile, user_availabilities):
-    # Avail is each Availability object
-    for avail in user_availabilities:
-        #matching_session = Session.objects.filter(end_time__lte=avail.end_time, start_time__gte=avail.start_time).first()#looping through all the sessions end times that match to availability
-        matching_session = Session.objects.get(pk=1)
-		# Return session if it is viable
-        if matching_session:
-			# <DO OTHER CHECKS>
-            return matching_session
-    # Exhausted all availabilities and no sessions were matching criteria
-    return None
-
 # Removes the authenticated player from the queue
 @login_required
 def exit_queue(request):
@@ -479,28 +434,96 @@ def exit_queue(request):
     request.user.profile.save()
     return redirect('dashboard')
 
+# Get the most suitable session for the profile given. 
+# Availability existence should be verified prior to this point.
 def get_suitable_session(profile):
-	users_availabilities = Availability.objects.filter(profile=profile) #mapping user_avail to user profile
-	if not users_availabilities:
-		redirect('index')
-	else:
-  		# Avail is each Availability object
-		for avail in users_availabilities:
-			matching_session = Session.objects.get(end_time__lte=avail.end_time)#looping through all the sessions end times that match to availability
-    		# Return session if it is viable
-			if matching_session:
-				return matching_session
-	# Exhausted all availabilities and no sessions were matching criteria
-	return None
+	# Modifiers
+	acceptable_mmr_range = 100 # How much above/below us should they be to be viable?
+	min_accepted_viability = 0.6 # A value (out of 1) which states how viable a session must be to be included
+	# Queueing players details
+	user_availabilities = Availability.objects.filter(profile=profile)
+	user_connected_accounts = Profile_Connected_Game_Account.objects.filter(profile=profile)
+  	
+	# Create a list of games to filter based off
+	user_accounts = []
+	for acc in user_connected_accounts:
+		user_accounts += acc.game
 
-# Removes the authenticated player from the queue
-@login_required
-def exit_queue(request):
-	if not user_profile.in_queue:
-		redirect('dashboard')
-	player_session = Session_Profile.objects.get(profile=request.user.profile)
-	player_session.delete()
-	return redirect('dashboard')
+	# All the sessions which meet basic requirements (mmr, time/day, playlist, game)
+	viable_sessions = []
+
+	# Get any session that matches the availability given (1 hour min.)
+	for avail in user_availabilities:
+		# The value of the days for filtering by day
+		day = 0
+		if avail.day == Availability.Monday:
+			day = 2
+		elif avail.day == Availability.Tuesday:
+			day = 3
+		elif avail.day == Availability.Wednesday:
+			day = 4
+		elif avail.day == Availability.Thursday:
+			day = 5
+		elif avail.day == Availability.Friday:
+			day = 6
+		elif avail.day == Availability.Saturday:
+			day = 7
+
+		# Get any sessions that haven't happened yet, match our day, is one of our games we have set up, and is the right playlist type
+		avail_match_sessions = Session.objects.filter(
+			start__gte=datetime.datetime.now(), 
+			start__week_day=day, 
+			game__in=user_accounts, 
+			competitive=avail.competitive,
+		)
+
+		user_acc = Profile_Connected_Game_Account.objects.filter(profile=profile).first()
+		# Check the viability of the session
+		for session in avail_match_sessions:
+			# Get the stats of each player that is attached to the session
+			player_session = Session_Profile.objects.filter(Session=session)
+			
+			# Check if their MMR is within the range we want
+			for player_s in player_session:
+				prof_acc = Profile_Connected_Game_Account.objects.get(profile=player_s.profile)
+
+				# Cancel if mmr out of range
+				if (profile_acc.mmr < user_acc.mmr - 100) or (profile_acc.mmr < user_acc.mmr + 100):
+					break
+			
+			# Add this session as it is basic viable
+			viable_sessions += session
+
+	# Check existence
+	if len(viable_sessions) < 1:
+		return None
+	# Add any sessions that meet viability requirements
+	sorted_sessions = []
+	for session in viable_sessions:
+		v = calc_match_viablity(session)
+		if v > min_accepted_viability:
+			sorted_sessions += [v, session]
+	
+	# Check existence
+	if len(sorted_sessions) < 1:
+		return None
+
+	# Sort based on viability, highest to lowest
+	sorted_sessions.sort(key=lambda v: v[0], reverse=True)
+
+	# Get the best match
+	# Exhausted all availabilities and no sessions were matching criteria
+	return sorted_sessions[0]
+
+# Calculates how viable a session is for your current profile's weighting
+# (commendations create a % viability)
+# (sum((c1*w1)+(c2*w2)+(c3*w3)+(c4*w4)) / sum(c1 + c2 + c3 + c4)) * 100
+# Where c=commendations, w=weighting
+def calc_match_viablity(session):
+	weighting_modifiers = [1.0, 0.75, 0.5, 0.25]
+	# Dummy data
+	return 0.8
+
 def availability(request):
 	# Ensure that user is not queued!
 	if request.user.profile.in_queue:
