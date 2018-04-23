@@ -12,4 +12,5 @@ siteroot/mysite/static/* linguist-vendored
 
 # Ignore any database changes
 migrations/
-**/__pycache__/
+__pycache__/
+.vscode-root/

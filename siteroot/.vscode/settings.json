@@ -1,0 +1,17 @@
+{
+    "python.linting.enabled": true,
+    "python.pythonPath": "/usr/bin/python3.6",
+    "python.linting.pylintEnabled": true,
+    "python.linting.pep8Enabled": false,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/__pycache__": true,
+        "**/migrations": true,
+        "db.sqlite3": true,
+        "manage.py": true,
+    }
+}

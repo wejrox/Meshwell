@@ -11,7 +11,7 @@ class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.PROTECT)
 
 	def __str__(self):
-		return self.user.username;
+		return self.user.username
 
 	USWEST = 'usw'
 	USEAST = 'use'
@@ -130,6 +130,10 @@ class Game(models.Model):
 		default='No description provided.',
 	)
 	# ADD IMAGE SUPPORT
+	image = models.ImageField(
+		upload_to="games",
+		default='games/default.jpg',
+	)
 
 # An entry for a Role that has a connected game
 class Game_Role(models.Model):
