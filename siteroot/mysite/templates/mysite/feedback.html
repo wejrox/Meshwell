@@ -6,11 +6,10 @@
 
 <h1>{{ title }}</h1>
 
-
 <p>{{ message }}</p>
 <!--Using form.py & view.py to call feedback form testing-->
 {% if success == 'False' %}
-<form method="post">dadd
+<form method="post">
 		{% csrf_token %}
 	{{ form.as_p }}
 	 <br>

@@ -76,7 +76,7 @@
 			    	{% endif %}
 
 			    	<li class="nav-item">
-				{% if user.is_authenticated %}
+						{% if user.is_authenticated %}
 				    	{% if user.profile.in_queue %}
 							<a class="btn btn-danger" href="{% url 'exit_queue' %}">Exit Queue</a>
 							{% else %}
@@ -139,120 +139,115 @@
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<!-- FOOTER -->
+		<!--Footer for smaller resolution devices-->
+		<div class="d-lg-none">
+		<footer id="myFooter">
+				<div class="container">
+						<div class="row">
+								<div class="col-sm-4 myCols">
+									<div class="btn-group">
+							<button class="btn btn-secondary btn-lg dropdown-toggle customFooterButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Get Started
+							</button>
+							<div class="dropdown-menu customFooterDropdown">
+								<a class="dropdown-item customItem" href="#">Homepage</a>
+								<a class="dropdown-item customItem" href="#">Register</a>
+								<a class="dropdown-item customItem" href="#">Supported Games</a>
+							</div>
+						</div>
+										<hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
+								</div>
+
+								<div class="col-sm-4 myCols">
+									<div class="btn-group">
+							<button class="btn btn-secondary btn-lg dropdown-toggle customFooterButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								About Us
+							</button>
+							<div class="dropdown-menu customFooterDropdown">
+								<a class="dropdown-item customItem" href="#">Company Information</a>
+								<a class="dropdown-item customItem" href="#">Contact Us</a>
+							</div>
+						</div>
+										<hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
+								</div>
+							<div class="col-sm-4 myCols">
+									<div class="btn-group">
+							<button class="btn btn-secondary btn-lg dropdown-toggle customFooterButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Legal
+							</button>
+							<div class="dropdown-menu customFooterDropdown">
+								<a class="dropdown-item customItem" href="#">Terms of Service</a>
+								<a class="dropdown-item customItem" href="#">Terms of Use</a>
+								<a class="dropdown-item customItem" href="#">Privacy Policy</a>
+							</div>
+						</div>
+										<hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
+								</div>
+						</div>
+				</div>
+				<div class="social-networks">
+						<a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
+						<a href="https://www.facebook.com/MeshwellPlayTogether/" class="facebook"><i class="fa fa-facebook-official"></i></a>
+						<a href="#" class="google"><i class="fa fa-google-plus"></i></a>
+				</div>
+				<div class="footer-copyright">
+						<p>© 2018 Copyright Meshwell</p>
+						<!--hello-->
+				</div>
+		</footer>
+		</div>
+		<!--/.Footer for smaller resolution devices-->
+
+		<!--Footer for large resolution devices-->
+		<div class="d-none d-lg-block">
+		<footer id="myFooter">
+				<div class="container">
+						<div class="row">
+								<div class="col-sm-4 myCols">
+										<div class="myFooter title">Get started</div>
+										<hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
+										<ul>
+												<li><a href="#">Homepage</a></li>
+												<li><a href="#">Register</a></li>
+												<li><a href="#">Supported Games</a></li>
+										</ul>
+								</div>
+								<div class="col-sm-4 myCols">
+										<div class="myFooter title">About Us</div>
+										<hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
+										<ul>
+												<li><a href="#">Company Information</a></li>
+												<li><a href="#">Contact us</a></li>
+										</ul>
+								</div>
+								<div class="col-sm-4 myCols">
+										<div class="myFooter title">Legal</div>
+										<hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
+										<ul>
+												<li><a href="#">Terms of Service</a></li>
+												<li><a href="#">Terms of Use</a></li>
+												<li><a href="#">Privacy Policy</a></li>
+										</ul>
+								</div>
+						</div>
+				</div>
+				<div class="social-networks">
+						<a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
+						<a href="https://www.facebook.com/MeshwellPlayTogether/" class="facebook"><i class="fa fa-facebook-official"></i></a>
+						<a href="#" class="google"><i class="fa fa-google-plus"></i></a>
+				</div>
+				<div class="footer-copyright">
+						<p>© 2018 Copyright Meshwell</p>
+						<!--hello-->
+				</div>
+		</footer>
+		</div>
+		<!--/.Footer for smaller resolution devices-->
+
+		<!--Javascript-->
+		<script src="{% static "js/favicon.js" %}" type="text/javascript"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 	</body>
-	<!-- FOOTER -->
-<body>
-<div class="content">
-</div>
-<!--Footer for smaller resolution devices-->
-<div class="d-lg-none">
-<footer id="myFooter">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-4 myCols">
-            	<div class="btn-group">
-				  <button class="btn btn-secondary btn-lg dropdown-toggle customFooterButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    Get Started
-				  </button>
-				  <div class="dropdown-menu customFooterDropdown">
-				    <a class="dropdown-item customItem" href="#">Homepage</a>
-				    <a class="dropdown-item customItem" href="#">Register</a>
-				    <a class="dropdown-item customItem" href="#">Supported Games</a>
-				  </div>
-				</div>
-                <hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
-            </div>
-
-            <div class="col-sm-4 myCols">
-            	<div class="btn-group">
-				  <button class="btn btn-secondary btn-lg dropdown-toggle customFooterButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    About Us
-				  </button>
-				  <div class="dropdown-menu customFooterDropdown">
-				    <a class="dropdown-item customItem" href="#">Company Information</a>
-				    <a class="dropdown-item customItem" href="#">Contact Us</a>
-				  </div>
-				</div>
-                <hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
-            </div>
-           <div class="col-sm-4 myCols">
-            	<div class="btn-group">
-				  <button class="btn btn-secondary btn-lg dropdown-toggle customFooterButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    Legal
-				  </button>
-				  <div class="dropdown-menu customFooterDropdown">
-				    <a class="dropdown-item customItem" href="#">Terms of Service</a>
-				    <a class="dropdown-item customItem" href="#">Terms of Use</a>
-				    <a class="dropdown-item customItem" href="#">Privacy Policy</a>
-				  </div>
-				</div>
-                <hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
-            </div>
-        </div>
-    </div>
-    <div class="social-networks">
-        <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
-        <a href="https://www.facebook.com/MeshwellPlayTogether/" class="facebook"><i class="fa fa-facebook-official"></i></a>
-        <a href="#" class="google"><i class="fa fa-google-plus"></i></a>
-    </div>
-    <div class="footer-copyright">
-        <p>© 2018 Copyright Meshwell</p>
-        <!--hello-->
-    </div>
-</footer>
-</div>
-<!--/.Footer for smaller resolution devices-->
-
-<!--Footer for large resolution devices-->
-<div class="d-none d-lg-block">
-<footer id="myFooter">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-4 myCols">
-                <div class="myFooter title">Get started</div>
-                <hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
-                <ul>
-                    <li><a href="#">Homepage</a></li>
-                    <li><a href="#">Register</a></li>
-                    <li><a href="#">Supported Games</a></li>
-                </ul>
-            </div>
-            <div class="col-sm-4 myCols">
-                <div class="myFooter title">About Us</div>
-                <hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
-                <ul>
-                    <li><a href="#">Company Information</a></li>
-                    <li><a href="#">Contact us</a></li>
-                </ul>
-            </div>
-            <div class="col-sm-4 myCols">
-                <div class="myFooter title">Legal</div>
-                <hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
-                <ul>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Terms of Use</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="social-networks">
-        <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
-        <a href="https://www.facebook.com/MeshwellPlayTogether/" class="facebook"><i class="fa fa-facebook-official"></i></a>
-        <a href="#" class="google"><i class="fa fa-google-plus"></i></a>
-    </div>
-    <div class="footer-copyright">
-        <p>© 2018 Copyright Meshwell</p>
-        <!--hello-->
-    </div>
-</footer>
-</div>
-<!--/.Footer for smaller resolution devices-->
-
-<!--Javascript-->
-<script src="{% static "js/favicon.js" %}" type="text/javascript"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-</body>
 </html>
