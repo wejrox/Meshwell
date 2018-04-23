@@ -344,42 +344,6 @@ Use the standardised CSS tags I have created if possible.*/
     -webkit-flex: 0 0 auto;
 }
 
-/*User Profile*/
-.table-user-information{
-border-style: solid;
-width:50%;
-margin-left: auto;
-margin-right: auto;
-padding: 20%;
-text-align: left;
-border-top: 0% solid black;
-position: relative;
-font-size: 100%;
-/*right:50%;*/
-top: 2%;
-
-}
-
-/*Shading for Table*/
-/*tr:nth-child(even){
-  background-color: #f2f2f2;
-}
-
-.th.Custom{
-  padding:10px;
-  text-align:left !important;
-}*/
-
-/*.h1.Custom{
-  /* Note: Renable this when your tags are seperated with it's their own unique class/id.
-  position: relative;
-  font-size: 500%;
-  font-style: oblique;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-
-}*/
 
 .Customcenter{
   text-align: center;
@@ -389,23 +353,7 @@ top: 2%;
   font-style: oblique;
   padding: 0%;
   position: relative;
-  left:25%;
 
-}
-
-.Commendations{
-border-style: solid;
-width: 100%;
-margin-left: auto;
-margin-right: auto;
-padding: 100%;
-text-align: center;
-border-top: 3% solid black;
-position: relative;
-font-size: 100%;
-left:25%;
-/*right:50%;*/
-top: 100%;
 }
 
 #profile-image1{
@@ -415,7 +363,7 @@ height: 300px;
 position: relative;
 margin-left: auto;
 margin-right: auto;
-left: 100%;
+left: 50%;
 top: 2px;
 border:0px solid black ;}
 }
