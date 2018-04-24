@@ -205,7 +205,7 @@ class Profile_Connected_Game_Account(models.Model):
 # An entry for a Session, created when two players queue that could match, then players that match are added when possible
 class Session(models.Model):
 	def __str__(self):
-		return str.join(', ', (str(self.game.name), str(self.datetime_created), str(self.start_time)))
+		return str.join(', ', (str(self.game.name), str(self.datetime_created), str(self.start)))
 
 	game = models.ForeignKey(
 		'Game',

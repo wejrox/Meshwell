@@ -469,37 +469,41 @@ def get_suitable_sessions(profile):
 	# Get any session that matches the availability given (1 hour min.)
 	for avail in user_availabilities:
 		# The value of the days for filtering by day
-		day = 0
-		if avail.pref_day == Availability.SUNDAY:
-			day = 1
-		elif avail.pref_day == Availability.MONDAY:
-			day = 2
+		day = -1
+		if avail.pref_day == Availability.MONDAY:
+			day = '0'
 		elif avail.pref_day == Availability.TUESDAY:
-			day = 3
+			day = 1
 		elif avail.pref_day == Availability.WEDNESDAY:
-			day = 4
+			day = 2
 		elif avail.pref_day == Availability.THURSDAY:
-			day = 5
+			day = 3
 		elif avail.pref_day == Availability.FRIDAY:
-			day = 6
+			day = 4
 		elif avail.pref_day == Availability.SATURDAY:
-			day = 7
+			day = 5
+		elif avail.pref_day == Availability.SUNDAY:
+			day = 6
 		print(day)
 		# Get any sessions that haven't happened yet, match our day, is one of our games we have set up, and is the right playlist type
 		avail_match_sessions = Session.objects.filter(
-			start__gte=datetime.datetime.now(), 
-			start__week_day=day, 
-			game__in=user_accounts, 
-			competitive=avail.competitive,
+			#start__gte=datetime.datetime.now(), 
+			start__week_day=0 
+			#game__in=user_accounts, 
+			#competitive=avail.competitive,
 		)
 		print(avail_match_sessions)
+		if avail_match_sessions:
+			for ses in avail_match_sessions:
+				if ses.start:
+					print (ses.start.weekday())
 
 		# Check the viability of the session
 		for session in avail_match_sessions:
 			# Get user account connected to this game
 			user_acc = Profile_Connected_Game_Account.objects.filter(profile=profile, game=session.game).first()
 			# Get the stats of each player that is attached to the session
-			player_sessions = Session_Profile.objects.filter(Session=session)
+			player_sessions = Session_Profile.objects.filter(session=session)
 			
 			suitable = True
 			# Check if their MMR is within the range we want
@@ -507,10 +511,15 @@ def get_suitable_sessions(profile):
 				prof_acc = Profile_Connected_Game_Account.objects.filter(profile=player_s.profile, game=session.game).first()
 
 				# Cancel if mmr out of range
-				if (profile_acc.mmr < user_acc.mmr - acceptable_mmr_range) or (profile_acc.mmr < user_acc.mmr + acceptable_mmr_range):
-					suitable = False
-					break
-			
+				if session.competitive:
+					if (prof_acc.comp_rank < user_acc.comp_rank - acceptable_mmr_range) or (prof_acc.comp_rank > user_acc.comp_rank + acceptable_mmr_range):
+						suitable = False
+						break
+				else:
+					if (prof_acc.cas_rank < user_acc.cas_rank - acceptable_mmr_range) or (prof_acc.cas_rank > user_acc.cas_rank + acceptable_mmr_range):
+						suitable = False
+						break
+			print(suitable)
 			# Basic viable session
 			if suitable:
 				viable_sessions.append(session)
