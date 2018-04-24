@@ -394,16 +394,26 @@ def enter_queue(request):
         return redirect('dashboard')
 
     # Create a user session
-    player_session = Session_Profile.objects.create(profile=user_profile)
-    player_session.save()
+#    player_session = Session_Profile.objects.create(profile=user_profile)
+#    player_session.save()
 
     # Get user's availabilities, or send to availability page
-    user_availabilities = Availability.objects.filter(profile=user_profile) #mapping user_avail to user profile
+    user_availabilities = Availability.objects.filter(profile=user_profile)
     if not user_availabilities:
         return redirect('availability')
     else:
-    	session = get_suitable_session(user_profile, user_availabilities)
-    # Suitable session?
+        sessions = get_suitable_sessions(user_profile)
+        if sessions:
+            session = sessions[0]
+            print(session)
+        else:
+            session = None
+			
+	# Testing, don't run the rest
+    return redirect('dashboard')
+    
+	
+	# Suitable session?
     if session:
         # Attach a session
         player_session.session = session
@@ -434,9 +444,9 @@ def exit_queue(request):
     request.user.profile.save()
     return redirect('dashboard')
 
-# Get the most suitable session for the profile given. 
+# Get all suitable sessions for a user to join
 # Availability existence should be verified prior to this point.
-def get_suitable_session(profile):
+def get_suitable_sessions(profile):
 	# Modifiers
 	acceptable_mmr_range = 100 # How much above/below us should they be to be viable?
 	min_accepted_viability = 0.6 # A value (out of 1) which states how viable a session must be to be included
@@ -447,7 +457,11 @@ def get_suitable_session(profile):
 	# Create a list of games to filter based off
 	user_accounts = []
 	for acc in user_connected_accounts:
-		user_accounts += acc.game
+		user_accounts.append(acc.game)
+
+	# Testing
+	print(user_accounts)
+	print(user_availabilities)
 
 	# All the sessions which meet basic requirements (mmr, time/day, playlist, game)
 	viable_sessions = []
@@ -456,19 +470,21 @@ def get_suitable_session(profile):
 	for avail in user_availabilities:
 		# The value of the days for filtering by day
 		day = 0
-		if avail.day == Availability.Monday:
+		if avail.pref_day == Availability.SUNDAY:
+			day = 1
+		elif avail.pref_day == Availability.MONDAY:
 			day = 2
-		elif avail.day == Availability.Tuesday:
+		elif avail.pref_day == Availability.TUESDAY:
 			day = 3
-		elif avail.day == Availability.Wednesday:
+		elif avail.pref_day == Availability.WEDNESDAY:
 			day = 4
-		elif avail.day == Availability.Thursday:
+		elif avail.pref_day == Availability.THURSDAY:
 			day = 5
-		elif avail.day == Availability.Friday:
+		elif avail.pref_day == Availability.FRIDAY:
 			day = 6
-		elif avail.day == Availability.Saturday:
+		elif avail.pref_day == Availability.SATURDAY:
 			day = 7
-
+		print(day)
 		# Get any sessions that haven't happened yet, match our day, is one of our games we have set up, and is the right playlist type
 		avail_match_sessions = Session.objects.filter(
 			start__gte=datetime.datetime.now(), 
@@ -476,23 +492,28 @@ def get_suitable_session(profile):
 			game__in=user_accounts, 
 			competitive=avail.competitive,
 		)
+		print(avail_match_sessions)
 
-		user_acc = Profile_Connected_Game_Account.objects.filter(profile=profile).first()
 		# Check the viability of the session
 		for session in avail_match_sessions:
+			# Get user account connected to this game
+			user_acc = Profile_Connected_Game_Account.objects.filter(profile=profile, game=session.game).first()
 			# Get the stats of each player that is attached to the session
-			player_session = Session_Profile.objects.filter(Session=session)
+			player_sessions = Session_Profile.objects.filter(Session=session)
 			
+			suitable = True
 			# Check if their MMR is within the range we want
-			for player_s in player_session:
-				prof_acc = Profile_Connected_Game_Account.objects.get(profile=player_s.profile)
+			for player_s in player_sessions:
+				prof_acc = Profile_Connected_Game_Account.objects.filter(profile=player_s.profile, game=session.game).first()
 
 				# Cancel if mmr out of range
-				if (profile_acc.mmr < user_acc.mmr - 100) or (profile_acc.mmr < user_acc.mmr + 100):
+				if (profile_acc.mmr < user_acc.mmr - acceptable_mmr_range) or (profile_acc.mmr < user_acc.mmr + acceptable_mmr_range):
+					suitable = False
 					break
 			
-			# Add this session as it is basic viable
-			viable_sessions += session
+			# Basic viable session
+			if suitable:
+				viable_sessions.append(session)
 
 	# Check existence
 	if len(viable_sessions) < 1:
@@ -502,7 +523,7 @@ def get_suitable_session(profile):
 	for session in viable_sessions:
 		v = calc_match_viablity(session)
 		if v > min_accepted_viability:
-			sorted_sessions += [v, session]
+			sorted_sessions.append([v, session])
 	
 	# Check existence
 	if len(sorted_sessions) < 1:
@@ -517,7 +538,7 @@ def get_suitable_session(profile):
 
 # Calculates how viable a session is for your current profile's weighting
 # (commendations create a % viability)
-# (sum((c1*w1)+(c2*w2)+(c3*w3)+(c4*w4)) / sum(c1 + c2 + c3 + c4)) * 100
+# (sum( (c1*w1)+(c2*w2)+(c3*w3)+(c4*w4) ) / sum( c1 + c2 + c3 + c4 ))
 # Where c=commendations, w=weighting
 def calc_match_viablity(session):
 	weighting_modifiers = [1.0, 0.75, 0.5, 0.25]
