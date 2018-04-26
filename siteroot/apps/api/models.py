@@ -13,14 +13,14 @@ class Profile(models.Model):
 	def __str__(self):
 		return self.user.username
 
-	USWEST = 'usw'
-	USEAST = 'use'
-	EUROPE = 'eu'
-	OCEANIA = 'oce'
-	ASIA = 'as'
-	SOUTHAMERICA = 'sam'
-	SOUTHAFRICA = 'saf'
-	MIDDLEEAST = 'me'
+	USWEST = 'US-West'
+	USEAST = 'US-East'
+	EUROPE = 'Europe'
+	OCEANIA = 'Oceania'
+	ASIA = 'Asia'
+	SOUTHAMERICA = 'South America'
+	SOUTHAFRICA = 'South Africa'
+	MIDDLEEAST = 'Middle-East'
 
 	PREF_SERVER_CHOICES = (
 		(USWEST, 'US-West'),
@@ -34,7 +34,7 @@ class Profile(models.Model):
 	)
 
 	pref_server = models.CharField(
-		max_length=3,
+		max_length=20,
 		choices=PREF_SERVER_CHOICES,
 		default=USWEST,
 	)
@@ -139,7 +139,7 @@ class Game(models.Model):
 	max_players = models.IntegerField(
 		null=False,
 		blank=False,
-		default='2',
+		default=2,
 	)
 
 	description = models.CharField(
@@ -184,9 +184,9 @@ class Profile_Connected_Game_Account(models.Model):
 	def __str__(self):
 		return self.game_player_tag
 
-	PS4 = 'ps4'
-	XBOX = 'xone'
-	PC = 'pc'
+	PS4 = 'Playstation 4'
+	XBOX = 'Xbox One'
+	PC = 'PC'
 
 	PLATFORM_CHOICES = (
 		(PS4, 'Playstation 4'),
@@ -212,7 +212,7 @@ class Profile_Connected_Game_Account(models.Model):
 	# The ID that we should use to request the players details.
 	game_player_tag = models.CharField(max_length=50, blank=False, null=False, default='<Missing>')
 	platform = models.CharField(
-		max_length=5,
+		max_length=20,
 		blank=False,
 		null=False,
 		choices=PLATFORM_CHOICES,
@@ -237,6 +237,7 @@ class Session(models.Model):
 	start = models.DateTimeField(blank=True, null=True,)
 	end_time = models.TimeField(blank=True, null=True,)
 	competitive = models.BooleanField(default=False,)
+	space_available = models.BooleanField(default=True,)
 
 # An entry for a profile's session, connected with a Session when it is found
 class Session_Profile(models.Model):
@@ -269,8 +270,8 @@ class Report(models.Model):
 	def __str__(self):
 		return str.join(str(self.user_reported), str(self.datetime_sent))
 
-	TOXICITY = 'toxic'
-	SPORTSMANSHIP = 'sportsmanship'
+	TOXICITY = 'Toxicity'
+	SPORTSMANSHIP = 'Poor sportsmanship'
 
 	REPORT_REASON_CHOICES = (
 		(TOXICITY, 'Toxicity'),
