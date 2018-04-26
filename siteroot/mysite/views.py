@@ -88,22 +88,6 @@ def tos(request):
 
 # User dashboard
 @login_required
-
-""" BACKUP - Old dashboard code.
-def dashboard(request):
-	context = {
-		'title':'Dashboard',
-		'message':'Play Together. Mesh Well.',
-	}
-
-	context['connected_accounts'] = Profile_Connected_Game_Account.objects.filter(profile=request.user.profile)
-	context['availabilities'] = Availability.objects.filter(profile=request.user.profile)
-	context['prev_sessions'] = Session_Profile.objects.filter(profile=request.user.profile).exclude(session__isnull=True).order_by('-session__start')
-
-	data = retrieve_data('profile', 'id='+str(request.user.profile.id))
-	return render(request, 'mysite/dashboard.html', context)
-"""
-
 def dashboard(request):
 	#Profile
 	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
