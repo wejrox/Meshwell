@@ -126,7 +126,7 @@ def dashboard(request):
 		'birth_date':data['birth_date'],
 		'sessions_played':data['sessions_played'],
 		'teamwork_commends':data['teamwork_commends'],
-		'positivity_commends':data['positivity_commends'],
+		'sportsmanship_commends':data['sportsmanship_commends'],
 		'skill_commends':data['skill_commends'],
 		'communication_commends':data['communication_commends'],
 	}
@@ -158,7 +158,7 @@ def profile(request):
 		'birth_date':data['birth_date'],
 		'sessions_played':data['sessions_played'],
 		'teamwork_commends':data['teamwork_commends'],
-		'positivity_commends':data['positivity_commends'],
+		'sportsmanship_commends':data['sportsmanship_commends'],
 		'skill_commends':data['skill_commends'],
 		'communication_commends':data['communication_commends'],
 	}

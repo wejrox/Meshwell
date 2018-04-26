@@ -293,7 +293,7 @@ class RateSessionForm(forms.Form):
             if self.cleaned_data['player_%s_skill' % i]:
                 profile.skill_commends += 1
             if self.cleaned_data['player_%s_positivity' % i]:
-                profile.positivity_commends += 1
+                profile.sportsmanship_commends += 1
             if self.cleaned_data['player_%s_communication' % i]:
                 profile.communication_commends += 1
             if self.cleaned_data['player_%s_teamwork' % i]:
