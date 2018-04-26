@@ -424,6 +424,7 @@ def enter_queue(request):
         return redirect('availability')
     else:
         sessions = get_suitable_sessions(user_profile)
+        print(sessions)
         if sessions:
             session = sessions[0]
             print(session)
@@ -432,7 +433,6 @@ def enter_queue(request):
 			
 	# Testing, don't run the rest
     return redirect('dashboard')
-    
 	
 	# Suitable session?
     if session:
@@ -445,6 +445,7 @@ def enter_queue(request):
         # Create a session and add the user
         game = Game.objects.get(pk=1)
         session = Session.objects.create(game=game)
+		#session.start = 
         player_session.session = session
         player_session.save()
         user_profile.in_queue = True
@@ -481,8 +482,8 @@ def get_suitable_sessions(profile):
 		user_accounts.append(acc.game)
 
 	# Testing
-	print(user_accounts)
-	print(user_availabilities)
+	#print(user_accounts)
+	#print(user_availabilities)
 
 	# All the sessions which meet basic requirements (mmr, time/day, playlist, game)
 	viable_sessions = []
@@ -505,7 +506,7 @@ def get_suitable_sessions(profile):
 			day = 7
 		elif avail.pref_day == Availability.SUNDAY:
 			day = 1
-		print(day)
+
 		# Get any sessions that haven't happened yet, match our day, is one of our games we have set up, and is the right playlist type
 		avail_match_sessions = Session.objects.filter(
 			start__gte=datetime.datetime.now(),
@@ -547,7 +548,7 @@ def get_suitable_sessions(profile):
 	# Add any sessions that meet viability requirements
 	sorted_sessions = []
 	for session in viable_sessions:
-		v = calc_match_viablity(session)
+		v = calc_match_viablity(profile, session)
 		if v > min_accepted_viability:
 			sorted_sessions.append([v, session])
 	
@@ -560,17 +561,60 @@ def get_suitable_sessions(profile):
 
 	# Get the best match
 	# Exhausted all availabilities and no sessions were matching criteria
-	return sorted_sessions[0]
+	return sorted_sessions
 
 # THE ACTUAL ALGORITHMIC CHECKS
 # Calculates how viable a session is for your current profile's weighting
 # (commendations create a % viability)
-# (sum( (c1*w1)+(c2*w2)+(c3*w3)+(c4*w4) ) / sum( c1 + c2 + c3 + c4 ))
-# Where c=commendations, w=weighting
-def calc_match_viablity(session):
-	weighting_modifiers = [1.0, 0.75, 0.5, 0.25]
-	# Dummy data
-	return 0.8
+# sum(each_player:(c1/tsp*w1)+(c2/tsp*w2)+(c3/tsp*w3)+(c4/tsp*w4)) / pc
+# Where c=commendations, , tsp=total sessions played, w=weighting, pc=Player Count
+def calc_match_viablity(user_profile, session):
+	# What each should be worth out of 1 (Team, Comm, Skill, Sport)
+	weight = [ 0.5, 0.25, 0.125, 0.125 ]
+	# Assign weights to commends by checking if their names are the same
+	modifiers = { 'Teamwork':1.0, 'Communication':1.0, 'Skill':1.0, 'Sportsmanship':1.0, }
+	for key, value in modifiers.items():
+		if user_profile.commend_priority_1 == key:
+			modifiers[key] = weight[0]
+		elif user_profile.commend_priority_2 == key:
+			modifiers[key] = weight[1]
+		elif user_profile.commend_priority_3 == key:
+			modifiers[key] = weight[2]
+		elif user_profile.commend_priority_4 == key:
+			modifiers[key] = weight[3]
+
+	# Players connected to the session
+	players = Session_Profile.objects.filter(session=session)
+
+	# How much the sessions commends are worth after they have been weighted
+	weighted_commends = { 'Teamwork':0.0, 'Communication':0.0, 'Skill':0.0, 'Sportsmanship':0.0, }
+	total_commends = { 'Teamwork':0, 'Communication':0, 'Skill':0, 'Sportsmanship':0, }
+	player_viability = {}
+	# Weigh their commendations based on what the user believes is important
+	for player in players:
+		num_sess = player.profile.sessions_played
+
+		# If they've played a session, grade them.
+		if num_sess > 0:
+			teamwork = (player.profile.teamwork_commends / num_sess) * modifiers['Teamwork']
+			communication = (player.profile.communication_commends / num_sess) * modifiers['Communication']
+			skill = (player.profile.skill_commends / num_sess) * modifiers['Skill']
+			sportsmanship = (player.profile.sportsmanship_commends / num_sess) * modifiers['Sportsmanship']
+		
+			player_viability[player.id] = teamwork + communication + skill + sportsmanship
+		# If not, we just give them 0.5
+		else:
+			player_viability[player.id] = 0.5
+
+	# Calculate the sum of the viability of all players
+	total_viability = 0.0
+	for key in player_viability:
+		total_viability += player_viability[key]
+
+	# Get the average viability to return as our viability percentage
+	averaged_viability = total_viability / len(players)
+
+	return averaged_viability
 
 def availability(request):
 	# Ensure that user is not queued!
