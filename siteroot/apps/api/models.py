@@ -39,12 +39,31 @@ class Profile(models.Model):
 		default=USWEST,
 	)
 
-	birth_date = models.DateField(null=True, blank=False,)
-	sessions_played = models.IntegerField(null=False, blank=False, default='0',)
+	TEAMWORK = 'Teamwork'
+	COMMUNICATION = 'Communication'
+	SKILL = 'Skill'
+	SPORTSMANSHIP = 'Sportsmanship'
+
+	COMMENDS_CHOICES = (
+		(TEAMWORK, 'Teamwork'),
+		(COMMUNICATION, 'Communication'),
+		(SKILL, 'Skill'),
+		(SPORTSMANSHIP, 'Sportsmanship'),
+	)
 	teamwork_commends = models.IntegerField(null=False, blank=False, default='0',)
 	communication_commends = models.IntegerField(null=False, blank=False, default='0',)
 	skill_commends = models.IntegerField(null=False, blank=False, default='0',)
-	positivity_commends = models.IntegerField(null=False, blank=False, default='0',)
+	sportsmanship_commends = models.IntegerField(null=False, blank=False, default='0',)
+
+	# Weighting of commends
+	commend_priority_1 = models.CharField(null=False, blank=False, max_length=20, default=TEAMWORK, choices=COMMENDS_CHOICES,)
+	commend_priority_2 = models.CharField(null=False, blank=False, max_length=20, default=COMMUNICATION, choices=COMMENDS_CHOICES,)
+	commend_priority_3 = models.CharField(null=False, blank=False, max_length=20, default=SKILL, choices=COMMENDS_CHOICES,)
+	commend_priority_4 = models.CharField(null=False, blank=False, max_length=20, default=SPORTSMANSHIP, choices=COMMENDS_CHOICES,)
+
+	# Other details
+	birth_date = models.DateField(null=True, blank=False,)
+	sessions_played = models.IntegerField(null=False, blank=False, default='0',)
 	in_queue = models.BooleanField(null=False, blank=False, default=False,)
 
 	# The users name on discord, which is limited by them to 32 chars, plus 5 for id. e.g. myname#1205
@@ -205,7 +224,7 @@ class Profile_Connected_Game_Account(models.Model):
 # An entry for a Session, created when two players queue that could match, then players that match are added when possible
 class Session(models.Model):
 	def __str__(self):
-		return str.join(', ', (str(self.game.name), str(self.datetime_created), str(self.start_time)))
+		return str.join(', ', (str(self.game.name), str(self.datetime_created), str(self.start)))
 
 	game = models.ForeignKey(
 		'Game',
@@ -217,6 +236,7 @@ class Session(models.Model):
 	datetime_created = models.DateTimeField(auto_now_add=True,)
 	start = models.DateTimeField(blank=True, null=True,)
 	end_time = models.TimeField(blank=True, null=True,)
+	competitive = models.BooleanField(default=False,)
 
 # An entry for a profile's session, connected with a Session when it is found
 class Session_Profile(models.Model):

@@ -42,7 +42,6 @@ urlpatterns = [
     path('login/', site_views.a_login, name='login'),
     path('logout/', site_views.a_logout, name='logout'),
     path('dashboard/edit_profile/', site_views.edit_profile, name='edit_profile'),
-    path('dashboard/preference/', site_views.user_preference, name='user_preference'),
     path('dashboard/enter_queue/', site_views.enter_queue, name='enter_queue'),
     path('dashboard/exit_queue', site_views.exit_queue, name='exit_queue'),
     path('dashboard/availability/', site_views.availability, name='availability'),
@@ -57,5 +56,6 @@ urlpatterns = [
     path('css-standard/', site_views.css_standard, name='css-standard'),
 ]
 
+# Development serving of media files (game images)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
