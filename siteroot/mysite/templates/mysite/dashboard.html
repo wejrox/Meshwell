@@ -2,138 +2,318 @@
 {% load static %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-<div class="mainContent">
-	<br>
-	<div class="imgAndText">
+
+<!-- <div class="d-none d-lg-block"> -->
+<div class="dashboardContent">
+	<div class="container-fluid">
 		<div class="row">
-			<div class="col-sm-10" style="border-right: 1px solid; border-color: #c1c1c1;">
-				<div class="headerContent">
-					{{ message }}
-				</div>
-				<br>
-				<!-- Profile, Connected Game Accounts, Availability -->
-				<div class="row" style="margin-top: 2%;">
-					<div class="col-lg-4">
-						<img class="rounded-circle" src="{% static "css/images/dashboard/avatar.png" %}" alt="Profile link image" width="140" height="140">
-						<h2>Profile</h2>
-						<p>View and Edit your profile.</p>
-						<p>
-							<a href="{% url 'profile' %}" class="btn btn-secondary" role="button">Take me there!</a>
-						</p>
+			<div class="col-lg-1"></div>
+			<div class="col-lg-3">
+				<div class="profileColumn1">
+					<div class="row-fluid">
+						<div class="profilePicture img-thumbnail"> <!--Profile Picture-->
+							<!-- Hover Effect 12 Code by Mike Young (https://miketricking.github.io/bootstrap-image-hover) -->
+						    <div class="hovereffect">
+						        <img class="img-responsive" src="https://i.imgur.com/kKDfShy.png" alt="Profile Picture Placeholder">
+					            <div class="overlay">
+									<p>
+										<a href="#">Change Profile Picture</a>
+									</p>
+					            </div>
+						    </div>
+							<!-- Old Profile Picture Code <img src="https://i.imgur.com/kKDfShy.png" class="img-fluid" alt="Profile Picture Placeholder" style=""> -->
+						</div> <!--/Profile Picture-->
 					</div>
-					<div class="col-lg-4">
-						<img class="rounded-circle" src="{% static "css/images/dashboard/avatar2.png" %}" alt="Connected Accounts link image" width="140" height="140">
-						<h2>Connected Game Accounts</h2>
-						<p>View and Edit your connected game accounts.</p>
-						<p>
-							<a href="{% url 'connected_accounts' %}" class="btn btn-secondary" role="button">Take me there!</a>
-						</p>
+					<br>
+					<div class="row-fluid">
+						<div class="profileDetails">
+							<div class="profileDetailsContent">
+								<div style="text-align:center" class="underline">
+								    <span class="pull-left">
+								        Personal
+								    </span>
+								    <span style="color: #fff;">
+								        .
+								    </span>
+								    <a href="{% url 'edit_profile' %}">
+								    	<span class="pull-right" style="color: #ddd;">Edit Profile</span>
+								    </a>
+								</div>
+						 		<table class="table">
+									<tbody>
+										<tr>
+											<td style="border: none;">
+												Username
+											</td>
+											<td class="value" style="border: none;">
+												{{ username }}
+											</td>
+										</tr>
+										<tr>
+											<td style="border: none;">
+												First Name
+											</td>
+											<td class="value" style="border: none;">
+												{{ first_name }}
+											</td>
+										</tr>
+										<tr>
+											<td style="border: none;">
+												Last Name
+											</td>
+											<td class="value" style="border: none;">
+												{{ last_name }}
+											</td>
+										</tr>
+										<tr>
+											<td style="border: none;">
+												Email
+											</td>
+											<td class="value" style="border: none;">
+												{{ email }}
+											</td>
+										</tr>
+										<tr>
+											<td style="border: none;">
+												Birth Date
+											</td>
+											<td class="value" style="border: none;">
+												{{ birth_date }}
+											</td>
+										</tr>
+										<tr>
+											<td style="border: none;">
+												Sessions Played
+											</td>
+											<td class="value" style="border: none;">
+												{{ sessions_played }}
+											</td>
+										</tr>
+										<tr>
+											<td style="border: none;">
+												Region
+											</td>
+											<td class="value" style="border: none;">
+												{{ pref_server }}
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<span class="underline">Commendations</span>
+						 		<table class="table">
+									<tbody>
+										<tr>
+											<td style="border: none; width: 32px;">
+												<img src="css/images/tw_icon.png" width="32" alt="Created by Parallel Digital Studio from Noun Project">
+											</td>
+											<td style="border: none;">
+												Teamwork
+											</td>
+											<td class="value" style="border: none;">
+												{{ teamwork_commends }}
+											</td>
+										</tr>
+										<tr>
+											<td style="border: none;">
+												<img src="css/images/cm_icon.png" width="32" alt="Created by Gregor Cresnar from Noun Project">
+											</td>
+											<td style="border: none;">
+												Communication
+											</td>
+											<td class="value" style="border: none;">
+												{{ communication_commends }}
+											</td>
+										</tr>
+										<tr>
+											<td style="border: none;">
+												<img src="css/images/sl_icon.png" width="32" alt="Created by Miguel C Balandrano  from Noun Project">
+											</td>
+											<td style="border: none;">
+												Skill Level
+											</td>
+											<td class="value" style="border: none;">
+												{{ skill_commends }}
+											</td>
+										</tr>
+										<tr>
+											<td style="border: none;">
+												<img src="css/images/ps_icon.png" width="32" alt="Created by rui from Noun Project">
+											</td>
+											<td style="border: none;">
+												Positivity
+											</td>
+											<td class="value" style="border: none;">
+												{{ positivity_commends }}
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							 </div>
+						</div> <!--Profile Details-->
 					</div>
-					<div class="col-lg-4">
-						<img class="rounded=circle" src="{% static "css/images/dashboard/avatar3.png" %}" alt="Availability link image" width="140" height="140">
-						<h2>Availability</h2>
-						<p>View and Edit your availability.</p>
-						<p>
-							<a href="{% url 'availability' %}" class="btn btn-secondary" role="button">Take me there!</a>
-						</p>
+					<br>
+					<div class="row-fluid">
+						<div class="discordCustom">
+							<div class="customWidget">
+								<iframe src="https://discordapp.com/widget?id=418990653641588736&theme=light" width="100%" height="500" allowtransparency="true" frameborder="0"></iframe>
+							</div>
+						</div> <!--Discord Widget-->
 					</div>
 				</div>
-			</div>
-			<div class="col-sm-2">
-				<div class="customWidget">
-					<iframe src="https://discordapp.com/widget?id=418990653641588736&theme=dark" width="300" height="500" allowtransparency="true" frameborder="0"></iframe>
+			</div> <!--Profile and Discord-->
+
+			<div class="col col-lg-7">
+				<div class="profileColumn2">
+					<div class="container">
+						<div class="row">
+							<div class="matchmakingButtons">
+								<button type="button" class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="bottom" title="Use our algorithm to find other compatible players." style="font-weight: 100;">Smart Matchmaking</button>
+								<button type="button" class="btn btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="Select from a list of potential players you can play with. Compatibility metrics will be shown." style="font-weight: 100;">Manual Matchmaking</button>
+							</div>
+						</div>
+						<hr>
+						<div class="row"> <!--Table-->
+							<div class="container">
+								<div class="row">
+									<div class="customTableTitle">
+										Connected Game Account
+									</div>
+								</div>
+								<div class="row">
+									<a href="https://www.google.com">
+										<div class="col-md-2 text-center d-flex">
+								            <img class="mx-auto my-auto" src="https://i.imgur.com/9yVTkI9.png" height="90px" style="border-radius: 12px;">
+								        </div>
+							        </a>
+									<div class="col col-lg-10">
+										<table class="table table-curved table-striped">
+										  <thead class="thead-dark">
+										    <tr>
+										      <th scope="col">Game Name</th>
+										      <th scope="col">Connected Account</th>
+										      <th scope="col">Platform</th>
+										      <th scope="col">Casual MMR</th>
+										      <th scope="col">Competitive MMR</th>
+										    </tr>
+										  </thead>
+										  <tbody>
+										  	<tr>
+											{% for value in connected_accounts %}
+												<td>{{ value.game.name }}</td>
+												<td>{{ value.game_player_tag }}</td>
+												<td>{{ value.platform }}</td>
+												<td>{{ value.cas_rank }}</td>
+												<td>{{ value.comp_rank }}</td>
+											</tr>
+											{% endfor %}
+										  </tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div> <!--Table-->
+						<br>
+						<div class="row"> <!--Table-->
+							<div class="container">
+								<div class="row">
+									<div class="customTableTitle">
+										Availabilities
+									</div>
+								</div>
+								<div class="row">
+									<a href="https://www.google.com">
+										<div class="col-md-2 text-center d-flex">
+								            <img class="mx-auto my-auto" src="https://i.imgur.com/Jotb1XS.png" height="90px" style="border-radius: 12px;">
+								        </div>
+							    	</a>
+									<div class="col col-lg-10">
+										<table class="table table-curved table-striped">
+										  <thead class="thead-dark">
+										    <tr>
+										      <th scope="col">Day</th>
+										      <th scope="col">Start Time</th>
+										      <th scope="col">End Time</th>
+										      <th scope="col">Competitive</th>
+										    </tr>
+										  </thead>
+										  <tbody>
+											<tr>
+											{% for value in availabilities %}
+												<td>{{ value.pref_day }}</td>
+												<td>{{ value.start_time }}</td>
+												<td>{{ value.end_time }}</td>
+												<td>{{ value.competitive }}</td>
+											</tr>
+											{% endfor %}
+										  </tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div> <!--Table-->
+						<br>
+						<div class="row"> <!--Table-->
+							<div class="container">
+								<div class="row">
+									<div class="customTableTitle">
+										Session History
+									</div>
+								</div>
+								<div class="row">
+									<a href="https://www.google.com">
+										<div class="col-md-2 text-center d-flex">
+								            <img class="mx-auto my-auto" src="https://i.imgur.com/I3j35gX.png" height="90px" style="border-radius: 12px;">
+										</div>
+									</a>
+									<div class="col col-lg-10">
+										<table class="table table-curved table-striped">
+										  <thead class="thead-dark">
+										    <tr>
+										      <th scope="col">Game</th>
+										      <th scope="col">Date</th>
+										      <th scope="col">Time Started</th>
+										      <th scope="col">Time Ended</th>
+										      <th scope="col">Competitive</th>
+										      <th scope="col">Rating</th>
+										    </tr>
+										  </thead>
+											  <tbody>
+												<tr>
+												{% for value in prev_sessions %}
+													<td>{{ value.session.game }}</td>
+													<td>{{ value.session.start|date:'D d-m-Y' }}</td>
+													<td>{{ value.session.start|date:'H:i' }}</td>
+													<td>{{ value.session.end_time|time:'H:i' }}</td>
+													<td>{{ value.session.competitive }}</td>
+													<!-- Show the rating they gave the session, or allow them to rate it -->
+													{% if value.rating %}
+													<td>{{ value.rating }}/5</td>
+													{% else %}
+													<td>
+														<form action="#" method="get">
+															<input type="hidden" name="id" value="{{ value.id }}">
+															<input type="submit" class="btn btn-info btn-sm" value="Rate" name="Rate">
+														</form>
+													</td>
+													{% endif %}
+												</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div> <!--Table-->
+					</div>
 				</div>
-			</div>
-		</div>
+			</div> <!--Matchmaking and Tables-->
+		<div class="col-lg-1"></div></div>
 	</div>
-	<br>
-	<!-- Connected accounts -->
-	<div class="headerContent">
-		Connected game accounts
-	</div>
-	<table class="table">
-		<thead class="thead-dark">
-			<tr>
-				<th scope="col">Game Name</th>
-				<th scope="col">Connected Account</th>
-				<th scope="col">Platform</th>
-				<th scope="col">Casual Rank</th>
-				<th scope="col">Competitive Rank</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-			{% for value in connected_accounts %}
-				<td>{{ value.game.name }}</td>
-				<td>{{ value.game_player_tag }}</td>
-				<td>{{ value.platform }}</td>
-				<td>{{ value.cas_rank }}</td>
-				<td>{{ value.comp_rank }}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	<!-- Availabilities -->
-	<div class="headerContent">
-		Availabilities
-	</div>
-	<table class="table">
-		<thead class="thead-dark">
-			<tr>
-				<th scope="col">Day</th>
-				<th scope="col">Start Time</th>
-				<th scope="col">End Time</th>
-				<th scope="col">Competitive</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-			{% for value in availabilities %}
-				<td>{{ value.pref_day }}</td>
-				<td>{{ value.start_time }}</td>
-				<td>{{ value.end_time }}</td>
-				<td>{{ value.competitive }}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	<!-- Previous sessions -->
-	<div class="headerContent">
-		Previous sessions
-	</div>
-	<table class="table">
-		<thead class="thead-dark">
-			<tr>
-				<th scope="col">Game</th>
-				<th scope="col">Date</th>
-				<th scope="col">Start</th>
-				<th scope="col">End</th>
-				<th scope="col">Competitive</th>
-				<th scope="col">Rating</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-			{% for value in prev_sessions %}
-				<td>{{ value.session.game }}</td>
-				<td>{{ value.session.start|date:'D d-m-Y' }}</td>
-				<td>{{ value.session.start|date:'H:i' }}</td>
-				<td>{{ value.session.end_time|time:'H:i' }}</td>
-				<td>{{ value.session.competitive }}</td>
-				<!-- Show the rating they gave the session, or allow them to rate it -->
-				{% if value.rating %}
-				<td>{{ value.rating }}/5</td>
-				{% else %}
-				<td>
-					<form action="#" method="get">
-						<input type="hidden" name="id" value="{{ value.id }}">
-						<input type="submit" class="btn btn-info btn-sm" value="Rate" name="Rate">
-					</form>
-				</td>
-				{% endif %}
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
 </div>
+<!-- </div> /Desktop View-->
+
+<!--<div class="d-lg-none">For mobile devices</div>-->
+<!--Debug for mobile <div class="d-lg-none">Hidden for lg view. Visible only on smaller views.</div>
+<div class="d-none d-lg-block">Visible only on lg view</div> -->
+
 {% endblock %}
