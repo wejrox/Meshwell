@@ -15,6 +15,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.signals import request_finished
 from django.dispatch import receiver
 from django.urls import reverse, resolve
+from django.utils import timezone
 # Import settings
 from django.conf import settings
 
@@ -117,7 +118,7 @@ def dashboard(request):
 
 	context['connected_accounts'] = Profile_Connected_Game_Account.objects.filter(profile=request.user.profile)
 	context['availabilities'] = Availability.objects.filter(profile=request.user.profile)
-	context['prev_sessions'] = Session_Profile.objects.filter(profile=request.user.profile).exclude(session__isnull=True).order_by('-session__start')
+	context['prev_sessions'] = Session_Profile.objects.filter(profile=request.user.profile, session__start__lt=timezone.now()).exclude(session__isnull=True).order_by('-session__start')
 
 	data = retrieve_data('profile', 'id='+str(request.user.profile.id))
 	return render(request, 'mysite/dashboard.html', context)
@@ -382,8 +383,13 @@ def get_r6siege_ranks(request, player_tag):
 	url = 'https://r6db.com/api/v2/players?name=' + player_tag
 	headers = { 'X-App-Id':'MyRequest' }
 	response = requests.get(url, headers=headers)
-	data = response.json()
-	print(player_tag)
+
+	# Try get the ranks or cancel if we can't
+	try:
+		data = response.json()
+	except:
+		return None
+
 	# Cancel the check if the user was not found or too many were found
 	if not response.ok or len(data) != 1:
 		return None
@@ -408,63 +414,81 @@ def get_r6siege_ranks(request, player_tag):
 @login_required
 def enter_queue(request):
     # Get user details
-    django_user = request.user
-    user_profile = django_user.profile
+	django_user = request.user
+	user_profile = django_user.profile
     # Ensure player is not already queueing
-    if user_profile.in_queue:
-        return redirect('dashboard')
+	if user_profile.in_queue:
+		return redirect('dashboard')
 
     # Create a user session
-#    player_session = Session_Profile.objects.create(profile=user_profile)
-#    player_session.save()
+	player_session = Session_Profile.objects.create(profile=user_profile)
+	player_session.save()
 
     # Get user's availabilities, or send to availability page
-    user_availabilities = Availability.objects.filter(profile=user_profile)
-    if not user_availabilities:
-        return redirect('availability')
-    else:
-        sessions = get_suitable_sessions(user_profile)
-        print(sessions)
-        if sessions:
-            session = sessions[0]
-            print(session)
-        else:
-            session = None
+	user_availabilities = Availability.objects.filter(profile=user_profile)
+	if not user_availabilities:
+		return redirect('availability')
+	else:
+		sessions = get_suitable_sessions(user_profile)
+		if sessions:
+			session = sessions[0]
+		else:
+			session = None
 			
 	# Testing, don't run the rest
-    return redirect('dashboard')
+#	return redirect('dashboard')
 	
 	# Suitable session?
-    if session:
-        # Attach a session
-        player_session.session = session
-        player_session.save()
-        user_profile.in_queue = True
-        user_profile.save()
-    else:
-        # Create a session and add the user
-        game = Game.objects.get(pk=1)
-        session = Session.objects.create(game=game)
-		#session.start = 
-        player_session.session = session
-        player_session.save()
-        user_profile.in_queue = True
-        user_profile.save()
+	if session:
+        # Attach the session
+		player_session.session = session[1][0]
+		user_profile.in_queue = True
+		# Set the session begin and end time to where it intersected
+		avail = session[1][1]
+		new_session = session[1][0]
+		if avail.start_time > new_session.start.time():
+			new_session.start.time = avail.start_time
+		if avail.end_time < new_session.end_time:
+			new_session.end_time = avail.end_time
 
-    return redirect('dashboard')
+		# Set session remaining spaces
+		connected_players = Session_Profile.objects.filter(session=new_session)
+		if len(connected_players) >= new_session.game.max_players:
+			new_session.space_available = False
+		
+		# Save database
+		user_profile.save()
+		player_session.save()
+		new_session.save()
+	### REPLACE WITH A REDIRECTION TO A SESSION CREATION FORM! ###
+	else:
+        # Create a session and add the user
+		player_acc = Profile_Connected_Game_Account.objects.filter(profile=user_profile).first()
+		game = Game.objects.get(id=player_acc.game.id)
+		session = Session.objects.create(game=game)
+		player_session.session = session
+		player_session.save()
+		user_profile.in_queue = True
+		user_profile.save()
+
+	return redirect('dashboard')
 
 # Removes the authenticated player from the queue
 @login_required
 def exit_queue(request):
-    if not request.user.profile.in_queue:
-        redirect('dashboard')
+	if not request.user.profile.in_queue:
+		redirect('dashboard')
 
-	# Get the most recent queue and delete it (as we can have many sessions)
-    player_session = Session_Profile.objects.filter(profile=request.user.profile).order_by('-session__start').first()
-    player_session.delete()
-    request.user.profile.in_queue = False
-    request.user.profile.save()
-    return redirect('dashboard')
+	# Get the most recent queue (since we could have played before)
+	player_session = Session_Profile.objects.filter(profile=request.user.profile).order_by('-session__start').first()
+    # Session now has spaces (regardless of if there were spaces before)
+	player_session.session.space_available = True
+	player_session.session.save()
+	# Remove our player session
+	player_session.delete()
+	request.user.profile.in_queue = False
+	request.user.profile.save()
+	return redirect('dashboard')
 
 # Get all suitable sessions for a user to join
 # Availability existence should be verified prior to this point.
@@ -480,10 +504,6 @@ def get_suitable_sessions(profile):
 	user_accounts = []
 	for acc in user_connected_accounts:
 		user_accounts.append(acc.game)
-
-	# Testing
-	#print(user_accounts)
-	#print(user_availabilities)
 
 	# All the sessions which meet basic requirements (mmr, time/day, playlist, game)
 	viable_sessions = []
@@ -507,40 +527,42 @@ def get_suitable_sessions(profile):
 		elif avail.pref_day == Availability.SUNDAY:
 			day = 1
 
-		# Get any sessions that haven't happened yet, match our day, is one of our games we have set up, and is the right playlist type
+		# Get any sessions that haven't happened yet, match our day, is one of our games we have set up, is the right playlist type, and has spaces available
 		avail_match_sessions = Session.objects.filter(
 			start__gte=datetime.datetime.now(),
 			game__in=user_accounts, 
 			competitive=avail.competitive,
 			start__week_day=day,
+			space_available=True,
 		).exclude(start__isnull=True)
 
 		# Check the viability of the session
 		for session in avail_match_sessions:
-			# Get user account connected to this game
-			user_acc = Profile_Connected_Game_Account.objects.filter(profile=profile, game=session.game).first()
-			# Get the stats of each player that is attached to the session
-			player_sessions = Session_Profile.objects.filter(session=session)
-			
-			# All sessions are suitable until proven otherwise
-			suitable = True
-			# Check if their MMR is within the range we want
-			for player_s in player_sessions:
-				prof_acc = Profile_Connected_Game_Account.objects.filter(profile=player_s.profile, game=session.game).first()
+			# Only check them if user availability time overlaps by an hour at least
+			if is_time_acceptable(session, avail):
+				# Get user account connected to this game
+				user_acc = Profile_Connected_Game_Account.objects.filter(profile=profile, game=session.game).first()
+				# Get the stats of each player that is attached to the session
+				player_sessions = Session_Profile.objects.filter(session=session)
+				
+				# All sessions are suitable until proven otherwise
+				suitable = True
+				# Check if their MMR is within the range we want
+				for player_s in player_sessions:
+					prof_acc = Profile_Connected_Game_Account.objects.filter(profile=player_s.profile, game=session.game).first()
 
-				# Cancel if mmr out of range
-				if session.competitive:
-					if (prof_acc.comp_rank < user_acc.comp_rank - acceptable_mmr_range) or (prof_acc.comp_rank > user_acc.comp_rank + acceptable_mmr_range):
-						suitable = False
-						break
-				else:
-					if (prof_acc.cas_rank < user_acc.cas_rank - acceptable_mmr_range) or (prof_acc.cas_rank > user_acc.cas_rank + acceptable_mmr_range):
-						suitable = False
-						break
-			print(suitable)
-			# Basic viable session
-			if suitable:
-				viable_sessions.append(session)
+					# Cancel if mmr out of range
+					if session.competitive:
+						if (prof_acc.comp_rank < user_acc.comp_rank - acceptable_mmr_range) or (prof_acc.comp_rank > user_acc.comp_rank + acceptable_mmr_range):
+							suitable = False
+							break
+					else:
+						if (prof_acc.cas_rank < user_acc.cas_rank - acceptable_mmr_range) or (prof_acc.cas_rank > user_acc.cas_rank + acceptable_mmr_range):
+							suitable = False
+							break
+				# Basic viable session
+				if suitable:
+					viable_sessions.append([session, avail])
 
 	# Check existence
 	if len(viable_sessions) < 1:
@@ -548,7 +570,7 @@ def get_suitable_sessions(profile):
 	# Add any sessions that meet viability requirements
 	sorted_sessions = []
 	for session in viable_sessions:
-		v = calc_match_viablity(profile, session)
+		v = calc_match_viablity(profile, session[0])
 		if v > min_accepted_viability:
 			sorted_sessions.append([v, session])
 	
@@ -559,6 +581,7 @@ def get_suitable_sessions(profile):
 	# Sort based on viability, highest to lowest
 	sorted_sessions.sort(key=lambda v: v[0], reverse=True)
 
+	print(sorted_sessions)
 	# Get the best match
 	# Exhausted all availabilities and no sessions were matching criteria
 	return sorted_sessions
@@ -615,6 +638,20 @@ def calc_match_viablity(user_profile, session):
 	averaged_viability = total_viability / len(players)
 
 	return averaged_viability
+
+# Checks if the time is at least an hour inside availability
+# Returns True if so, else False
+def is_time_acceptable(session, availability):
+	min_end = session.start + datetime.timedelta(hours=1)
+	# Check if the session exists within our availability
+	if session.start.time() >= availability.start_time and min_end.time() <= availability.end_time:
+		return True
+	# Check if the session is before our start time but goes at least an hour into our availability
+	if session.start.time() <= availability.start_time and min_end.time() <= availability.end_time:
+		return True
+	
+	# To reach here, the session isn't within our availability and it doesn't overlap
+	return False
 
 def availability(request):
 	# Ensure that user is not queued!
