@@ -88,10 +88,47 @@ def tos(request):
 
 # User dashboard
 @login_required
+
+""" BACKUP - Old dashboard code.
 def dashboard(request):
 	context = {
 		'title':'Dashboard',
 		'message':'Play Together. Mesh Well.',
+	}
+
+	context['connected_accounts'] = Profile_Connected_Game_Account.objects.filter(profile=request.user.profile)
+	context['availabilities'] = Availability.objects.filter(profile=request.user.profile)
+	context['prev_sessions'] = Session_Profile.objects.filter(profile=request.user.profile).exclude(session__isnull=True).order_by('-session__start')
+
+	data = retrieve_data('profile', 'id='+str(request.user.profile.id))
+	return render(request, 'mysite/dashboard.html', context)
+"""
+
+def dashboard(request):
+	#Profile
+	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
+	profile = Profile.objects.filter(user=request.user.id).first()
+	if not profile:
+		profile = Profile.objects.create(user=request.user)
+	url = 'http://127.0.0.1/api/profile/' + str(profile.id) + '/?format=json'
+	response = requests.get(url, headers=headers)
+	data = response.json()
+
+	context = {
+		'title':'Dashboard',
+		'message':'Play Together. Mesh Well.',
+
+		#Profile Context Items
+		'username':data['user']['username'],
+		'first_name':data['user']['first_name'],
+		'last_name':data['user']['last_name'],
+		'pref_server':data['pref_server'],
+		'birth_date':data['birth_date'],
+		'sessions_played':data['sessions_played'],
+		'teamwork_commends':data['teamwork_commends'],
+		'positivity_commends':data['positivity_commends'],
+		'skill_commends':data['skill_commends'],
+		'communication_commends':data['communication_commends'],
 	}
 
 	context['connected_accounts'] = Profile_Connected_Game_Account.objects.filter(profile=request.user.profile)

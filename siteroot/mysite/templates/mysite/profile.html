@@ -4,80 +4,76 @@
 {% block content %}
 
 <div class='headerContent'>
-	{{ title }}
+	{{ PROFILE }}
 </div>
 <div class="mainContent">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-7 ">
-				<div class="box box-info">
-	  			<div class="box-body">
 	           <div class="col-sm-6">
 	            	<div  align="center"> <img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" id="profile-image1" class="center">
 								</div>
 							</div>
-	    				<br>
-	  			</div>
+				<div class="Customcenter">{{ username }}'s info</div>
+					<table class="table">
+						<thead class="thead-dark">
+							<tr>
+								<th scope="col">First</th>
+								<th scope="col">Last</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Username</td>
+								<td>{{ username }}</td>
+							</tr>
+							<tr>
+								<td>First Name</td>
+								<td>{{ first_name }}</td>
+							</tr>
+							<tr>
+								<td>Last Name</td>
+								<td>{{ last_name }}</td>
+							</tr>
+							<tr>
+
+								<td>Email</td>
+								<td>{{ email }}</td>
+							</tr>
+							<tr>
+
+								<td>D.O.B</td>
+								<td>{{ birth_date }}</td>
+							</tr>
+							<tr>
+								<td>Sessions Played</td>
+								<td>{{ sessions_played }}</td>
+							</tr>
+							<tr>
+								<td>Region</td>
+								<td>{{ pref_server }}</td>
+							</tr>
+						</tbody>
 					</table>
-					<div class="Customcenter">User Details</div>
-	        <table class="table table-user-information">
-	          <tbody>
-	            <tr>
-	              <td><div style="width:400px">Username:</div></td>
-	              <td><div style="width:400px">{{ username }}</div></td>
-	            </tr>
-	            <tr>
-	              <td>First Name:</td>
-	              <td>{{ first_name }}</td>
-	            </tr>
-	            <tr>
-	              <td>Last Name</td>
-	              <td>{{ last_name }}</td>
-	            </tr>
-	            <tr>
-	              <td>Email:</td>
-	              <td>{{ email }}</td>
-	            </tr>
-	            <tr>
-	              <td>Birth Date:</td>
-	              <td>{{ birth_date }}</td>
-	            </tr>
-	            <tr>
-	              <td>Sessions Played:</td>
-	              <td>{{ sessions_played }}</td>
-	            </tr>
-	            <tr>
-	              <td>Region</td>
-	              <td>{{ pref_server }}</td>
-	            </tr>
-	          </tbody>
-	        </table>
-				  <table class="Commendations">
-		        <tbody>
-	            <th colspan="4">
-	                <h6> COMMENDATIONS </h6>
-	            </th>
-	            <tr>
-	              <th>Teamwork</th>
-	              <th>Communication</th>
-	              <th>Skill</th>
-	              <th>Positivity</th>
-	            </tr>
-	            <tr>
-	              <td>{{ teamwork_commends }}</td>
-	              <td>{{ communication_commends }}</td>
-	              <td>{{ skill_commends }}</td>
-	              <td>{{ positivity_commends }}</td>
-	        		</tr>
-		        </tbody>
-			    </table>
+					<div class="Customcenter">Commendations</div>
+					<table class="table text-center">
+						<thead class="thead-dark">
+							<tr>
+								<th scope="col">Teamwork</th>
+								<th scope="col">Communication</th>
+								<th scope="col">Positivity</th>
+								<th scope="col">Skill</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>{{ teamwork_commends }}</td>
+								<td>{{ communication_commends }}</td>
+								<td>{{ skill_commends }}</td>
+								<td>{{ positivity_commends }}</td>
+							</tr>
+						</tbody>
+					</table>
 					<br>
 	        <div class="Customcenter">
 						<a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Info</a>
 					</div>
-				</div>
 			</div>
-		</div>
-	</div>
-</div>
 {% endblock %}
