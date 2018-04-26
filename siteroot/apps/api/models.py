@@ -39,12 +39,31 @@ class Profile(models.Model):
 		default=USWEST,
 	)
 
-	birth_date = models.DateField(null=True, blank=False,)
-	sessions_played = models.IntegerField(null=False, blank=False, default='0',)
+	TEAMWORK = 'Teamwork'
+	COMMUNICATION = 'Communication'
+	SKILL = 'Skill'
+	SPORTSMANSHIP = 'Sportsmanship'
+
+	COMMENDS_CHOICES = (
+		(TEAMWORK, 'Teamwork'),
+		(COMMUNICATION, 'Communication'),
+		(SKILL, 'Skill'),
+		(SPORTSMANSHIP, 'Sportsmanship'),
+	)
 	teamwork_commends = models.IntegerField(null=False, blank=False, default='0',)
 	communication_commends = models.IntegerField(null=False, blank=False, default='0',)
 	skill_commends = models.IntegerField(null=False, blank=False, default='0',)
-	positivity_commends = models.IntegerField(null=False, blank=False, default='0',)
+	sportsmanship_commends = models.IntegerField(null=False, blank=False, default='0',)
+
+	# Weighting of commends
+	commend_priority_1 = models.CharField(null=False, blank=False, max_length=20, default=TEAMWORK, choices=COMMENDS_CHOICES,)
+	commend_priority_2 = models.CharField(null=False, blank=False, max_length=20, default=COMMUNICATION, choices=COMMENDS_CHOICES,)
+	commend_priority_3 = models.CharField(null=False, blank=False, max_length=20, default=SKILL, choices=COMMENDS_CHOICES,)
+	commend_priority_4 = models.CharField(null=False, blank=False, max_length=20, default=SPORTSMANSHIP, choices=COMMENDS_CHOICES,)
+
+	# Other details
+	birth_date = models.DateField(null=True, blank=False,)
+	sessions_played = models.IntegerField(null=False, blank=False, default='0',)
 	in_queue = models.BooleanField(null=False, blank=False, default=False,)
 
 	# The users name on discord, which is limited by them to 32 chars, plus 5 for id. e.g. myname#1205

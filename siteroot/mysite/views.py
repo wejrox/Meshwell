@@ -471,32 +471,27 @@ def get_suitable_sessions(profile):
 		# The value of the days for filtering by day
 		day = -1
 		if avail.pref_day == Availability.MONDAY:
-			day = '0'
-		elif avail.pref_day == Availability.TUESDAY:
-			day = 1
-		elif avail.pref_day == Availability.WEDNESDAY:
 			day = 2
-		elif avail.pref_day == Availability.THURSDAY:
+		elif avail.pref_day == Availability.TUESDAY:
 			day = 3
-		elif avail.pref_day == Availability.FRIDAY:
+		elif avail.pref_day == Availability.WEDNESDAY:
 			day = 4
-		elif avail.pref_day == Availability.SATURDAY:
+		elif avail.pref_day == Availability.THURSDAY:
 			day = 5
-		elif avail.pref_day == Availability.SUNDAY:
+		elif avail.pref_day == Availability.FRIDAY:
 			day = 6
+		elif avail.pref_day == Availability.SATURDAY:
+			day = 7
+		elif avail.pref_day == Availability.SUNDAY:
+			day = 1
 		print(day)
 		# Get any sessions that haven't happened yet, match our day, is one of our games we have set up, and is the right playlist type
 		avail_match_sessions = Session.objects.filter(
-			#start__gte=datetime.datetime.now(), 
-			start__week_day=0 
-			#game__in=user_accounts, 
-			#competitive=avail.competitive,
-		)
-		print(avail_match_sessions)
-		if avail_match_sessions:
-			for ses in avail_match_sessions:
-				if ses.start:
-					print (ses.start.weekday())
+			start__gte=datetime.datetime.now(),
+			game__in=user_accounts, 
+			competitive=avail.competitive,
+			start__week_day=day,
+		).exclude(start__isnull=True)
 
 		# Check the viability of the session
 		for session in avail_match_sessions:
@@ -505,6 +500,7 @@ def get_suitable_sessions(profile):
 			# Get the stats of each player that is attached to the session
 			player_sessions = Session_Profile.objects.filter(session=session)
 			
+			# All sessions are suitable until proven otherwise
 			suitable = True
 			# Check if their MMR is within the range we want
 			for player_s in player_sessions:
@@ -545,6 +541,7 @@ def get_suitable_sessions(profile):
 	# Exhausted all availabilities and no sessions were matching criteria
 	return sorted_sessions[0]
 
+# THE ACTUAL ALGORITHMIC CHECKS
 # Calculates how viable a session is for your current profile's weighting
 # (commendations create a % viability)
 # (sum( (c1*w1)+(c2*w2)+(c3*w3)+(c4*w4) ) / sum( c1 + c2 + c3 + c4 ))
