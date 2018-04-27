@@ -120,7 +120,11 @@ def dashboard(request):
 	context['availabilities'] = Availability.objects.filter(profile=request.user.profile)
 	context['prev_sessions'] = Session_Profile.objects.filter(profile=request.user.profile, session__start__lt=timezone.now()).exclude(session__isnull=True).order_by('-session__start')
 
-	data = retrieve_data('profile', 'id='+str(request.user.profile.id))
+	# Redirect to an edit availability page, given the id of the profile to edit
+	if(request.GET.get('rate_session')):
+		request.session['session_profile_id'] = request.GET.get('session_profile_id')
+		return redirect('rate_session')
+
 	return render(request, 'mysite/dashboard.html', context)
 
 #views for the profile page
@@ -765,14 +769,25 @@ def rate_session(request):
 	    'message' : 'We hope you\'ve enjoyed your session! Please rate how well it was matched below.',
 	}
 
-	# Dummy
-	user_session = Session.objects.get(pk=1)
+	# Redirect to dashboard if the user has already rated this session
+	if 'session_profile_id' in request.session:
+		session_profile = Session_Profile.objects.filter(id=request.session['session_profile_id']).first()
+		if session_profile:
+			if session_profile.rating is not None:
+				del request.session['session_profile_id']
+				return redirect('dashboard')
+	else:
+		return redirect('dashboard')
+
+	# Get the session we're rating
+	user_session = Session.objects.get(pk=session_profile.session.id)
+
 	# Creae a new entry, or edit the existing one if it has been given
 	if request.method == 'POST':
 		form = RateSessionForm(request.POST, session=user_session, profile=request.user.profile)
 		if form.is_valid():
 			form.save()
-			return redirect('availability')
+			return redirect('dashboard')
 	else:
 		form = RateSessionForm(session=user_session, profile=request.user.profile)
 

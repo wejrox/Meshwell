@@ -265,6 +265,8 @@ class Session_Profile(models.Model):
 		null=True,
 	)
 
+	rating = models.IntegerField(blank=True, null=True)
+
 # An entry for a report that a player has made.
 class Report(models.Model):
 	def __str__(self):
