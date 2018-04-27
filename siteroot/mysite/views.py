@@ -470,6 +470,8 @@ def enter_queue(request):
 		player_acc = Profile_Connected_Game_Account.objects.filter(profile=user_profile).first()
 		game = Game.objects.get(id=player_acc.game.id)
 		session = Session.objects.create(game=game)
+		session.start = timezone.now()
+		session.save()
 		player_session.session = session
 		player_session.save()
 		user_profile.in_queue = True
@@ -485,7 +487,7 @@ def exit_queue(request):
 
 	# Get the most recent queue (since we could have played before)
 	player_session = Session_Profile.objects.filter(profile=request.user.profile).order_by('-session__start').first()
-    # Session now has spaces (regardless of if there were spaces before)
+	# Session now has spaces (regardless of if there were spaces before)
 	player_session.session.space_available = True
 	player_session.session.save()
 	# Remove our player session
