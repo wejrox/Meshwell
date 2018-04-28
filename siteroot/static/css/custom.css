@@ -301,7 +301,7 @@ td.value{
   color: #00a2ff;
 }
 
-.nav-item active{
+.navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link{
   color: #fff;
   border-bottom: 2px solid white;
   padding-bottom: 1px;
