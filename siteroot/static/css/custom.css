@@ -301,7 +301,7 @@ td.value{
   color: #00a2ff;
 }
 
-ul li.active-link>a{
+.nav-item active{
   color: #fff;
   border-bottom: 2px solid white;
   padding-bottom: 1px;
