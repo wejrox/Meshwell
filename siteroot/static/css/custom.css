@@ -317,7 +317,11 @@ td.value{
 */
 
 .bg-light {
-  background-color: #171717 !important;
+  background-color: #131313 !important;
+  background-image: url("https://i.imgur.com/hNTS2AD.png");
+  background-position: right;
+  background-size: 50%;
+  background-repeat-x: no-repeat;
 }
 
 .navbar-light .navbar-brand:focus, .navbar-light .navbar-brand:hover{
