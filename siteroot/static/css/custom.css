@@ -1,4 +1,25 @@
 /*Content Styling*/
+
+/***********************************************************/
+/* Extra small devices (portrait phones, less than 576px) */
+/* No media query since this is the default in Bootstrap*/
+
+/* Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) { ... }
+
+/* Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) { ... }
+
+/* Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) { ... }
+
+/*// Extra large devices (large desktops, 1200px and up)*/
+/*@media (min-width: 1200px) { ... }*/
+@media (min-width: 1200px) {
+  max-width: 1540px;
+}
+/***********************************************************/
+
 .guiderContent{
   background-color: #272727;
   padding: 10px;
@@ -29,6 +50,7 @@
 }
 
 .customRow{
+  max-width: 1140px;
   margin: auto;
 }
 
@@ -43,7 +65,15 @@
 
 .footer{
   background-color: #272727;
-  color: white;
+  color: white; 
+}
+
+.customDiv{
+  margin: 3px;
+  min-height: 400px;
+  background-color: silver;
+  text-align: center;
+  font-size: 14pt;
 }
 
 /*Dashboard*/
@@ -253,6 +283,7 @@ td.value{
 }
 
 /*Buttons*/
+
 .btn-danger{
   color: #fff;
   background-color: #F44C41;
@@ -279,6 +310,7 @@ td.value{
 }
 
 /*Carousel*/
+
 .vertical-center {
   min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
   min-height: 100vh; /* These two lines are counted as one :-)       */
@@ -289,39 +321,21 @@ td.value{
 
 .carousel img {
   margin: auto;
-  min-width: 100% !important
-}
-
-.carousel-inner{
-  background:#272727;
+  min-width: 100%;
 }
 
 /*Navbar*/
+
 .navbar-light .navbar-nav .nav-link{
-  color: #00a2ff;
+  color: #f44c41;
 }
 
-.navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link{
-  color: #fff;
-  border-bottom: 2px solid white;
-}
-
-.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover{
-  color: #fff;
-}
-
-/*
 .navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link {
   color: #ffffff;
 }
-*/
 
 .bg-light {
-  background-color: #131313 !important;
-  background-image: url("https://i.imgur.com/hNTS2AD.png");
-  background-position: right;
-  background-size: 50%;
-  background-repeat-x: no-repeat;
+  background-color: #373737 !important;
 }
 
 .navbar-light .navbar-brand:focus, .navbar-light .navbar-brand:hover{
@@ -332,15 +346,22 @@ td.value{
   color: #f44c41;
 }
 
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover{
+  color: #f44c41;
+}
+
+.carousel-inner{
+  background:#272727;
+}
+
 .navbar-brand
 {
   font-family: "timeburner";
     src: url("css/fonts/timeburner.eot");
-    src:
+    src: 
     url("css/fonts/timeburner.woff") format("woff"),
-    url("{% static "fonts/timeburner.woff" %}") format("woff"),
-    url("{% static "fonts/timeburner.otf" %}") format("opentype"),
-    url("{% static "fonts/timeburner.svg#filename" %}") format("svg"),
+    url("css/fonts/timeburner.otf") format("opentype"),
+    url("css/fonts/timeburner.svg#filename") format("svg");
 
   font-size: 24pt;
 }
@@ -351,57 +372,8 @@ td.value{
   border-color: #f44c41;
 }
 
-/*Dropdown Styles*/
-.dropdown-menu{
-  background-color: #373737 !important;
-  border-color: #f44c41 !important;
-}
+/*----About Us CSS----*/
 
-.dropdown-item{
-  color: #f44c41 !important;
-}
-
-.dropdown-item.active, .dropdown-item:active{
-  color: #fff !important;
-  background-color: #373737 !important;
-}
-
-.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
-    background-color: #373737 !important;
-    color: #FFFFFF;
-}
-
-.dropdown-menu.customFooterDropdown{
-  background-color: #373737 !important;
-  border-color: #696969 !important;
-  top: 135% !important;
-  left: 50% !important;
-  right: auto !important;
-  text-align: center !important;
-  transform: translate(-50%, 0) !important;
-}
-
-.dropdown-item.customItem{
-  color: #fff !important;
-}
-
-.dropdown-item:hover{
-  color: #fff !important;
-}
-
-.dropdown-item:focus, .dropdown-item:hover {
-  background-color: #F44C41;
-}
-
-.btn.btn-secondary.btn-lg.dropdown-toggle.customFooterButton{
-  color: #fff !important;
-  background:  transparent;
-  border: transparent;
-  font-weight:  100;
-  margin-top: 30px;
-}
-
-/*About Us CSS*/
 .headerContent.aboutMe{
   text-align: center;
   font-size: 3em;
@@ -432,7 +404,6 @@ td.value{
 .hover14 figure {
   position: relative;
 }
-
 .hover14 figure::before {
   position: absolute;
   top: 0;
@@ -447,28 +418,20 @@ td.value{
   -webkit-transform: skewX(-25deg);
   transform: skewX(-25deg);
 }
-
 .hover14 figure:hover::before {
   -webkit-animation: shine 1.75s;
   animation: shine 1.75s;
 }
-
 @-webkit-keyframes shine {
   100% {
     left: 125%;
   }
 }
-
 @keyframes shine {
   100% {
     left: 125%;
   }
 }
-
-/*Mihir's CSS Code*/
-/*Please dont use the HTML and BODY tags unless it is extremely necessary, as this will overwrite the entire website.
-Use bootstrap tags whenever possible as this will reduce any scaling problems you will run into.
-Use the standardised CSS tags I have created if possible.*/
 
 /*Footer*/
 #myFooter {
@@ -494,6 +457,7 @@ Use the standardised CSS tags I have created if possible.*/
   padding-left: 0;
   line-height: 1.7;
   font-size: 13pt;
+
 }
 
 .myFooter.title{
@@ -561,26 +525,42 @@ Use the standardised CSS tags I have created if possible.*/
     -webkit-flex: 0 0 auto;
 }
 
-
-.Customcenter{
-  text-align: center;
-  font-size: 150%;
-  margin-left: auto;
-  margin-right: auto;
-  font-style: oblique;
-  padding: 0%;
-  position: relative;
-
+.dropdown-menu.customFooterDropdown{
+  background-color: #373737 !important;
+  border-color: #696969 !important;
+  top: 135% !important;
+  left: 50% !important;
+  right: auto !important;
+  text-align: center !important;
+  transform: translate(-50%, 0) !important;
 }
 
-#profile-image1{
-cursor: pointer;
-width: 300px;
-height: 300px;
-position: relative;
-margin-left: auto;
-margin-right: auto;
-left: 50%;
-top: 2px;
-border:0px solid black ;}
+.dropdown-item.customItem{
+  color: #fff !important;
+}
+
+.dropdown-item:hover{
+  color: #fff !important;
+}
+
+.dropdown-item:focus, .dropdown-item:hover {
+  background-color: #F44C41;
+}
+
+.btn.btn-secondary.btn-lg.dropdown-toggle.customFooterButton{
+  color: #fff !important;
+  background:  transparent;
+  border: transparent;
+  font-weight:  100;
+  margin-top: 30px;
+}
+
+.dropdown-item.active, .dropdown-item:active{
+  color: #fff !important;
+  background-color: #373737 !important;
+}
+
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+  background-color: #373737 !important;
+  color: #fff;
 }
