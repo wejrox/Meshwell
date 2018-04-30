@@ -76,19 +76,19 @@
 			    	{% endif %}
 
 			    	<li class="nav-item">
-						{% if user.is_authenticated %}
-				    	{% if user.profile.in_queue %}
+					{% if user.is_authenticated %}
+					    	{% if user.profile.in_queue %}
 							<a class="btn btn-danger" href="{% url 'exit_queue' %}">Exit Queue</a>
-							{% else %}
-							<a class="btn btn-primary" href="{% url 'enter_queue' %}">Queue</a>
-							{% endif %}
-						{% endif %}
-						{% if user.is_authenticated %}
-						<a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
 						{% else %}
+							<a class="btn btn-primary" href="{% url 'enter_queue' %}">Queue</a>
+						{% endif %}
+					{% endif %}
+					{% if user.is_authenticated %}
+						<a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
+					{% else %}
 						<!-- Button trigger modal -->
 						<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">Login</button>
-			    	{% endif %}
+				    	{% endif %}
 						<!-- Modal -->
 						<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 						  <div class="modal-dialog modal-dialog-centered" role="document">
@@ -134,6 +134,7 @@
 			  </div>
 			</nav>
 		</header>
+		<div class="customSpacer"> </div>
 
 		<!-- Custom code goes below here -->
 		{% block content %}
@@ -149,7 +150,7 @@
 	<!--Footer for smaller resolution devices-->
 	<div class="d-lg-none">
 	<footer id="myFooter">
-		<dir class="customSpacer"></dir>
+		<div class="customSpacer"></dir>
 			<div class="container">
 					<div class="row">
 							<div class="col-sm-4 myCols">

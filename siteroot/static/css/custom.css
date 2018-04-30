@@ -5,10 +5,10 @@ body, html {
 
 body{
   background-color: #131313 !important;
-  background-image: url("https://i.imgur.com/hNTS2AD.png");
-  background-position: right;
-  background-size: 50%;
-  background-repeat-x: no-repeat;
+  background-image: url("https://i.imgur.com/jho3Kyb.png");
+  background-position: center;
+  background-size: 100%;
+  background-repeat: repeat-y;
 }
 
 /*Index Page*/
@@ -366,6 +366,7 @@ section h1 {
   min-width: 820px;
   border: #cdcdcd 1px solid;
   border-radius: 10px;
+  background-color: whitesmoke;
 }
 
 .profilePicture{
@@ -374,6 +375,7 @@ section h1 {
 .profileDetails{
   border: #cdcdcd 1px solid;
   border-radius: 10px;
+  background-color: whitesmoke;
 }
 
 .discordCustom{
@@ -603,6 +605,7 @@ td.value{
 /*Navbar*/
 .navbar-light .navbar-nav .nav-link{
   color: #00a2ff;
+  margin-left: 10px;
 }
 
 .navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link{
@@ -611,8 +614,8 @@ td.value{
 }
 
 .navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover{
-  color: #fff;
-  border-bottom: 2px solid white;
+  color: #8ed6ff;
+  border-bottom: 2px solid #8ed6ff;
 }
 
 .li.nav-item{
@@ -621,10 +624,10 @@ td.value{
 
 .bg-light {
   background-color: #131313 !important;
-  background-image: url("https://i.imgur.com/hNTS2AD.png");
-  background-position: right;
-  background-size: 50%;
-  background-repeat-x: no-repeat;
+  background-image: url("https://i.imgur.com/jho3Kyb.png");
+  background-position: center;
+  background-size: 100%;
+  background-repeat: repeat-y;
 }
 
 .navbar-light .navbar-brand:focus, .navbar-light .navbar-brand:hover{
