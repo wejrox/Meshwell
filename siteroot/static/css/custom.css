@@ -615,8 +615,8 @@ td.value{
   border-bottom: 2px solid white;
 }
 
-.li{
-  margin-right: 0.25cm;
+.li.nav-item{
+  margin-right: 0.25cm !important;
 }
 
 .bg-light {
