@@ -1,3 +1,5 @@
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
@@ -243,12 +245,15 @@ class UserAvailabilityForm(forms.ModelForm):
 class RateSessionForm(forms.Form):
     # A tuple for rating numbers user can give
     RATINGS=((0, '0'),(1, '1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'))
+    COMMENDS=(('Skill', 'Skill'), ('Positivity', 'Positivity'), ('Communication', 'Communication'), ('Teamwork', 'Teamwork'))
     # Create fields for rating
     rating = forms.ChoiceField(
         choices=RATINGS,
         widget=forms.RadioSelect(
+#			# DOES NOT GET APPLIED FOR SOME REASON
+#			attrs={'class':'form-check-inline'}
         ),
-		initial=[2]
+        initial=[2]
     )
 
     # Run when form is created
@@ -256,20 +261,21 @@ class RateSessionForm(forms.Form):
         self.session = kwargs.pop('session', None)
         self.profile = kwargs.pop('profile', None)
         super(RateSessionForm, self).__init__(*args, **kwargs)
-        # Get our current profile
         # Get all the users connected to the session and add them
         players = Session_Profile.objects.filter(session=self.session).exclude(profile=self.profile.id)
         self.player_count = len(players)
         for i, player in enumerate(players):
-#            # Get their ign so the user knows who they are (DISABLED RIGHT NOW AS WE ARE TESTING)
+#            # Get teammates ign so the user knows who they are (DISABLED RIGHT NOW AS WE ARE TESTING AND NO ACCOUNT EXISTS)
 #            ign = Profile_Connected_Game_Account.filter(game=self.session.game.id, profile=player.profile.id).first()
             self.fields['player_%s_id' % i] = forms.CharField(initial=player.profile.id, label='')
             self.fields['player_%s_id' % i].widget = forms.HiddenInput()
             self.fields['player_%s_name' % i] = forms.CharField(disabled=True, label='Player', initial=player.profile.user.username)
-            self.fields['player_%s_skill' % i] = forms.BooleanField(label='Skill', required=False)
-            self.fields['player_%s_positivity' % i] = forms.BooleanField(label='Positivity', required=False)
-            self.fields['player_%s_communication' % i] = forms.BooleanField(label='Communication', required=False)
-            self.fields['player_%s_teamwork' % i] = forms.BooleanField(label='Teamwork', required=False)
+            self.fields['player_%s_commends' % i] = forms.MultipleChoiceField(
+				label='Commendations', 
+				required=False,
+				choices=self.COMMENDS, 
+			)
+            self.fields['player_%s_commends' % i].widget = forms.CheckboxSelectMultiple (attrs={'class':'form-check-inline'})
             self.fields['player_%s_report' % i] = forms.BooleanField(label='Report', required=False)
 
     def clean(self):
