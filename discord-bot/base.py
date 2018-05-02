@@ -3,7 +3,6 @@
 import discord
 import asyncio
 from discord.ext import commands
-from discord.ext.commands import Bot
 import bot_settings # Private file, as my bot key is private!
 # Database connection
 import MySQLdb
@@ -11,20 +10,106 @@ import sys
 # Run code on exit of script
 import atexit
 
-client = discord.Client()
-bot = commands.Bot(command_prefix="?server-sent:")
+bot = commands.Bot(command_prefix=bot_settings.cmd_prefix)
 
 # Database
-db_connection = MySQLdb.connect(host="localhost", user="root", passwd="1234", db="meshwell_data")
+db_connection = MySQLdb.connect(host=bot_settings.host, 
+								user=bot_settings.user, 
+								passwd=bot_settings.password, 
+								db=bot_settings.meshwell_db
+								)
 
-async def auto_create_channels():
-	await client.wait_until_ready()
-
-	while not client.is_closed:
+async def auto_manage_channels():
+	'''
+	Gets all upcoming sessions that have a start and end time
+	and the discord names of those players in the sessions.
+	Creates a channel for them.
+	Gets all sessions that are over x amount of time old.
+	Deletes the channel that is for that session.
+	Sends DM to discord user, telling them to rate the session
+	'''
+	await bot.wait_until_ready()
+	# Get guild identity
+	print("Getting guild")
+	# Gets meshwell server by guild id
+	guild = bot.get_guild(bot_settings.guild_id)
+	if guild is not None:
+		print(guild)
+	else:
+		print("Guild not found")
+	# Get the meshwell category by channel id
+	print("Getting category")
+	category = guild.get_channel(bot_settings.category_id)
+	if category is not None:
+		print(category)
+	else:
+		print("Category not found")
+	# Query database every x timeframe
+	
+	while not bot.is_closed():
 		# Get upcoming sessions
+		cursor = db_connection.cursor()
+		cursor.execute(bot_settings.upcoming_sessions_query)
+		upcoming = cursor.fetchall()
+		# Create channels if needed
+		if len(upcoming) > 0:
+			print("Fetched upcoming [session_id, discord_id]:")
+			for row in upcoming:
+				print (row[0], row[1])
+			print("Creating channels...")
+			for row in upcoming:
+				if row[1] is not None:
+					# Get channel if exists (CONSIDER CHANGING TO guild.voice_channel)
+					channel = discord.utils.get(guild.channels, name=str(row[0]))
+					# Create channel if it doesn't exist
+					if channel is None:
+						channel = await guild.create_voice_channel(name=str(row[0]), category=category, reason="Automated channel creation on session start")
+						print("New channel created")
+					else:
+						print("Channel exists")
+					# Set default perms
+					await channel.set_permissions(guild.default_role, connect=False)
+					# Assign permissions to channel for users
+					member = guild.get_member_named(row[1])
+					if member is not None:
+						await channel.set_permissions(member, connect=True)
+						print("Permissions set")
+						# Send invite to the players discord
+						invite = await channel.create_invite(reason="Automated invite creation")
+						print("Invite created: " + str(invite))
+						message = "Hi! This message is to let you know that your session now has a voice channel available! \n" + str(invite)
+						print(message)
+						await member.send(content=message)
+					else:
+						print("Guild does not have member '"+row[1]+"'")
+		else:
+			print("No upcoming sessions")
+		cursor.close()
 
-		# Wait 2 minutes before checking again
-		await asyncio.sleep(120)
+		# Get past sessions to be removed
+		cursor = db_connection.cursor()
+		cursor.execute(bot_settings.past_sessions_query)
+		past = cursor.fetchall()
+		# Delete channels if needed
+		if len(past) > 0:
+			print("Deleting channels [session_id, discord_id]")
+			for row in past:
+				print (row[0], row[1])
+			print("Deleting channels...")
+			for row in past:
+				if row[0] is not None and row[1] is not None:
+					# Get channel
+					member = guild.get_member_named(row[1])
+					channel = discord.utils.get(guild.channels, name=str(row[0]))
+					# Send message to members to rate session
+					message = "We hope that you've enjoyed your session. \nPlease rate your session in order to recieve the best matching experience. https://www.meshwell.ml/dashboard/"
+					await member.send(content=message)
+					# If channel exists, delete it
+					if channel is not None:
+						await channel.delete(reason="Automated channel delete on session end")
+					
+		# Wait x seconds before checking again
+		await asyncio.sleep(bot_settings.query_interval)
 
 @bot.event
 async def on_ready():
@@ -49,9 +134,7 @@ async def create_channel(ctx, *args):
 	
 	# Get the default role, override it so nobody has join permissions
 	role_default = guild.default_role
-
-	# Decide on the category to place it under
-	category = discord.utils.get(guild.categories, name="Meshwell")
+	category = guild.get_channel(bot_settings.category_id)
 	# Create the channel and enable certain users to connect only
 	channel = await guild.create_voice_channel(name=channel_name, category=category)
 	await channel.set_permissions(role_default, connect=False)
@@ -81,21 +164,24 @@ def exit_handler():
 	'''
 	# Close all open connections
 	try:
+		auto_manage_channels.cancel()
+		print("Cancelled channel creation")
+	except:
+		pass
+	try:
 		db_connection.close()
+		print("Closed database connection")
 	except:
 		pass
 	try:
-		client.close()
+		bot.close()
+		print("Turned off the bot")
 	except:
 		pass
-	try:
-		connection.close()
-	except:
-		pass
-	auto_create_channels.cancel()
+
 
 # Initiate channel creator
-auto_create_channels = client.loop.create_task(auto_create_channels())
+auto_manage_channels = bot.loop.create_task(auto_manage_channels())
 
 # Run code at exit
 atexit.register(exit_handler)
