@@ -77,7 +77,7 @@ async def auto_manage_channels():
 						# Send invite to the players discord
 						invite = await channel.create_invite(reason="Automated invite creation")
 						print("Invite created: " + str(invite))
-						message = "Hi! This message is to let you know that your session now has a voice channel available! \n" + str(invite)
+						message = "Hi! This message is to let you know that your session now has a voice channel available!\n" + str(invite)
 						print(message)
 						await member.send(content=message)
 					else:
@@ -99,14 +99,17 @@ async def auto_manage_channels():
 			for row in past:
 				if row[0] is not None and row[1] is not None:
 					# Get channel
-					member = guild.get_member_named(row[1])
+					member = guild.get_member_named(str(row[1]))
 					channel = discord.utils.get(guild.channels, name=str(row[0]))
+					rate_url = "https://www.meshwell.com/dashboard/session/rate/"+str(row[2])
 					# Send message to members to rate session
-					message = "We hope that you've enjoyed your session. \nPlease rate your session in order to recieve the best matching experience. https://www.meshwell.ml/dashboard/"
+					message = "We hope you've enjoyed your session! \nPlease follow the link to rate your session in order to receive the best matching experience.\n"+str(rate_url)
 					await member.send(content=message)
 					# If channel exists, delete it
 					if channel is not None:
 						await channel.delete(reason="Automated channel delete on session end")
+		else:
+			print("No sessions to delete")
 					
 		# Wait x seconds before checking again
 		await asyncio.sleep(bot_settings.query_interval)
