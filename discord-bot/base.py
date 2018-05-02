@@ -11,6 +11,7 @@ import sys
 # Run code on exit of script
 import atexit
 
+debug = False
 bot = commands.Bot(command_prefix=bot_settings.cmd_prefix)
 
 # Database
@@ -31,22 +32,25 @@ async def auto_manage_channels():
 	'''
 	await bot.wait_until_ready()
 	# Get guild identity
-	print("Getting guild")
+	print("=================\nSetup\n=================")
+	print("Getting guild...")
 	# Gets meshwell server by guild id
 	guild = bot.get_guild(bot_settings.guild_id)
 	if guild is not None:
-		print(guild)
+		print("Guild name: ", guild)
 	else:
-		print("Guild not found")
+		print("Guild not found, bot cannot function! \nExiting...")
+		sys.exit()
 	# Get the meshwell category by channel id
-	print("Getting category")
+	print("Getting category...")
 	category = guild.get_channel(bot_settings.category_id)
 	if category is not None:
-		print(category)
+		print("Category name: ", category)
 	else:
-		print("Category not found")
+		print("Category not found, bot cannot function! \nExiting...")
+		sys.exit()
 	# Query database every x timeframe
-	
+	print("=================\nRunning\n=================")
 	while not bot.is_closed():
 		# Get upcoming sessions
 		cursor = db_connection.cursor()
@@ -54,9 +58,11 @@ async def auto_manage_channels():
 		upcoming = cursor.fetchall()
 		# Create channels if needed
 		if len(upcoming) > 0:
-			print("Fetched upcoming [session_id, discord_id]:")
-			for row in upcoming:
-				print (row[0], row[1])
+			# Run only if in debug mode for performance reasons
+			if debug:
+				print("Fetched upcoming session details [session_id, discord_id]:")
+				for row in upcoming:
+					print (row[0], row[1])
 			print("Creating channels...")
 			for row in upcoming:
 				if row[1] is not None:
@@ -67,7 +73,7 @@ async def auto_manage_channels():
 						channel = await guild.create_voice_channel(name=str(row[0]), category=category, reason="Automated channel creation on session start")
 						print("New channel created")
 					else:
-						print("Channel exists")
+						print("Channel exists, adding users")
 					# Set default perms
 					await channel.set_permissions(guild.default_role, connect=False)
 					# Assign permissions to channel for users
@@ -82,7 +88,7 @@ async def auto_manage_channels():
 						print(message)
 						await member.send(content=message)
 					else:
-						print("Guild does not have member '"+row[1]+"'")
+						print("Guild does not have member '"+row[1]+"', they may not be in the server!")
 		else:
 			print("No upcoming sessions")
 		cursor.close()
@@ -93,10 +99,12 @@ async def auto_manage_channels():
 		past = cursor.fetchall()
 		# Delete channels if needed
 		if len(past) > 0:
-			print("Deleting channels [session_id, discord_id]")
-			for row in past:
-				print (row[0], row[1])
-			print("Deleting channels...")
+			# Run only if in debug mode for performance reasons
+			if debug:
+				print("Sessions to end [session_id, discord_id]")
+				for row in past:
+					print (row[0], row[1])
+			print("Handling session end...")
 			for row in past:
 				if row[0] is not None and row[1] is not None:
 					# Get channel
@@ -114,6 +122,7 @@ async def auto_manage_channels():
 					
 		# Wait x seconds before checking again
 		await asyncio.sleep(query_data.query_interval)
+		print("=================\nRe-Checking Sessions\n=================")
 
 @bot.event
 async def on_ready():
