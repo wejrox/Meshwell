@@ -54,11 +54,11 @@ class RegistrationForm(UserCreationForm):
 	class Meta:
 		model = User
 		fields = (
-	        'username',
-	        'first_name',
+			'username',
+			'first_name',
 			'last_name',
 			'email',
-	        'birth_date',
+			'birth_date',
 			'password1',
 			'password2',
 		)
@@ -243,68 +243,68 @@ class UserAvailabilityForm(forms.ModelForm):
 		return cleaned_data
 
 class RateSessionForm(forms.Form):
-    # A tuple for rating numbers user can give
-    RATINGS=((0, '0'),(1, '1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'))
-    COMMENDS=(('Skill', 'Skill'), ('Positivity', 'Positivity'), ('Communication', 'Communication'), ('Teamwork', 'Teamwork'))
-    # Create fields for rating
-    rating = forms.ChoiceField(
-        choices=RATINGS,
-        widget=forms.RadioSelect(
+	# A tuple for rating numbers user can give
+	RATINGS=((0, '0'),(1, '1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'))
+	COMMENDS=(('Skill', 'Skill'), ('Positivity', 'Positivity'), ('Communication', 'Communication'), ('Teamwork', 'Teamwork'))
+	# Create fields for rating
+	rating = forms.ChoiceField(
+		choices=RATINGS,
+		widget=forms.RadioSelect(
 #			# DOES NOT GET APPLIED FOR SOME REASON
 #			attrs={'class':'form-check-inline'}
-        ),
-        initial=[2]
-    )
+		),
+		initial=[2]
+	)
 
-    # Run when form is created
-    def __init__(self, *args, **kwargs):
-        self.session = kwargs.pop('session', None)
-        self.profile = kwargs.pop('profile', None)
-        super(RateSessionForm, self).__init__(*args, **kwargs)
-        # Get all the users connected to the session and add them
-        players = Session_Profile.objects.filter(session=self.session).exclude(profile=self.profile.id)
-        self.player_count = len(players)
-        for i, player in enumerate(players):
+	# Run when form is created
+	def __init__(self, *args, **kwargs):
+		self.session = kwargs.pop('session', None)
+		self.profile = kwargs.pop('profile', None)
+		super(RateSessionForm, self).__init__(*args, **kwargs)
+		# Get all the users connected to the session and add them
+		players = Session_Profile.objects.filter(session=self.session).exclude(profile=self.profile.id)
+		self.player_count = len(players)
+		for i, player in enumerate(players):
 #            # Get teammates ign so the user knows who they are (DISABLED RIGHT NOW AS WE ARE TESTING AND NO ACCOUNT EXISTS)
 #            ign = Profile_Connected_Game_Account.filter(game=self.session.game.id, profile=player.profile.id).first()
-            self.fields['player_%s_id' % i] = forms.CharField(initial=player.profile.id, label='')
-            self.fields['player_%s_id' % i].widget = forms.HiddenInput()
-            self.fields['player_%s_name' % i] = forms.CharField(disabled=True, label='Player', initial=player.profile.user.username)
-            self.fields['player_%s_commends' % i] = forms.MultipleChoiceField(
+			self.fields['player_%s_id' % i] = forms.CharField(initial=player.profile.id, label='')
+			self.fields['player_%s_id' % i].widget = forms.HiddenInput()
+			self.fields['player_%s_name' % i] = forms.CharField(disabled=True, label='Player', initial=player.profile.user.username)
+			self.fields['player_%s_commends' % i] = forms.MultipleChoiceField(
 				label='Commendations', 
 				required=False,
 				choices=self.COMMENDS, 
 			)
-            self.fields['player_%s_commends' % i].widget = forms.CheckboxSelectMultiple (attrs={'class':'form-check-inline'})
-            self.fields['player_%s_report' % i] = forms.BooleanField(label='Report', required=False)
+			self.fields['player_%s_commends' % i].widget = forms.CheckboxSelectMultiple (attrs={'class':'form-check-inline'})
+			self.fields['player_%s_report' % i] = forms.BooleanField(label='Report', required=False)
 
-    def clean(self):
-        cleaned_data = super().clean()
-        # Custom cleaning
+	def clean(self):
+		cleaned_data = super().clean()
+		# Custom cleaning
 
-        return cleaned_data
+		return cleaned_data
 
-    def save(self):
-        # Get their session Details
-        session_profile = Session_Profile.objects.filter(profile=self.profile, session=self.session).first()
-        # Save rating
-        session_profile.rating = self.cleaned_data.get('rating')
-        session_profile.save()
+	def save(self):
+		# Get their session Details
+		session_profile = Session_Profile.objects.filter(profile=self.profile, session=self.session).first()
+		# Save rating
+		session_profile.rating = self.cleaned_data.get('rating')
+		session_profile.save()
 
-        # Apply commendations and reports
-        for i in range(0, self.player_count):
-            # Get profile
-            profile = Profile.objects.get(pk=self.cleaned_data['player_%s_id' % i])
-            # Apply commendations and reports
-            if self.cleaned_data['player_%s_skill' % i]:
-                profile.skill_commends += 1
-            if self.cleaned_data['player_%s_positivity' % i]:
-                profile.sportsmanship_commends += 1
-            if self.cleaned_data['player_%s_communication' % i]:
-                profile.communication_commends += 1
-            if self.cleaned_data['player_%s_teamwork' % i]:
-                profile.teamwork_commends += 1
-            if self.cleaned_data['player_%s_report' % i]:
-                report = Report.objects.create(session=self.session, user_reported=profile, sent_by=self.profile, report_reason='toxic')
-                report.save()
-            profile.save()
+		# Apply commendations and reports
+		for i in range(0, self.player_count):
+			# Get profile
+			profile = Profile.objects.get(pk=self.cleaned_data['player_%s_id' % i])
+			# Apply commendations and reports
+			if self.cleaned_data['player_%s_skill' % i]:
+				profile.skill_commends += 1
+			if self.cleaned_data['player_%s_positivity' % i]:
+				profile.sportsmanship_commends += 1
+			if self.cleaned_data['player_%s_communication' % i]:
+				profile.communication_commends += 1
+			if self.cleaned_data['player_%s_teamwork' % i]:
+				profile.teamwork_commends += 1
+			if self.cleaned_data['player_%s_report' % i]:
+				report = Report.objects.create(session=self.session, user_reported=profile, sent_by=self.profile, report_reason='toxic')
+				report.save()
+			profile.save()
