@@ -4,6 +4,7 @@ import discord
 import asyncio
 from discord.ext import commands
 import bot_settings # Private file, as my bot key is private!
+import query_data
 # Database connection
 import MySQLdb
 import sys
@@ -16,7 +17,7 @@ bot = commands.Bot(command_prefix=bot_settings.cmd_prefix)
 db_connection = MySQLdb.connect(host=bot_settings.host, 
 								user=bot_settings.user, 
 								passwd=bot_settings.password, 
-								db=bot_settings.meshwell_db
+								db=bot_settings.database_name
 								)
 
 async def auto_manage_channels():
@@ -49,7 +50,7 @@ async def auto_manage_channels():
 	while not bot.is_closed():
 		# Get upcoming sessions
 		cursor = db_connection.cursor()
-		cursor.execute(bot_settings.upcoming_sessions_query)
+		cursor.execute(query_data.upcoming_sessions_query)
 		upcoming = cursor.fetchall()
 		# Create channels if needed
 		if len(upcoming) > 0:
@@ -88,7 +89,7 @@ async def auto_manage_channels():
 
 		# Get past sessions to be removed
 		cursor = db_connection.cursor()
-		cursor.execute(bot_settings.past_sessions_query)
+		cursor.execute(query_data.past_sessions_query)
 		past = cursor.fetchall()
 		# Delete channels if needed
 		if len(past) > 0:
@@ -112,7 +113,7 @@ async def auto_manage_channels():
 			print("No sessions to delete")
 					
 		# Wait x seconds before checking again
-		await asyncio.sleep(bot_settings.query_interval)
+		await asyncio.sleep(query_data.query_interval)
 
 @bot.event
 async def on_ready():
