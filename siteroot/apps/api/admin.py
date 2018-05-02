@@ -23,7 +23,7 @@ admin.site.register(Report, ReportAdmin)
 
 class ProfileAdmin(admin.ModelAdmin):
 	list_display = ('user', 'birth_date', 'sessions_played', 'total_reports')
-	readonly_fields = (('sessions_played'),('birth_date'),('user'),('pref_server'),('teamwork_commends'),('skill_commends'),('positivity_commends'),('communication_commends'),('discord_name'))#,'total_reports')
+	readonly_fields = (('sessions_played'),('birth_date'),('user'),('pref_server'),('teamwork_commends'),('skill_commends'),('sportsmanship_commends'),('communication_commends'),('discord_name'))#,'total_reports')
 
 	def total_reports(self, obj):
 		return Report.objects.filter(user_reported=obj).count()
@@ -43,6 +43,6 @@ class MyUserAdmin(UserAdmin):
 
 	def remove_ban(self, request, queryset):
 		queryset.update(is_active = True)
-		self.message_user(request, "Users ban has been liften")
+		self.message_user(request, "Users ban has been lifted")
 admin.site.unregister(User)
 admin.site.register(User, MyUserAdmin)

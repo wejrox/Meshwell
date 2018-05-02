@@ -13,5 +13,6 @@
         "**/migrations": true,
         "db.sqlite3": true,
         "manage.py": true,
-    }
+    },
+    "editor.fontSize": 10
 }

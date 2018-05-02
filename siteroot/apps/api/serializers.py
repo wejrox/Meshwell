@@ -26,7 +26,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
 	class Meta:
 		model = Profile
-		fields = '__all__' #('url', 'user', 'pref_server', 'birth_date', 'sessions_played', 'teamwork_commends', 'positivity_commends', 'skill_commends', 'communication_commends')
+		fields = '__all__' 
 
 	# Create a new User and Profile
 	def create(self, validated_data):
@@ -66,7 +66,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 		instance.birth_date = validated_data.get('birth_date', instance.birth_date)
 		instance.sessions_played = validated_data.get('sessions_played', instance.sessions_played)
 		instance.teamwork_commends = validated_data.get('teamwork_commends', instance.teamwork_commends)
-		instance.positivity_commends = validated_data.get('positivity_commends', instance.positivity_commends)
+		instance.sportsmanship_commends = validated_data.get('sportsmanship_commends', instance.sportsmanship_commends)
 		instance.skill_commends = validated_data.get('skill_commends', instance.skill_commends)
 		instance.communication_commends = validated_data.get('communication_comments', instance.communication_commends)
 

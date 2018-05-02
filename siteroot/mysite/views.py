@@ -2,7 +2,7 @@ from apps.api.models import Profile, Profile_Connected_Game_Account, Availabilit
 from rest_framework import viewsets
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from django.shortcuts import render, redirect
-import requests, json, urllib.parse
+import requests, json, urllib.parse, datetime
 from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, RateSessionForm
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
@@ -15,6 +15,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.signals import request_finished
 from django.dispatch import receiver
 from django.urls import reverse, resolve
+from django.utils import timezone
 # Import settings
 from django.conf import settings
 
@@ -89,16 +90,41 @@ def tos(request):
 # User dashboard
 @login_required
 def dashboard(request):
+	#Profile
+	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
+	profile = Profile.objects.filter(user=request.user.id).first()
+	if not profile:
+		profile = Profile.objects.create(user=request.user)
+	url = 'http://127.0.0.1/api/profile/' + str(profile.id) + '/?format=json'
+	response = requests.get(url, headers=headers)
+	data = response.json()
+
 	context = {
 		'title':'Dashboard',
 		'message':'Play Together. Mesh Well.',
+
+		#Profile Context Items
+		'username':data['user']['username'],
+		'first_name':data['user']['first_name'],
+		'last_name':data['user']['last_name'],
+		'pref_server':data['pref_server'],
+		'birth_date':data['birth_date'],
+		'sessions_played':data['sessions_played'],
+		'teamwork_commends':data['teamwork_commends'],
+		'sportsmanship_commends':data['sportsmanship_commends'],
+		'skill_commends':data['skill_commends'],
+		'communication_commends':data['communication_commends'],
 	}
 
 	context['connected_accounts'] = Profile_Connected_Game_Account.objects.filter(profile=request.user.profile)
 	context['availabilities'] = Availability.objects.filter(profile=request.user.profile)
-	context['prev_sessions'] = Session_Profile.objects.filter(profile=request.user.profile).exclude(session__isnull=True).order_by('-session__start')
+	context['prev_sessions'] = Session_Profile.objects.filter(profile=request.user.profile, session__start__lt=timezone.now()).exclude(session__isnull=True).order_by('-session__start')
 
-	data = retrieve_data('profile', 'id='+str(request.user.profile.id))
+	# Redirect to an edit availability page, given the id of the profile to edit
+	if(request.GET.get('rate_session')):
+		request.session['session_profile_id'] = request.GET.get('session_profile_id')
+		return redirect('rate_session')
+
 	return render(request, 'mysite/dashboard.html', context)
 
 #views for the profile page
@@ -121,7 +147,7 @@ def profile(request):
 		'birth_date':data['birth_date'],
 		'sessions_played':data['sessions_played'],
 		'teamwork_commends':data['teamwork_commends'],
-		'positivity_commends':data['positivity_commends'],
+		'sportsmanship_commends':data['sportsmanship_commends'],
 		'skill_commends':data['skill_commends'],
 		'communication_commends':data['communication_commends'],
 	}
@@ -361,8 +387,13 @@ def get_r6siege_ranks(request, player_tag):
 	url = 'https://r6db.com/api/v2/players?name=' + player_tag
 	headers = { 'X-App-Id':'MyRequest' }
 	response = requests.get(url, headers=headers)
-	data = response.json()
-	print(player_tag)
+
+	# Try get the ranks or cancel if we can't
+	try:
+		data = response.json()
+	except:
+		return None
+
 	# Cancel the check if the user was not found or too many were found
 	if not response.ok or len(data) != 1:
 		return None
@@ -383,124 +414,251 @@ def get_r6siege_ranks(request, player_tag):
 
 	return ranks
 
-@login_required
-def user_preference(request):
-	form = UserPreferenceForm()
-	context = {
-		'title': 'User Preference',
-		'message': 'Please enter your preference details.',
-		'success': 'False',
-		'form': form,
-	}
-	if request.user.is_authenticated:
-		if request.method == 'POST':
-			form = UserPreferenceForm(request.POST)
-
-			if form.is_valid():
-				form.save()
-				context = {
-					'title': 'Preference created.',
-					'message': 'Your preference is created.',
-					'success': 'True',
-				}
-				return render(request, 'registration/preference_success.html', context)
-			else:
-				form = UserPreferenceForm()
-				return render(request, 'registration/preference.html', context)
-		else:
-			form = UserPreferenceForm()
-			return render(request, 'registration/preference.html', context)
-	else:
-		context = {'error_title':'Not logged in', 'message':'You must be logged in to view this page'}
-		return render(request, 'mysite/error_page.html', context)
-
 # Handles the user entering the queue for a session when the button on the nav bar is pressed
 @login_required
 def enter_queue(request):
     # Get user details
-    django_user = request.user
-    user_profile = django_user.profile
+	django_user = request.user
+	user_profile = django_user.profile
     # Ensure player is not already queueing
-    if user_profile.in_queue:
-        return redirect('dashboard')
+	if user_profile.in_queue:
+		return redirect('dashboard')
 
     # Create a user session
-    player_session = Session_Profile.objects.create(profile=user_profile)
-    player_session.save()
+	player_session = Session_Profile.objects.create(profile=user_profile)
+	player_session.save()
 
     # Get user's availabilities, or send to availability page
-    user_availabilities = Availability.objects.filter(profile=user_profile) #mapping user_avail to user profile
-    if not user_availabilities:
-        return redirect('availability')
-    else:
-    	session = get_suitable_session(user_profile, user_availabilities)
-    # Suitable session?
-    if session:
-        # Attach a session
-        player_session.session = session
-        player_session.save()
-        user_profile.in_queue = True
-        user_profile.save()
-    else:
-        # Create a session and add the user
-        game = Game.objects.get(pk=1)
-        session = Session.objects.create(game=game)
-        player_session.session = session
-        player_session.save()
-        user_profile.in_queue = True
-        user_profile.save()
-
-    return redirect('dashboard')
-
-# Returns either the first session that a profile can connect to, or return None if sessions aren't available
-@login_required
-def get_suitable_session(profile, user_availabilities):
-    # Avail is each Availability object
-    for avail in user_availabilities:
-        #matching_session = Session.objects.filter(end_time__lte=avail.end_time, start_time__gte=avail.start_time).first()#looping through all the sessions end times that match to availability
-        matching_session = Session.objects.get(pk=1)
-		# Return session if it is viable
-        if matching_session:
-			# <DO OTHER CHECKS>
-            return matching_session
-    # Exhausted all availabilities and no sessions were matching criteria
-    return None
-
-# Removes the authenticated player from the queue
-@login_required
-def exit_queue(request):
-    if not request.user.profile.in_queue:
-        redirect('dashboard')
-
-	# Get the most recent queue and delete it (as we can have many sessions)
-    player_session = Session_Profile.objects.filter(profile=request.user.profile).order_by('-session__start').first()
-    player_session.delete()
-    request.user.profile.in_queue = False
-    request.user.profile.save()
-    return redirect('dashboard')
-
-def get_suitable_session(profile):
-	users_availabilities = Availability.objects.filter(profile=profile) #mapping user_avail to user profile
-	if not users_availabilities:
-		redirect('index')
+	user_availabilities = Availability.objects.filter(profile=user_profile)
+	if not user_availabilities:
+		return redirect('availability')
 	else:
-  		# Avail is each Availability object
-		for avail in users_availabilities:
-			matching_session = Session.objects.get(end_time__lte=avail.end_time)#looping through all the sessions end times that match to availability
-    		# Return session if it is viable
-			if matching_session:
-				return matching_session
-	# Exhausted all availabilities and no sessions were matching criteria
-	return None
+		sessions = get_suitable_sessions(user_profile)
+		if sessions:
+			session = sessions[0]
+		else:
+			session = None
+			
+	# Testing, don't run the rest
+#	return redirect('dashboard')
+	
+	# Suitable session?
+	if session:
+        # Attach the session
+		player_session.session = session[1][0]
+		user_profile.in_queue = True
+		# Set the session begin and end time to where it intersected
+		avail = session[1][1]
+		new_session = session[1][0]
+		if avail.start_time > new_session.start.time():
+			new_session.start.time = avail.start_time
+		if avail.end_time < new_session.end_time:
+			new_session.end_time = avail.end_time
+
+		# Set session remaining spaces
+		connected_players = Session_Profile.objects.filter(session=new_session)
+		if len(connected_players) >= new_session.game.max_players:
+			new_session.space_available = False
+		
+		# Save database
+		user_profile.save()
+		player_session.save()
+		new_session.save()
+	### REPLACE WITH A REDIRECTION TO A SESSION CREATION FORM! ###
+	else:
+        # Create a session and add the user
+		player_acc = Profile_Connected_Game_Account.objects.filter(profile=user_profile).first()
+		game = Game.objects.get(id=player_acc.game.id)
+		session = Session.objects.create(game=game)
+		session.start = timezone.now()
+		session.save()
+		player_session.session = session
+		player_session.save()
+		user_profile.in_queue = True
+		user_profile.save()
+
+	return redirect('dashboard')
 
 # Removes the authenticated player from the queue
 @login_required
 def exit_queue(request):
-	if not user_profile.in_queue:
+	if not request.user.profile.in_queue:
 		redirect('dashboard')
-	player_session = Session_Profile.objects.get(profile=request.user.profile)
+
+	# Get the most recent queue (since we could have played before)
+	player_session = Session_Profile.objects.filter(profile=request.user.profile).order_by('-session__start').first()
+	# Session now has spaces (regardless of if there were spaces before)
+	player_session.session.space_available = True
+	player_session.session.save()
+	# Remove our player session
 	player_session.delete()
+	request.user.profile.in_queue = False
+	request.user.profile.save()
 	return redirect('dashboard')
+
+# Get all suitable sessions for a user to join
+# Availability existence should be verified prior to this point.
+def get_suitable_sessions(profile):
+	# Modifiers
+	acceptable_mmr_range = 100 # How much above/below us should they be to be viable?
+	min_accepted_viability = 0.6 # A value (out of 1) which states how viable a session must be to be included
+	# Queueing players details
+	user_availabilities = Availability.objects.filter(profile=profile)
+	user_connected_accounts = Profile_Connected_Game_Account.objects.filter(profile=profile)
+  	
+	# Create a list of games to filter based off
+	user_accounts = []
+	for acc in user_connected_accounts:
+		user_accounts.append(acc.game)
+
+	# All the sessions which meet basic requirements (mmr, time/day, playlist, game)
+	viable_sessions = []
+
+	# Get any session that matches the availability given (1 hour min.)
+	for avail in user_availabilities:
+		# The value of the days for filtering by day
+		day = -1
+		if avail.pref_day == Availability.MONDAY:
+			day = 2
+		elif avail.pref_day == Availability.TUESDAY:
+			day = 3
+		elif avail.pref_day == Availability.WEDNESDAY:
+			day = 4
+		elif avail.pref_day == Availability.THURSDAY:
+			day = 5
+		elif avail.pref_day == Availability.FRIDAY:
+			day = 6
+		elif avail.pref_day == Availability.SATURDAY:
+			day = 7
+		elif avail.pref_day == Availability.SUNDAY:
+			day = 1
+
+		# Get any sessions that haven't happened yet, match our day, is one of our games we have set up, is the right playlist type, and has spaces available
+		avail_match_sessions = Session.objects.filter(
+			start__gte=datetime.datetime.now(),
+			game__in=user_accounts, 
+			competitive=avail.competitive,
+			start__week_day=day,
+			space_available=True,
+		).exclude(start__isnull=True)
+
+		# Check the viability of the session
+		for session in avail_match_sessions:
+			# Only check them if user availability time overlaps by an hour at least
+			if is_time_acceptable(session, avail):
+				# Get user account connected to this game
+				user_acc = Profile_Connected_Game_Account.objects.filter(profile=profile, game=session.game).first()
+				# Get the stats of each player that is attached to the session
+				player_sessions = Session_Profile.objects.filter(session=session)
+				
+				# All sessions are suitable until proven otherwise
+				suitable = True
+				# Check if their MMR is within the range we want
+				for player_s in player_sessions:
+					prof_acc = Profile_Connected_Game_Account.objects.filter(profile=player_s.profile, game=session.game).first()
+
+					# Cancel if mmr out of range
+					if session.competitive:
+						if (prof_acc.comp_rank < user_acc.comp_rank - acceptable_mmr_range) or (prof_acc.comp_rank > user_acc.comp_rank + acceptable_mmr_range):
+							suitable = False
+							break
+					else:
+						if (prof_acc.cas_rank < user_acc.cas_rank - acceptable_mmr_range) or (prof_acc.cas_rank > user_acc.cas_rank + acceptable_mmr_range):
+							suitable = False
+							break
+				# Basic viable session
+				if suitable:
+					viable_sessions.append([session, avail])
+
+	# Check existence
+	if len(viable_sessions) < 1:
+		return None
+	# Add any sessions that meet viability requirements
+	sorted_sessions = []
+	for session in viable_sessions:
+		v = calc_match_viablity(profile, session[0])
+		if v > min_accepted_viability:
+			sorted_sessions.append([v, session])
+	
+	# Check existence
+	if len(sorted_sessions) < 1:
+		return None
+
+	# Sort based on viability, highest to lowest
+	sorted_sessions.sort(key=lambda v: v[0], reverse=True)
+
+	print(sorted_sessions)
+	# Get the best match
+	# Exhausted all availabilities and no sessions were matching criteria
+	return sorted_sessions
+
+# THE ACTUAL ALGORITHMIC CHECKS
+# Calculates how viable a session is for your current profile's weighting
+# (commendations create a % viability)
+# sum(each_player:(c1/tsp*w1)+(c2/tsp*w2)+(c3/tsp*w3)+(c4/tsp*w4)) / pc
+# Where c=commendations, , tsp=total sessions played, w=weighting, pc=Player Count
+def calc_match_viablity(user_profile, session):
+	# What each should be worth out of 1 (Team, Comm, Skill, Sport)
+	weight = [ 0.5, 0.25, 0.125, 0.125 ]
+	# Assign weights to commends by checking if their names are the same
+	modifiers = { 'Teamwork':1.0, 'Communication':1.0, 'Skill':1.0, 'Sportsmanship':1.0, }
+	for key, value in modifiers.items():
+		if user_profile.commend_priority_1 == key:
+			modifiers[key] = weight[0]
+		elif user_profile.commend_priority_2 == key:
+			modifiers[key] = weight[1]
+		elif user_profile.commend_priority_3 == key:
+			modifiers[key] = weight[2]
+		elif user_profile.commend_priority_4 == key:
+			modifiers[key] = weight[3]
+
+	# Players connected to the session
+	players = Session_Profile.objects.filter(session=session)
+
+	# How much the sessions commends are worth after they have been weighted
+	weighted_commends = { 'Teamwork':0.0, 'Communication':0.0, 'Skill':0.0, 'Sportsmanship':0.0, }
+	total_commends = { 'Teamwork':0, 'Communication':0, 'Skill':0, 'Sportsmanship':0, }
+	player_viability = {}
+	# Weigh their commendations based on what the user believes is important
+	for player in players:
+		num_sess = player.profile.sessions_played
+
+		# If they've played a session, grade them.
+		if num_sess > 0:
+			teamwork = (player.profile.teamwork_commends / num_sess) * modifiers['Teamwork']
+			communication = (player.profile.communication_commends / num_sess) * modifiers['Communication']
+			skill = (player.profile.skill_commends / num_sess) * modifiers['Skill']
+			sportsmanship = (player.profile.sportsmanship_commends / num_sess) * modifiers['Sportsmanship']
+		
+			player_viability[player.id] = teamwork + communication + skill + sportsmanship
+		# If not, we just give them 0.5
+		else:
+			player_viability[player.id] = 0.5
+
+	# Calculate the sum of the viability of all players
+	total_viability = 0.0
+	for key in player_viability:
+		total_viability += player_viability[key]
+
+	# Get the average viability to return as our viability percentage
+	averaged_viability = total_viability / len(players)
+
+	return averaged_viability
+
+# Checks if the time is at least an hour inside availability
+# Returns True if so, else False
+def is_time_acceptable(session, availability):
+	min_end = session.start + datetime.timedelta(hours=1)
+	# Check if the session exists within our availability
+	if session.start.time() >= availability.start_time and min_end.time() <= availability.end_time:
+		return True
+	# Check if the session is before our start time but goes at least an hour into our availability
+	if session.start.time() <= availability.start_time and min_end.time() <= availability.end_time:
+		return True
+	
+	# To reach here, the session isn't within our availability and it doesn't overlap
+	return False
+
 def availability(request):
 	# Ensure that user is not queued!
 	if request.user.profile.in_queue:
@@ -613,14 +771,25 @@ def rate_session(request):
 	    'message' : 'We hope you\'ve enjoyed your session! Please rate how well it was matched below.',
 	}
 
-	# Dummy
-	user_session = Session.objects.get(pk=1)
+	# Redirect to dashboard if the user has already rated this session
+	if 'session_profile_id' in request.session:
+		session_profile = Session_Profile.objects.filter(id=request.session['session_profile_id']).first()
+		if session_profile:
+			if session_profile.rating is not None:
+				del request.session['session_profile_id']
+				return redirect('dashboard')
+	else:
+		return redirect('dashboard')
+
+	# Get the session we're rating
+	user_session = Session.objects.get(pk=session_profile.session.id)
+
 	# Creae a new entry, or edit the existing one if it has been given
 	if request.method == 'POST':
 		form = RateSessionForm(request.POST, session=user_session, profile=request.user.profile)
 		if form.is_valid():
 			form.save()
-			return redirect('availability')
+			return redirect('dashboard')
 	else:
 		form = RateSessionForm(session=user_session, profile=request.user.profile)
 

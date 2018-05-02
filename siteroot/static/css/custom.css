@@ -1,3 +1,276 @@
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+body{
+  background-color: #131313 !important;
+  background-image: url("https://i.imgur.com/jho3Kyb.png");
+  background-position: center;
+  background-size: 100%;
+  background-repeat: repeat-y;
+}
+
+/*Index Page*/
+.bg{
+  /* The image used */
+  background-image: url("https://i.imgur.com/CXO7SzZ.jpg");
+
+  /* Full height */
+  height: 100%; 
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+#whatIsMeshwell{
+  /* The image used */
+  background-image: url("https://i.imgur.com/NBwwFBC.jpg");
+
+  /* Full height */
+  height: 100%; 
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+#howItWorks{
+  /* The image used */
+  background-image: url("https://i.imgur.com/xmcqlq1.jpg");
+
+  /* Full height */
+  height: 100%; 
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+#supportedGames{
+  /* The image used */
+  background-image: url("https://i.imgur.com/zbFTgGv.jpg");
+
+  /* Full height */
+  height: 100%; 
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.meshwellIntroduction{
+  text-align: center;
+  color: #fff;
+  font-weight: 100;
+  z-index: 5;
+}
+
+.welcomeMessage{
+  font-size: 20pt;
+  padding-top: 15px;
+}
+
+.hr.indexPage {
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.container.fullFluid{
+  max-width: 100% !important;
+  z-index: 60;
+}
+
+.col.textStyle{
+  padding-top: 1em;
+}
+
+.col.pictureCenter{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.pictureFill{
+  padding-top: 1em;
+  width: 100%;
+}
+
+/*Scroller by Naoya - https://codepen.io/nxworld/pen/OyRrGy*/
+section {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+section::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  content: '';
+  width: 100%;
+  height: 80%;
+  background: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,.8) 80%,rgba(0,0,0,.8) 100%);
+  background: linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,.8) 80%,rgba(0,0,0,.8) 100%);
+}
+
+section2 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+section2::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  content: '';
+  width: 100%;
+  height: 80%;
+  background: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,.8) 80%,rgba(0,0,0,.8) 100%);
+  background: linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,.8) 80%,rgba(0,0,0,.8) 100%);
+}
+
+section h1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-weight: 100;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#section06 {}
+
+.demo a {
+  position: absolute;
+  bottom: 3cm;
+  z-index: 8;
+  display: inline-block;
+  -webkit-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  color: #fff;
+  font-weight: 100;
+  letter-spacing: .1em;
+  text-decoration: none;
+  transition: opacity .3s;
+}
+
+.demo a:hover {
+  opacity: .5;
+}
+
+#section06 a {
+  padding-top: 70px;
+}
+#section06 a span {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  border-left: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  -webkit-transform: rotateZ(-45deg);
+  transform: rotateZ(-45deg);
+  -webkit-animation: sdb06 1.5s infinite;
+  animation: sdb06 1.5s infinite;
+  box-sizing: border-box;
+}
+
+#section062 {}
+
+.demo2 a {
+  position: absolute;
+  bottom: 1cm;
+  z-index: 2;
+  display: inline-block;
+  -webkit-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  color: #fff;
+  font-weight: 100;
+  letter-spacing: .1em;
+  text-decoration: none;
+  transition: opacity .3s;
+}
+
+.demo2 a:hover {
+  opacity: .5;
+}
+
+#section062 a {
+  padding-top: 70px;
+}
+#section062 a span {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  border-left: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  -webkit-transform: rotateZ(-45deg);
+  transform: rotateZ(-45deg);
+  -webkit-animation: sdb06 1.5s infinite;
+  animation: sdb06 1.5s infinite;
+  box-sizing: border-box;
+}
+
+@-webkit-keyframes sdb06 {
+  0% {
+    -webkit-transform: rotateY(0) rotateZ(-45deg) translate(0, 0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: rotateY(720deg) rotateZ(-45deg) translate(-20px, 20px);
+    opacity: 0;
+  }
+}
+@keyframes sdb06 {
+  0% {
+    transform: rotateY(0) rotateZ(-45deg) translate(0, 0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotateY(720deg) rotateZ(-45deg) translate(-20px, 20px);
+    opacity: 0;
+  }
+}
+
 /*Content Styling*/
 .guiderContent{
   background-color: #272727;
@@ -6,7 +279,7 @@
   color: white;
   border-style:  solid;
   border-width: 0px 0px 4px 0px;
-  border-color: #f44c41;
+  border-color: #;
 }
 
 .mainContent{
@@ -16,24 +289,55 @@
 }
 
 .headerContent{
-  font-size: 2em;
-  text-align: center;
+  font-size: 4em;
+  font-weight: 100;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.4); 
+  color: #00a2ff; 
+  width: 100%;
+}
+
+.headerContent2{
+  margin-bottom: 1cm;
+  font-size: 4em;
+  font-weight: 100;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.4); 
+  color: #00a2ff; 
+  padding-left: 4cm;
 }
 
 .paragraphContent{
-  column-count: 3;
+  column-count: 1;
+  font-size: 2em;
+  font-weight: 100;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.4); 
+  color: white; 
+  width: 100%;
+  padding-left: 20px;
+  border-radius: 12px;
+  padding: 1cm;
 }
 
 .imgAndText{
   text-align: center;
+  color: white !important;
+  background: rgba(0, 0, 0, 0.4);
+  padding-left: 4cm;
+  padding-right: 4cm;
+  padding-top: 1cm;
+  padding-bottom: 1cm;
 }
 
 .customRow{
   margin: auto;
+  margin-left: 4cm;
+  margin-right: 4cm;
 }
 
 .form-control:focus {
-  border-color: #F44C41;
+  border-color: #00a2ff;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 76, 65, 0.6);
 }
 
@@ -46,24 +350,232 @@
   color: white;
 }
 
+/*Dashboard*/
+.dashboardContent{
+  margin-left: 2em;
+  margin-right: 2em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.profileColumn1{
+}
+
+.profileColumn2{
+  min-height: 100%;
+  min-width: 820px;
+  border: #cdcdcd 1px solid;
+  border-radius: 10px;
+  background-color: whitesmoke;
+}
+
+.profilePicture{
+}
+
+.profileDetails{
+  border: #cdcdcd 1px solid;
+  border-radius: 10px;
+  background-color: whitesmoke;
+}
+
+.discordCustom{
+}
+
+.underline{
+  border-bottom: 1px solid #cdcdcd;
+  width: 96%;
+  display: block;
+  color: #676767;
+  font-weight: 100;
+}
+
+.underline-game{
+  border-bottom: 1px solid #cdcdcd;
+  width: 96%;
+  display: block;
+  color: #676767;
+  font-weight: 100;
+}
+
+.profileDetailsContent{
+  margin-top: 3%;
+  margin-left: 3%;
+  overflow: auto;
+}
+
+.matchmakingButtons{
+  margin: auto;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.matchmakingInformation{
+  margin-left: 2em;
+  position: absolute;
+}
+
+.customTableTitle{
+  margin-left: 0.5em;
+  margin-bottom: 1em;
+  font-size: 20pt;
+  font-weight: 100;
+}
+
+/*Profile Picture*/
+.hovereffect {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  cursor: default;
+  background: #00a2ff;
+}
+
+.hovereffect .overlay {
+  width: 100%;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  padding: 50px 20px;
+}
+
+.hovereffect img {
+  display: block;
+  position: relative;
+  max-width: none;
+  width: calc(100% + 20px);
+  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+  transition: opacity 0.35s, transform 0.35s;
+  -webkit-transform: translate3d(-10px,0,0);
+  transform: translate3d(-10px,0,0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.hovereffect:hover img {
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+}
+
+.hovereffect h2 {
+  text-transform: uppercase;
+  color: #fff;
+  text-align: center;
+  position: relative;
+  font-size: 17px;
+  overflow: hidden;
+  padding: 0.5em 0;
+  background-color: transparent;
+}
+
+.hovereffect h2:after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  content: '';
+  -webkit-transition: -webkit-transform 0.35s;
+  transition: transform 0.35s;
+  -webkit-transform: translate3d(-100%,0,0);
+  transform: translate3d(-100%,0,0);
+}
+
+.hovereffect:hover h2:after {
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+}
+
+.hovereffect a, .hovereffect p {
+  color: #FFF;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+  transition: opacity 0.35s, transform 0.35s;
+  -webkit-transform: translate3d(100%,0,0);
+  transform: translate3d(100%,0,0);
+
+  margin-top: 35%;
+}
+
+.hovereffect:hover a, .hovereffect:hover p {
+  opacity: 1;
+  filter: alpha(opacity=100);
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+}
+
+/*Tables*/
+.table .thead-dark th{
+  background-color: #373737 !important;
+  border-color: transparent !important;
+  font-weight: 100;
+}
+
+.table-curved > :last-child > :last-child > :first-child{
+  border-left: transparent !important;
+}
+
+.table-curved {
+   border-radius: 6px;
+   border-left: 0px;
+   border-top: 0px;
+}
+.table-curved > thead:first-child > tr:first-child > th {
+    border-bottom: 0px;
+    border-top: solid #ddd 1px;
+}
+.table-curved td, .table-curved th {
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+}
+.table-curved > :first-child > :first-child > :first-child {
+    border-top-left-radius: 6px;
+}
+.table-curved > :first-child > :first-child > :last-child {
+    border-top-right-radius: 6px;
+}
+.table-curved > :last-child > :last-child > :first-child {
+    border-bottom-left-radius: 6px;
+}
+.table-curved > :last-child > :last-child > :last-child {
+    border-bottom-right-radius: 6px;
+}
+
+th{
+  font-weight: 100;
+}
+
+tr{
+  font-weight: 100;
+}
+
+td.value{
+  color: #676767;
+}
+
 /*Buttons*/
 .btn-danger{
   color: #fff;
-  background-color: #F44C41;
-  border-color: #F44C41;
+  background-color: #00a2ff;
+  border-color: #00a2ff;
 }
 
 .btn-outline-danger{
-  color: #F44C41;
+  color: #00a2ff;
   background-color: transparent;
   background-image: none;
-  border-color: #F44C41;
+  border-color: #00a2ff;
 }
 
 .btn-outline-danger:not(:disabled):not(.disabled).active, .btn-outline-danger:not(:disabled):not(.disabled):active, .show>.btn-outline-danger.dropdown-toggle{
   color: #fff;
-  background-color: #F44C41;
-  border-color: #F44C41;
+  background-color: #00a2ff;
+  border-color: #00a2ff;
 }
 
 .btn-primary{
@@ -92,15 +604,30 @@
 
 /*Navbar*/
 .navbar-light .navbar-nav .nav-link{
-  color: #f44c41;
+  color: #00a2ff;
+  margin-left: 10px;
 }
 
-.navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link {
-  color: #ffffff;
+.navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link{
+  color: #fff;
+  border-bottom: 2px solid white;
+}
+
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover{
+  color: #8ed6ff;
+  border-bottom: 2px solid #8ed6ff;
+}
+
+.li.nav-item{
+  margin-right: 0.25cm !important;
 }
 
 .bg-light {
-  background-color: #373737 !important;
+  background-color: #131313 !important;
+  background-image: url("https://i.imgur.com/jho3Kyb.png");
+  background-position: center;
+  background-size: 100%;
+  background-repeat: repeat-y;
 }
 
 .navbar-light .navbar-brand:focus, .navbar-light .navbar-brand:hover{
@@ -108,11 +635,7 @@
 }
 
 .navbar-light .navbar-brand{
-  color: #f44c41;
-}
-
-.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover{
-  color: #f44c41;
+  color: #00a2ff;
 }
 
 .navbar-brand
@@ -131,17 +654,17 @@
 .navBorder{
   border-style:  solid;
   border-width: 0px 0px 1px 0px;
-  border-color: #f44c41;
+  border-color: #00a2ff;
 }
 
 /*Dropdown Styles*/
 .dropdown-menu{
   background-color: #373737 !important;
-  border-color: #f44c41 !important;
+  border-color: #00a2ff !important;
 }
 
 .dropdown-item{
-  color: #f44c41 !important;
+  color: #00a2ff !important;
 }
 
 .dropdown-item.active, .dropdown-item:active{
@@ -173,7 +696,7 @@
 }
 
 .dropdown-item:focus, .dropdown-item:hover {
-  background-color: #F44C41;
+  background-color: #00a2ff;
 }
 
 .btn.btn-secondary.btn-lg.dropdown-toggle.customFooterButton{
@@ -254,13 +777,19 @@ Use bootstrap tags whenever possible as this will reduce any scaling problems yo
 Use the standardised CSS tags I have created if possible.*/
 
 /*Footer*/
+.customSpacer{
+  margin-top: 1px;
+  height: 1px;
+  background: linear-gradient(to right, #131313 , #00a2ff, #121314);
+}
+
 #myFooter {
-  background-color: #373737;
+  background-color: #131313;
   color:white;
 }
 
 #myFooter .footer-copyright{
-  background-color: #373737;
+  background-color: #131313;
   padding-top:3px;
   padding-bottom:3px;
   text-align: center;
@@ -294,7 +823,7 @@ Use the standardised CSS tags I have created if possible.*/
 }
 
 #myFooter a:hover, #myFooter a:focus{
-  color:#F44C41;
+  color:#;
   text-decoration: none;
 }
 
@@ -305,7 +834,7 @@ Use the standardised CSS tags I have created if possible.*/
 #myFooter .social-networks{
   text-align: center;
   padding-top: 30px;
-  padding-bottom: 38px;
+  padding-bottom: 15px;
 }
 
 #myFooter .social-networks a{
@@ -357,13 +886,13 @@ Use the standardised CSS tags I have created if possible.*/
 }
 
 #profile-image1{
-cursor: pointer;
-width: 300px;
-height: 300px;
-position: relative;
-margin-left: auto;
-margin-right: auto;
-left: 50%;
-top: 2px;
-border:0px solid black ;}
+  cursor: pointer;
+  width: 300px;
+  height: 300px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  left: 50%;
+  top: 2px;
+  border:0px solid black ;
 }
