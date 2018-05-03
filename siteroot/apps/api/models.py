@@ -320,3 +320,26 @@ class Feedback(models.Model):
 	email = models.EmailField()
 	title = models.CharField(max_length=254)
 	message = models.TextField()
+
+#Banned Users model
+class Banned_User(models.Model):
+	def __str__(self):
+		return self.user.get_username
+
+	profile = models.ForeignKey(
+		'Profile',
+		on_delete=models.PROTECT,
+		blank=False,
+		null=False,
+		related_name='banned_profile'
+	)
+
+	report_reason = models.ForeignKey(
+		'report',
+		on_delete=models.PROTECT,
+		blank=False,
+		null=False,
+		related_name='reason_banned',
+	)
+
+	date_banned = models.DateField(null=True, blank=False,)

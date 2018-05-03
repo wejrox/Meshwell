@@ -16,7 +16,7 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="{% static "css/custom.css" %}">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
-		
+
 		<!-- Favicon support -->
 		<link rel="shortcut icon" href="{%  static 'css/images/favicon/favicon.ico' %}">
 		<link rel="shortcut icon" href="{%  static 'css/images/favicon/favicon.ico' %}" type="image/x-icon">
@@ -111,7 +111,9 @@
 											{% if field.html_name != "password" %}
 											<input class="form-control" id="{{ field.id_for_label }}" maxlength="30" name="{{ field.html_name }}" value="" type="text">
 											{% else %}
-											<input class="form-control" id="{{ field.id_for_label }}" maxlength="30" name="{{ field.html_name }}" value="" type="password">
+											<input class="form-control" id="{{ field.id_for_label }}" maxlength="30" name="{{ field.html_name }}" value="" type="password"> <p>
+												<a href="{% url 'password_reset' %}">Forgot Password?</a>
+											</p>
 											{% endif %}
 										</div>
 										{{ field.errors }}
@@ -284,8 +286,8 @@
 		  .click(function(event) {
 		    // On-page links
 		    if (
-		      location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') 
-		      && 
+		      location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')
+		      &&
 		      location.hostname == this.hostname
 		    ) {
 		      // Figure out element to scroll to

@@ -438,10 +438,10 @@ def enter_queue(request):
 			session = sessions[0]
 		else:
 			session = None
-			
+
 	# Testing, don't run the rest
 #	return redirect('dashboard')
-	
+
 	# Suitable session?
 	if session:
         # Attach the session
@@ -459,7 +459,7 @@ def enter_queue(request):
 		connected_players = Session_Profile.objects.filter(session=new_session)
 		if len(connected_players) >= new_session.game.max_players:
 			new_session.space_available = False
-		
+
 		# Save database
 		user_profile.save()
 		player_session.save()
@@ -505,7 +505,7 @@ def get_suitable_sessions(profile):
 	# Queueing players details
 	user_availabilities = Availability.objects.filter(profile=profile)
 	user_connected_accounts = Profile_Connected_Game_Account.objects.filter(profile=profile)
-  	
+
 	# Create a list of games to filter based off
 	user_accounts = []
 	for acc in user_connected_accounts:
@@ -536,7 +536,7 @@ def get_suitable_sessions(profile):
 		# Get any sessions that haven't happened yet, match our day, is one of our games we have set up, is the right playlist type, and has spaces available
 		avail_match_sessions = Session.objects.filter(
 			start__gte=datetime.datetime.now(),
-			game__in=user_accounts, 
+			game__in=user_accounts,
 			competitive=avail.competitive,
 			start__week_day=day,
 			space_available=True,
@@ -550,7 +550,7 @@ def get_suitable_sessions(profile):
 				user_acc = Profile_Connected_Game_Account.objects.filter(profile=profile, game=session.game).first()
 				# Get the stats of each player that is attached to the session
 				player_sessions = Session_Profile.objects.filter(session=session)
-				
+
 				# All sessions are suitable until proven otherwise
 				suitable = True
 				# Check if their MMR is within the range we want
@@ -579,7 +579,7 @@ def get_suitable_sessions(profile):
 		v = calc_match_viablity(profile, session[0])
 		if v > min_accepted_viability:
 			sorted_sessions.append([v, session])
-	
+
 	# Check existence
 	if len(sorted_sessions) < 1:
 		return None
@@ -629,7 +629,7 @@ def calc_match_viablity(user_profile, session):
 			communication = (player.profile.communication_commends / num_sess) * modifiers['Communication']
 			skill = (player.profile.skill_commends / num_sess) * modifiers['Skill']
 			sportsmanship = (player.profile.sportsmanship_commends / num_sess) * modifiers['Sportsmanship']
-		
+
 			player_viability[player.id] = teamwork + communication + skill + sportsmanship
 		# If not, we just give them 0.5
 		else:
@@ -655,7 +655,7 @@ def is_time_acceptable(session, availability):
 	# Check if the session is before our start time but goes at least an hour into our availability
 	if session.start.time() <= availability.start_time and min_end.time() <= availability.end_time:
 		return True
-	
+
 	# To reach here, the session isn't within our availability and it doesn't overlap
 	return False
 
