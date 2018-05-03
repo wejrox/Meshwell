@@ -421,7 +421,7 @@ section h1 {
   font-weight: 100;
 }
 
-/*Profile Picture*/
+/*Profile Picture (Hover image effect by Mike Young - https://miketricking.github.io/bootstrap-image-hover/)*/
 .hovereffect {
   width: 100%;
   overflow: hidden;
@@ -657,7 +657,7 @@ td.value{
   border-color: #00a2ff;
 }
 
-/*Dropdown Styles*/
+/*Dropdown Menu Style Override*/
 .dropdown-menu{
   background-color: #373737 !important;
   border-color: #00a2ff !important;
@@ -712,13 +712,11 @@ td.value{
   text-align: center;
   font-size: 3em;
   font-weight: 100;
-  color: #373737;
+  color: #fff;
 }
 
 .paragraphContent.aboutMe{
   column-count: 1;
-  margin-left: 20%;
-  margin-right: 20%;
   text-align: center;
   font-weight: 100;
   font-size: 19pt;
@@ -734,7 +732,7 @@ td.value{
   margin-right: 20%;
 }
 
-/* Shine */
+/* Shine by Noaya - https://codepen.io/nxworld/pen/ZYNOBZ */
 .hover14 figure {
   position: relative;
 }
