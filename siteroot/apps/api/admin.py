@@ -26,7 +26,9 @@ admin.site.register(Feedback)
 
 def ban_users(self, request, queryset):
 	queryset.update(is_active = False)
-	self.message_user(request, "User banned")
+	banned_user = Banned_User.objects.create(profile=request.user.profile)
+	banned_user.save()
+	self.message_user(request, "user banned")
 
 def remove_ban(self, request, queryset):
 	print(queryset)

@@ -338,8 +338,6 @@ class Banned_User(models.Model):
 		'report',
 		on_delete=models.PROTECT,
 		blank=False,
-		null=False,
-		related_name='reason_banned',
 	)
 
 	date_banned = models.DateField(null=True, blank=False,)
