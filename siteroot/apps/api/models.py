@@ -151,7 +151,7 @@ class Game(models.Model):
 	# ADD IMAGE SUPPORT
 	image = models.ImageField(
 		upload_to="games",
-		default='games/default.jpg',
+		default='games/default.png',
 	)
 
 # An entry for a Role that has a connected game
