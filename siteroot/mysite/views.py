@@ -418,25 +418,25 @@ def get_r6siege_ranks(request, player_tag):
 # Handles the user entering the queue for a session when the button on the nav bar is pressed
 @login_required
 def enter_queue(request):
-    # Get user details
+	# Get user details
 	django_user = request.user
 	user_profile = django_user.profile
-    # Ensure player is not already queueing
+	# Ensure player is not already queueing
 	if user_profile.in_queue:
 		return redirect('dashboard')
 
-    # Create a user session
+	# Create a user session
 	player_session = Session_Profile.objects.create(profile=user_profile)
 	player_session.save()
 
-    # Get user's availabilities, or send to availability page
+	# Get user's availabilities, or send to availability page
 	user_availabilities = Availability.objects.filter(profile=user_profile)
 	if not user_availabilities:
 		return redirect('availability')
 	else:
 		sessions = get_suitable_sessions(user_profile)
 		if sessions:
-			session = sessions[0]
+			session = sessions[0] # The session and availability
 		else:
 			session = None
 
@@ -445,29 +445,10 @@ def enter_queue(request):
 
 	# Suitable session?
 	if session:
-        # Attach the session
-		player_session.session = session[1][0]
-		user_profile.in_queue = True
-		# Set the session begin and end time to where it intersected
-		avail = session[1][1]
-		new_session = session[1][0]
-		if avail.start_time > new_session.start.time():
-			new_session.start.time = avail.start_time
-		if avail.end_time < new_session.end_time:
-			new_session.end_time = avail.end_time
-
-		# Set session remaining spaces
-		connected_players = Session_Profile.objects.filter(session=new_session)
-		if len(connected_players) >= new_session.game.max_players:
-			new_session.space_available = False
-
-		# Save database
-		user_profile.save()
-		player_session.save()
-		new_session.save()
+		join_session(player_session, session[1][0], session[1][1])
 	### REPLACE WITH A REDIRECTION TO A SESSION CREATION FORM! ###
 	else:
-        # Create a session and add the user
+		# Create a session and add the user
 		player_acc = Profile_Connected_Game_Account.objects.filter(profile=user_profile).first()
 		game = Game.objects.get(id=player_acc.game.id)
 		session = Session.objects.create(game=game)
@@ -480,6 +461,38 @@ def enter_queue(request):
 
 	return redirect('dashboard')
 
+def join_session(session_profile, session, avail):
+	'''
+	Adds a user to a given session, overwriting the time of the session if necessary.
+	Returns True on success, False on failure
+	'''
+
+	# Ensure space available
+	if not session.space_available:
+		return False
+
+	# Attach the session
+	session_profile.session = session
+	session_profile.profile.in_queue = True
+
+	# Set the session begin and end time to where it intersected
+	if avail.start_time > session.start.time():
+		session.start.time = avail.start_time
+	if avail.end_time < session.end_time:
+		session.end_time = avail.end_time
+
+	# Set session remaining spaces
+	connected_players = Session_Profile.objects.filter(session=session)
+	if len(connected_players) >= session.game.max_players:
+		session.space_available = False
+
+	# Save database
+	session_profile.profile.save()
+	session_profile.save()
+	session.save()
+
+	return True
+
 # Removes the authenticated player from the queue
 @login_required
 def exit_queue(request):
@@ -491,6 +504,10 @@ def exit_queue(request):
 	# Session now has spaces (regardless of if there were spaces before)
 	player_session.session.space_available = True
 	player_session.session.save()
+	# Delete session if nobody is in it
+	sessions = Session_Profile.objects.filter(session=player_session.session)
+	if sessions is None:
+		Session_Profile.objects.delete(player_session.session)
 	# Remove our player session
 	player_session.delete()
 	request.user.profile.in_queue = False
@@ -500,6 +517,10 @@ def exit_queue(request):
 # Get all suitable sessions for a user to join
 # Availability existence should be verified prior to this point.
 def get_suitable_sessions(profile):
+	'''
+	Gets all suitable sessions for a user, above the minimum amount specified.
+	Returns the sessions as a list of 2 elements [viability, [session, availability]]
+	'''
 	# Modifiers
 	acceptable_mmr_range = 100 # How much above/below us should they be to be viable?
 	min_accepted_viability = 0.6 # A value (out of 1) which states how viable a session must be to be included
@@ -673,12 +694,12 @@ def availability(request):
 	context = {'title':'Availability', 'Message':'Below is a list of your current availabilities', 'availabilities':avail}
 
 	# Delete data based on the the id provided by the html page
-	if(request.GET.get('Remove Availability')):
+	if request.GET.get('Remove Availability'):
 		delete_availability(request.GET.get('url'))
 		return redirect('availability')
 
 	# Redirect to an edit availability page, given the id of the profile to edit
-	if(request.GET.get('Edit Availability')):
+	if request.GET.get('Edit Availability'):
 		request.session['avail_url'] = request.GET.get('url')
 		return redirect('edit_availability')
 
@@ -696,9 +717,9 @@ def add_availability(request):
 		return redirect('dashboard')
 
 	context = {
-	    'title': 'New Availability',
-	    'message' : 'Please enter the details for your new availability.',
-	    'editing' : False
+		'title': 'New Availability',
+		'message' : 'Please enter the details for your new availability.',
+		'editing' : False
 	}
 
 	# Creae a new entry, or edit the existing one if it has been given
@@ -736,8 +757,8 @@ def edit_availability(request):
 		except model.DoesNotExist:
 			return redirect('availability')
 		context = {
-		    'title': 'Update Availability',
-		    'message' : 'Please enter the new details for this availability.'
+			'title': 'Update Availability',
+			'message' : 'Please enter the new details for this availability.'
 		}
 	# Not editing an entry
 	else:
@@ -768,8 +789,8 @@ def edit_availability(request):
 @login_required
 def rate_session(request):
 	context = {
-	    'title': 'Rate Session',
-	    'message' : 'We hope you\'ve enjoyed your session! Please rate how well it was matched below.',
+		'title': 'Rate Session',
+		'message' : 'We hope you\'ve enjoyed your session! Please rate how well it was matched below.',
 	}
 
 	# Redirect to dashboard if the user has already rated this session
@@ -798,11 +819,18 @@ def rate_session(request):
 	context['form'] = form
 	return render(request, 'registration/availability_form.html', context)
 
+@login_required
 def test_discord_token(request):
 	context = {'token_url': 'https://discordapp.com/api/oauth2/authorize?response_type=code&client_id='+private_settings.CLIENT_ID+'&scope=identify%20guilds.join&redirect_uri=https%3A%2F%2Fwww.meshwell.ml%2Fdiscord_callback'}
 	return render(request, 'testing/test_discord_token.html', context)
 
 def discord_callback(request):
+	'''
+	When a user authenticates via discord, this is where discord sends them. 
+	discord gives a 'user' object but we only take the snowflake (user id) as its all we need.
+	Steps are: Get user permission (token), get user details (using token as authentication), 
+	store id, add user to server (using bot token in header and user token in json)
+	'''
 	error = request.GET.get('error', '')
 	if error:
 		print(error)
@@ -829,6 +857,9 @@ def discord_callback(request):
 	return redirect('dashboard')
 
 def discord_get_access_token(code):
+	'''
+	Gets an authenticated access token from the callback request
+	'''
 	client_auth = requests.auth.HTTPBasicAuth(private_settings.CLIENT_ID, private_settings.CLIENT_SECRET)
 	data = {
 				"client_id": private_settings.CLIENT_ID,
@@ -849,6 +880,10 @@ def discord_get_access_token(code):
 	return token_json['access_token']
 
 def discord_get_user_id(access_token):
+	'''
+	Returns a user id (snowflake) 
+	Uses a users access token to get user details
+	'''
 	headers = {'Authorization': 'Bearer ' + access_token}
 	response = requests.get('https://discordapp.com/api/users/@me', headers=headers)
 	user_json = response.json()
@@ -861,6 +896,9 @@ def discord_get_user_id(access_token):
 	return id
 
 def discord_put_user_on_server(access_token, discord_id):
+	'''
+	Adds the user that authenticated into the server automatically
+	'''
 	headers = {'Authorization': 'Bot ' + private_settings.BOT_TOKEN, 'Content-Type':'application/json'}
 	data = {'access_token': '' + access_token}
 	response = requests.put('https://discordapp.com/api/guilds/'+private_settings.GUILD_ID+'/members/'+discord_id, headers=headers, json={'access_token':str(access_token)})
@@ -868,3 +906,33 @@ def discord_put_user_on_server(access_token, discord_id):
 	if response.status_code >= 300:
 		return False
 	return True
+
+def manual_matchmaking(request):
+	'''
+	User selects from a list of current sessions, given the viability
+	'''
+	context = {'title':'Manual Matchmaking'}
+	context['sessions'] = {}
+	sessions = get_suitable_sessions(request.user.profile)
+	i = 0
+	for sv in sessions:
+		context['sessions'][str(i)] = {}
+		context['sessions'][str(i)]['session'] = {}
+		context['sessions'][str(i)]['session']['id'] = sv[1][0].id
+		context['sessions'][str(i)]['session']['viability'] = str(sv[0])
+		context['sessions'][str(i)]['session']['start'] = sv[1][0].start
+		context['sessions'][str(i)]['session']['end_time'] = sv[1][0].end_time
+		context['sessions'][str(i)]['session']['competitive'] = sv[1][0].competitive
+		context['sessions'][str(i)]['game_image'] = sv[1][0].game.image.url
+
+	if request.GET.get('Join Session'):
+		session_id = request.GET.get('id')
+		session = sessions[int(session_id)][1][0]
+		avail = sessions[int(session_id)][1][1]
+		# Create a user session
+		player_session = Session_Profile.objects.create(profile=request.user.profile)
+		player_session.save()
+
+		join_session(player_session, session, avail)
+		return redirect('edit_availability')
+	return render(request, 'mysite/manual_matchmaking.html', context)
