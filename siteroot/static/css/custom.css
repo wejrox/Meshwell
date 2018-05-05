@@ -5,7 +5,7 @@ body, html {
 
 body{
   background-color: #131313 !important;
-  background-image: url("https://i.imgur.com/CXO7SzZ.jpg");
+  background-image: url("https://i.imgur.com/meVKk9f.png");
   background-position: center;
   background-size: 100%;
   background-repeat: repeat-y;
@@ -636,7 +636,7 @@ td.value{
 
 .bg-light {
   background-color: #ffffff !important;
-  background-image: url("https://i.imgur.com/k9Vx8tD.png");
+  background-image: url("https://i.imgur.com/meVKk9f.png");
   background-position: center;
   background-size: 100%;
   background-repeat: repeat-y;
@@ -796,6 +796,7 @@ Use the standardised CSS tags I have created if possible.*/
 #myFooter {
   background-color: #fff;
   color:white;
+  border-top: 2px solid #00a2ff;
 }
 
 #myFooter .footer-copyright{
