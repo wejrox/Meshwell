@@ -5,7 +5,7 @@ body, html {
 
 body{
   background-color: #131313 !important;
-  background-image: url("https://i.imgur.com/jho3Kyb.png");
+  background-image: url("https://i.imgur.com/CXO7SzZ.jpg");
   background-position: center;
   background-size: 100%;
   background-repeat: repeat-y;
@@ -788,13 +788,13 @@ Use the standardised CSS tags I have created if possible.*/
 
 /*Footer*/
 .customSpacer{
-  margin-top: 1px;
+  margin-top: -1px;
   height: 1px;
   background: linear-gradient(to right, #ffffff , #00a2ff, #ffffff);
 }
 
 #myFooter {
-  background-color: #131313;
+  background-color: #fff;
   color:white;
 }
 
