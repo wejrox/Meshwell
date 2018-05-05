@@ -63,7 +63,8 @@ class Profile(models.Model):
 
 	# Other details
 	birth_date = models.DateField(null=True, blank=False,)
-	sessions_played = models.IntegerField(null=False, blank=False, default='0',)
+	sessions_played = models.IntegerField(null=False, blank=False, default=0,)
+	received_ratings = models.IntegerField(null=False, blank=False, default=0,)
 	in_queue = models.BooleanField(null=False, blank=False, default=False,)
 
 	# The users name on discord, which is limited by them to 32 chars, plus 5 for id. e.g. myname#1205

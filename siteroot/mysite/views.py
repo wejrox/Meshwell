@@ -621,7 +621,7 @@ def calc_match_viablity(user_profile, session):
 	player_viability = {}
 	# Weigh their commendations based on what the user believes is important
 	for player in players:
-		num_sess = player.profile.sessions_played
+		num_sess = player.profile.received_ratings
 
 		# If they've played a session, grade them.
 		if num_sess > 0:
