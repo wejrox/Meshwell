@@ -2,7 +2,7 @@ from apps.api.models import Profile, Profile_Connected_Game_Account, Availabilit
 from rest_framework import viewsets
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from django.shortcuts import render, redirect
-import requests, json, urllib.parse, datetime
+import requests, requests.auth, json, urllib.parse, datetime
 from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, RateSessionForm
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
@@ -11,13 +11,14 @@ from django.contrib.auth.views import login as contrib_login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.signals import user_logged_in
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.core.signals import request_finished
 from django.dispatch import receiver
 from django.urls import reverse, resolve
 from django.utils import timezone
 # Import settings
 from django.conf import settings
+from mysite import private_settings
 
 # Receiver to create a profile if the user doesn't have one for some reason
 @receiver(user_logged_in)
@@ -796,3 +797,42 @@ def rate_session(request):
 	# Set the form to whichever form we are using
 	context['form'] = form
 	return render(request, 'registration/availability_form.html', context)
+
+def test_discord_token(request):
+	context = {'token url': "https://discordapp.com/api/oauth2/authorize?response_type=code&client_id="+private_settings.CLIENT_ID+"&scope=identify%20guilds.join&redirect_uri=https%3A%2F%2Fwww.meshwell.ml%2Fdiscord_callback"}
+	return render(request, 'testing/test_discord_token.html', context)
+
+def discord_callback(request):
+	error = request.GET.get('error', '')
+	if error:
+		print(error)
+		# NEED TO IMPLEMENT ERROR
+		return redirect('dashboard')
+
+	code = request.GET.get('code')
+	access_token = discord_get_access_token(code)
+	id = discord_get_user_id(access_token)
+	print("User id = %s" % id)
+	return redirect('dashboard')
+
+def discord_get_access_token(code):
+	client_auth = requests.auth.HTTPBasicAuth(private_settings.CLIENT_ID, private_settings.CLIENT_SECRET)
+	post_data = {
+				"grant_type": "authorization_code",
+				"code": code,
+				"redirect_uri": private_settings.REDIRECT_URI,
+	}
+	response = requests.post(
+							"https://discordapp.com/api/oauth2/token",
+							auth=client_auth,
+							data=post_data 
+							)
+	token_json = response.json()
+	return token_json["access_token"]
+
+def discord_get_user_id(access_token):
+	headers = {'Authorization': 'bearer ' + access_token}
+	response = requests.get('https://discordapp.com/api/users/@me', headers=headers)
+	user_json = response.json()
+	print(user_json)
+	return user_json['id']

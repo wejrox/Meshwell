@@ -20,3 +20,4 @@ migrations/
 # Ignore bot settings file as it has the bot key
 discord-bot/bot_settings.py
 discord-bot/test.py
+siteroot/mysite/private_settings.py

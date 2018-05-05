@@ -60,6 +60,9 @@ urlpatterns = [
     url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         auth_views.password_reset_confirm, name='password_reset_confirm'),
     url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
+    # Discord Authentication
+    url(r'^discord_callback/', site_views.discord_callback, name='discord_callback'),
+    path('test_discord/', site_views.test_discord_token, name='test_discord_token'),
 ]
 
 # Development serving of media files (game images)
