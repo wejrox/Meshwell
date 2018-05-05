@@ -65,7 +65,7 @@
 			    </ul>
 			    <ul class="navbar-nav ml-auto">
 			    	{% if user.is_authenticated %}
-			    	<li class="nav-item dropdown" style="font-weight: bold;">
+			    	<li class="nav-item dropdown" style="font-weight: bold; margin-right: 10px;">
 			    		<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			    			Hello, {{ user.get_username }}
 			    		</a>
@@ -136,7 +136,6 @@
 			  </div>
 			</nav>
 		</header>
-		<div class="customSpacer"> </div>
 
 		<!-- Custom code goes below here -->
 		{% block content %}
