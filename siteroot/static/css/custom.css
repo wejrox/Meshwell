@@ -5,7 +5,7 @@ body, html {
 
 body{
   background-color: #131313 !important;
-  background-image: url("https://i.imgur.com/jho3Kyb.png");
+  background-image: url("https://i.imgur.com/meVKk9f.png");
   background-position: center;
   background-size: 100%;
   background-repeat: repeat-y;
@@ -621,13 +621,13 @@ td.value{
 }
 
 .navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link{
-  color: #fff;
-  border-bottom: 2px solid white;
+  color: #00a2ff;
+  border-bottom: 2px solid #00a2ff;
 }
 
 .navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover{
-  color: #8ed6ff;
-  border-bottom: 2px solid #8ed6ff;
+  color: #265fa3;
+  border-bottom: 2px solid #265fa3;
 }
 
 .li.nav-item{
@@ -635,8 +635,8 @@ td.value{
 }
 
 .bg-light {
-  background-color: #131313 !important;
-  background-image: url("https://i.imgur.com/jho3Kyb.png");
+  background-color: #ffffff !important;
+  background-image: url("https://i.imgur.com/meVKk9f.png");
   background-position: center;
   background-size: 100%;
   background-repeat: repeat-y;
@@ -788,18 +788,20 @@ Use the standardised CSS tags I have created if possible.*/
 
 /*Footer*/
 .customSpacer{
-  margin-top: 1px;
+  margin-top: -1px;
   height: 1px;
-  background: linear-gradient(to right, #131313 , #00a2ff, #121314);
+  background: linear-gradient(to right, #ffffff , #00a2ff, #ffffff);
 }
 
 #myFooter {
-  background-color: #131313;
+  background-color: #fff;
   color:white;
+  border-top: 2px solid #00a2ff;
 }
 
 #myFooter .footer-copyright{
-  background-color: #131313;
+  background: #fff;
+  border-top: 1px solid #ececec;
   padding-top:3px;
   padding-bottom:3px;
   text-align: center;
@@ -821,19 +823,20 @@ Use the standardised CSS tags I have created if possible.*/
 .myFooter.title{
   font-size: 16pt;
   font-weight: 100 !important;
-  color: white;
+  color: #2d363F;
   font-weight: bold;
   margin-top: 30px;
 }
 
 #myFooter a{
-  color:#fff;
+  color:#2d363F;
   font-weight: 100;
   text-decoration: none;
 }
 
 #myFooter a:hover, #myFooter a:focus{
-  color:#;
+  color:#2f97c1;
+  font-weight: 400;
   text-decoration: none;
 }
 
@@ -851,7 +854,7 @@ Use the standardised CSS tags I have created if possible.*/
   font-size: 32px;
   margin-right: 5px;
   margin-left: 5px;
-  color: #f9f9f9;
+  color: #2d363F;
   padding: 10px;
   transition: 0.2s;
 }
