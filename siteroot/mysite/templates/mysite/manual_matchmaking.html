@@ -29,9 +29,10 @@
 				<td>{{ value.session.competitive }}</td>
 				<td>{{ value.session.viability }}</td>
 				<td>
-                    <form action="#" method="post">
-                        <input type="hidden" name="url" value="{{ value.session.id }}">
-                        <input type="submit" class="btn btn-success" value="Join Session">
+                    <form action="#" method="get">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ key }}">
+                        <input type="submit" class="btn btn-success" value="Join Session" name="Join Session">
                     </form>
                 </td>
 			</tr>
