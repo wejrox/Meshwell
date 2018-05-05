@@ -445,7 +445,7 @@ def enter_queue(request):
 
 	# Suitable session?
 	if session:
-		join_session(player_session, session[0], session[1])
+		join_session(player_session, session[1][0], session[1][1])
 	### REPLACE WITH A REDIRECTION TO A SESSION CREATION FORM! ###
 	else:
 		# Create a session and add the user
@@ -504,6 +504,10 @@ def exit_queue(request):
 	# Session now has spaces (regardless of if there were spaces before)
 	player_session.session.space_available = True
 	player_session.session.save()
+	# Delete session if nobody is in it
+	sessions = Session_Profile.objects.filter(session=player_session.session)
+	if sessions is None:
+		Session_Profile.objects.delete(player_session.session)
 	# Remove our player session
 	player_session.delete()
 	request.user.profile.in_queue = False

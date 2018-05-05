@@ -166,10 +166,16 @@
 				<div class="profileColumn2">
 					<div class="container">
 						<div class="row">
+							{% if not user.profile.in_queue %}
 							<div class="matchmakingButtons">
-								<button type="button" class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="bottom" title="Use our algorithm to find other compatible players." style="font-weight: 100;">Smart Matchmaking</button>
-								<button type="button" class="btn btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="Select from a list of potential players you can play with. Compatibility metrics will be shown." style="font-weight: 100;">Manual Matchmaking</button>
+								<a href="{% url 'enter_queue' %}" type="button" class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="bottom" title="Use our algorithm to find other compatible players." style="font-weight: 100;">Smart Matchmaking</a>
+								<a href="{% url 'manual_matchmaking' %}" type="button" class="btn btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="Select from a list of potential players you can play with. Compatibility metrics will be shown." style="font-weight: 100;">Manual Matchmaking</a>
 							</div>
+							{% else %}
+							<div class="matchmakingButtons">
+								<a href="{% url 'exit_queue' %}" type="button" class="btn btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="Cancel your current search for a session." style="font-weight: 100;">Cancel Matchmaking</a>
+							</div>
+							{% endif %}
 						</div>
 						<hr>
 						<div class="row"> <!--Table-->
