@@ -834,4 +834,5 @@ def discord_get_user_id(access_token):
 	headers = {'Authorization': 'bearer ' + access_token}
 	response = requests.get('https://discordapp.com/api/users/@me', headers=headers)
 	user_json = response.json()
+	print(user_json)
 	return user_json['id']
