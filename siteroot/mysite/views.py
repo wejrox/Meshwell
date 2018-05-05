@@ -500,6 +500,10 @@ def exit_queue(request):
 # Get all suitable sessions for a user to join
 # Availability existence should be verified prior to this point.
 def get_suitable_sessions(profile):
+	'''
+	Gets all suitable sessions for a user, above the minimum amount specified.
+	Returns the sessions as a list of 2 elements [viability, [session, availability]]
+	'''
 	# Modifiers
 	acceptable_mmr_range = 100 # How much above/below us should they be to be viable?
 	min_accepted_viability = 0.6 # A value (out of 1) which states how viable a session must be to be included
@@ -798,11 +802,18 @@ def rate_session(request):
 	context['form'] = form
 	return render(request, 'registration/availability_form.html', context)
 
+@login_required
 def test_discord_token(request):
 	context = {'token_url': 'https://discordapp.com/api/oauth2/authorize?response_type=code&client_id='+private_settings.CLIENT_ID+'&scope=identify%20guilds.join&redirect_uri=https%3A%2F%2Fwww.meshwell.ml%2Fdiscord_callback'}
 	return render(request, 'testing/test_discord_token.html', context)
 
 def discord_callback(request):
+	'''
+	When a user authenticates via discord, this is where discord sends them. 
+	discord gives a 'user' object but we only take the snowflake (user id) as its all we need.
+	Steps are: Get user permission (token), get user details (using token as authentication), 
+	store id, add user to server (using bot token in header and user token in json)
+	'''
 	error = request.GET.get('error', '')
 	if error:
 		print(error)
@@ -829,6 +840,9 @@ def discord_callback(request):
 	return redirect('dashboard')
 
 def discord_get_access_token(code):
+	'''
+	Gets an authenticated access token from the callback request
+	'''
 	client_auth = requests.auth.HTTPBasicAuth(private_settings.CLIENT_ID, private_settings.CLIENT_SECRET)
 	data = {
 				"client_id": private_settings.CLIENT_ID,
@@ -849,6 +863,10 @@ def discord_get_access_token(code):
 	return token_json['access_token']
 
 def discord_get_user_id(access_token):
+	'''
+	Returns a user id (snowflake) 
+	Uses a users access token to get user details
+	'''
 	headers = {'Authorization': 'Bearer ' + access_token}
 	response = requests.get('https://discordapp.com/api/users/@me', headers=headers)
 	user_json = response.json()
@@ -861,6 +879,9 @@ def discord_get_user_id(access_token):
 	return id
 
 def discord_put_user_on_server(access_token, discord_id):
+	'''
+	Adds the user that authenticated into the server automatically
+	'''
 	headers = {'Authorization': 'Bot ' + private_settings.BOT_TOKEN, 'Content-Type':'application/json'}
 	data = {'access_token': '' + access_token}
 	response = requests.put('https://discordapp.com/api/guilds/'+private_settings.GUILD_ID+'/members/'+discord_id, headers=headers, json={'access_token':str(access_token)})
@@ -868,3 +889,23 @@ def discord_put_user_on_server(access_token, discord_id):
 	if response.status_code >= 300:
 		return False
 	return True
+
+def manual_matchmaking(request):
+	'''
+	User selects from a list of current sessions, given the viability
+	'''
+	context = {'title':'Manual Matchmaking'}
+	context['sessions'] = {}
+	sessions = get_suitable_sessions(request.user.profile)
+	i = 0
+	for sv in sessions:
+		context['sessions'][str(i)] = {}
+		context['sessions'][str(i)]['session'] = {}
+		context['sessions'][str(i)]['session']['id'] = sv[1][0].id
+		context['sessions'][str(i)]['session']['viability'] = str(sv[0])
+		context['sessions'][str(i)]['session']['start'] = sv[1][0].start
+		context['sessions'][str(i)]['session']['end_time'] = sv[1][0].end_time
+		context['sessions'][str(i)]['session']['competitive'] = sv[1][0].competitive
+		context['sessions'][str(i)]['game_image'] = sv[1][0].game.image.url
+
+	return render(request, 'mysite/manual_matchmaking.html', context)

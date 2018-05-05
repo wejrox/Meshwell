@@ -1,0 +1,43 @@
+{% extends 'mysite/base_meshwell.html' %}
+{% load static %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="mainContent">
+	<div class="headerContent">
+        {{ title }}
+    </div>
+    <br>
+    <table class="table">
+		<thead class="thead-dark">
+			<tr>
+                <th scope="col"></th>
+				<th scope="col">Date</th>
+				<th scope="col">Start</th>
+				<th scope="col">End</th>
+				<th scope="col">Competitive</th>
+				<th scope="col">Viability</th>
+				<th scope="col"></th>
+			</tr>
+		</thead>
+		<tbody>
+            {% for key, value in sessions.items %}
+            <tr>
+				<td><img class="img-fluid rounded img-thumbnail" src="{{ value.game_image }}" height=50pt width=50pt /></td>
+                <td>{{ value.session.start|date:'D d N' }}</td>
+                <td>{{ value.session.start|date:'H:i a' }}</td>
+				<td>{{ value.session.end_time }}</td>
+				<td>{{ value.session.competitive }}</td>
+				<td>{{ value.session.viability }}</td>
+				<td>
+                    <form action="#" method="post">
+                        <input type="hidden" name="url" value="{{ value.session.id }}">
+                        <input type="submit" class="btn btn-success" value="Join Session">
+                    </form>
+                </td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}

@@ -48,6 +48,7 @@ urlpatterns = [
     path('dashboard/availability/add', site_views.add_availability, name='add_availability'),
     path('dashboard/availability/edit', site_views.edit_availability, name='edit_availability'),
     path('dashboard/session/rate', site_views.rate_session, name='rate_session'),
+    path('dashboard/manual_matchmaking/', site_views.manual_matchmaking, name='manual_matchmaking'),
     # Admin
     url(r'^admin/', admin.site.urls),
     # API
