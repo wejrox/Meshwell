@@ -42,7 +42,7 @@ admin.site.register(Report, ReportAdmin)
 
 class ProfileAdmin(admin.ModelAdmin):
 	list_display = ('user', 'birth_date', 'sessions_played', 'total_reports')
-	readonly_fields = (('sessions_played'),('birth_date'),('user'),('pref_server'),('teamwork_commends'),('skill_commends'),('sportsmanship_commends'),('communication_commends'),('discord_name'))#,'total_reports')
+	readonly_fields = (('sessions_played'),('birth_date'),('user'),('pref_server'),('teamwork_commends'),('skill_commends'),('sportsmanship_commends'),('communication_commends'),('discord_id'))#,'total_reports')
 	actions = ['ban', 'unban']
 	ban = ban_users
 	unban = remove_ban

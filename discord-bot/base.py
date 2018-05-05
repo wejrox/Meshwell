@@ -15,11 +15,11 @@ debug = False
 bot = commands.Bot(command_prefix=bot_settings.cmd_prefix)
 
 # Database
-db_connection = MySQLdb.connect(host=bot_settings.host, 
-								user=bot_settings.user, 
-								passwd=bot_settings.password, 
-								db=bot_settings.database_name
-								)
+db_connection = MySQLdb.connect(host=bot_settings.host,
+				user=bot_settings.user,
+				passwd=bot_settings.password,
+				db=bot_settings.database_name
+				)
 
 async def auto_manage_channels():
 	'''
@@ -77,7 +77,7 @@ async def auto_manage_channels():
 					# Set default perms
 					await channel.set_permissions(guild.default_role, connect=False)
 					# Assign permissions to channel for users
-					member = guild.get_member_named(row[1])
+					member = guild.get_member(row[1])
 					if member is not None:
 						await channel.set_permissions(member, connect=True)
 						print("Permissions set")
@@ -88,7 +88,7 @@ async def auto_manage_channels():
 						print(message)
 						await member.send(content=message)
 					else:
-						print("Guild does not have member '"+row[1]+"', they may not be in the server!")
+						print("Guild does not have member \'"+row[1]+"\', they may not be in the server!")
 		else:
 			print("No upcoming sessions")
 		cursor.close()
@@ -108,7 +108,7 @@ async def auto_manage_channels():
 			for row in past:
 				if row[0] is not None and row[1] is not None:
 					# Get channel
-					member = guild.get_member_named(str(row[1]))
+					member = guild.get_member(str(row[1]))
 					channel = discord.utils.get(guild.channels, name=str(row[0]))
 					rate_url = "https://www.meshwell.com/dashboard/session/rate/"+str(row[2])
 					# Send message to members to rate session

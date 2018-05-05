@@ -799,7 +799,7 @@ def rate_session(request):
 	return render(request, 'registration/availability_form.html', context)
 
 def test_discord_token(request):
-	context = {'token url': "https://discordapp.com/api/oauth2/authorize?response_type=code&client_id="+private_settings.CLIENT_ID+"&scope=identify%20guilds.join&redirect_uri=https%3A%2F%2Fwww.meshwell.ml%2Fdiscord_callback"}
+	context = {'token_url': 'https://discordapp.com/api/oauth2/authorize?response_type=code&client_id='+private_settings.CLIENT_ID+'&scope=identify%20guilds.join&redirect_uri=https%3A%2F%2Fwww.meshwell.ml%2Fdiscord_callback'}
 	return render(request, 'testing/test_discord_token.html', context)
 
 def discord_callback(request):
@@ -812,27 +812,59 @@ def discord_callback(request):
 	code = request.GET.get('code')
 	access_token = discord_get_access_token(code)
 	id = discord_get_user_id(access_token)
-	print("User id = %s" % id)
+
+	# Check if id get was a failure
+	if id == -1:
+		return redirect('dashboard')
+
+	# Add them to the server
+	server_add_success = discord_put_user_on_server(access_token, id)
+
+	if server_add_success:
+		print("Added user %s to server" % id)
+		# Set the current users discord_id
+		request.user.profile.discord_id = id
+		request.user.profile.save()
+
 	return redirect('dashboard')
 
 def discord_get_access_token(code):
 	client_auth = requests.auth.HTTPBasicAuth(private_settings.CLIENT_ID, private_settings.CLIENT_SECRET)
-	post_data = {
+	data = {
+				"client_id": private_settings.CLIENT_ID,
+				"client_secret": private_settings.CLIENT_SECRET,
 				"grant_type": "authorization_code",
 				"code": code,
 				"redirect_uri": private_settings.REDIRECT_URI,
 	}
+	headers = {
+		'Content-Type': 'application/x-www-form-urlencoded'
+	}
 	response = requests.post(
-							"https://discordapp.com/api/oauth2/token",
-							auth=client_auth,
-							data=post_data 
-							)
+				"https://discordapp.com/api/oauth2/token",
+				data,
+				headers,
+				)
 	token_json = response.json()
-	return token_json["access_token"]
+	return token_json['access_token']
 
 def discord_get_user_id(access_token):
-	headers = {'Authorization': 'bearer ' + access_token}
+	headers = {'Authorization': 'Bearer ' + access_token}
 	response = requests.get('https://discordapp.com/api/users/@me', headers=headers)
 	user_json = response.json()
-	print(user_json)
-	return user_json['id']
+
+	# Request failed
+	if response.status_code >= 300:
+		return -1
+
+	id = user_json['id']
+	return id
+
+def discord_put_user_on_server(access_token, discord_id):
+	headers = {'Authorization': 'Bot ' + private_settings.BOT_TOKEN, 'Content-Type':'application/json'}
+	data = {'access_token': '' + access_token}
+	response = requests.put('https://discordapp.com/api/guilds/'+private_settings.GUILD_ID+'/members/'+discord_id, headers=headers, json={'access_token':str(access_token)})
+
+	if response.status_code >= 300:
+		return False
+	return True
