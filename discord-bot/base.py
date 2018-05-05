@@ -119,7 +119,7 @@ async def auto_manage_channels():
 						await channel.delete(reason="Automated channel delete on session end")
 		else:
 			print("No sessions to delete")
-					
+
 		# Wait x seconds before checking again
 		await asyncio.sleep(query_data.query_interval)
 		print("=================\nRe-Checking Sessions\n=================")
@@ -144,7 +144,7 @@ async def create_channel(ctx, *args):
 	# Get details from params
 	guild = ctx.message.guild
 	channel_name = args[0]
-	
+
 	# Get the default role, override it so nobody has join permissions
 	role_default = guild.default_role
 	category = guild.get_channel(bot_settings.category_id)
@@ -158,7 +158,11 @@ async def create_channel(ctx, *args):
 			member = guild.get_member_named(args[index])
 			if member is not None:
 				await channel.set_permissions(member, connect=True)
-	
+				# Send invite to the players discord
+				invite = await channel.create_invite(reason="Automated invite creation")
+				message = "Hi! This message is to let you know that your session now has a voice channel available!\n" + str(invite)
+				await member.send(content=message)
+
 @bot.command(pass_context=True)
 async def delete_channel(ctx, channel_name):
 	'''
@@ -167,6 +171,11 @@ async def delete_channel(ctx, channel_name):
 	guild = ctx.message.guild
 	channel = discord.utils.get(guild.channels, name=channel_name)
 	await channel.delete()
+	member = guild.get_member_named("JimJoms")
+	rate_url = "https://www.meshwell.com/dashboard/session/rate/2"
+	# Send message to members to rate session
+	message = "We hope you've enjoyed your session! \nPlease follow the link to rate your session in order to receive the best matching experience.\n"+str(rate_url)
+	await member.send(content=message)
 
 def exit_handler():
 	'''
