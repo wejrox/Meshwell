@@ -91,35 +91,91 @@ def tos(request):
 # User dashboard
 @login_required
 def dashboard(request):
-	#Profile
-	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
-	profile = Profile.objects.filter(user=request.user.id).first()
-	if not profile:
-		profile = Profile.objects.create(user=request.user)
-	url = 'http://127.0.0.1/api/profile/' + str(profile.id) + '/?format=json'
-	response = requests.get(url, headers=headers)
-	data = response.json()
-
+	'''
+	Displays the dashboard hub to the user.
+	Final context layout can be accessed via: 
+	(where id = the unique identifier of that entry. Use loops on that aspect to loop through the entries.)
+	title
+	message
+	profile.<username/first_name/last_name/pref_server/birth_date/sessions_played/teamwork_commends/sportsmanship_commends/skill_commends/communcation_commends/discord_id>
+	connected_accounts.*
+	availabilities.*
+	prev_sessions.{id}.session_profile_id
+	prev_sessions.{id}.game.<icon/name>
+	prev_sessions.{id}.session.<start/end_time/viability/rating>
+	prev_sessions.{id}.session.end_time
+	prev_sessions.{id}.session.viability
+	prev_sessions.{id}.session.rating
+	prev_sessions.{id}.players.{id}.<name/teamwork_commends/sportsmanship_commends/skill_commends/communication_commends>
+	'''
 	context = {
 		'title':'Dashboard',
 		'message':'Play Together. Mesh Well.',
 
 		#Profile Context Items
-		'username':data['user']['username'],
-		'first_name':data['user']['first_name'],
-		'last_name':data['user']['last_name'],
-		'pref_server':data['pref_server'],
-		'birth_date':data['birth_date'],
-		'sessions_played':data['sessions_played'],
-		'teamwork_commends':data['teamwork_commends'],
-		'sportsmanship_commends':data['sportsmanship_commends'],
-		'skill_commends':data['skill_commends'],
-		'communication_commends':data['communication_commends'],
+		'profile': {
+			'username':request.user.username,
+			'first_name':request.user.first_name,
+			'last_name':request.user.last_name,
+			'pref_server':request.user.profile.pref_server,
+			'birth_date':request.user.profile.birth_date,
+			'sessions_played':request.user.profile.sessions_played,
+			'teamwork_commends':request.user.profile.teamwork_commends,
+			'sportsmanship_commends':request.user.profile.sportsmanship_commends,
+			'skill_commends':request.user.profile.skill_commends,
+			'communication_commends':request.user.profile.communication_commends,
+			'discord_id':request.user.profile.discord_id,
+		}
 	}
 
 	context['connected_accounts'] = Profile_Connected_Game_Account.objects.filter(profile=request.user.profile)
 	context['availabilities'] = Availability.objects.filter(profile=request.user.profile)
-	context['prev_sessions'] = Session_Profile.objects.filter(profile=request.user.profile, session__start__lt=timezone.now()).exclude(session__isnull=True).order_by('-session__start')
+	# Get all required data for displaying previous sessions
+	usr_ses_prof = Session_Profile.objects.filter(profile=request.user.profile, session__start__lt=timezone.now()).exclude(session__end_time__isnull=True).order_by('-session__start')
+	sessions = Session.objects.filter(pk__in=usr_ses_prof.values_list('session__id', flat=True))
+	context['prev_sessions'] = {}
+	i = 0
+	# Get what is to be displayed from each session
+	for session in sessions:
+		# Find the session profiles, viability, game details
+		session_profiles = Session_Profile.objects.filter(session=session)
+		session_viability = calc_match_viablity(usr_ses_prof, session)
+		game_icon = session.game.image.url
+		game_name = session.game.name
+		start_time = session.start_time
+		context['prev_sessions'][str(i)] = {
+			'game':{
+				'icon':session.game.image.url,
+				'name':session.game.name,
+			},
+			'session':{
+				'start':session.start,
+				'end_time':session.end_time,
+				'viability':session_viability,
+				'rating':usr_ses_prof.rating,
+			},
+			'session_profile_id':usr_ses_prof.id,
+		}
+
+		count = 0
+		context['prev_sessions'][str(i)]['players'] = {}
+		# Assign each player to this session
+		for ses_p in sessions_profiles:
+			# Get their attached account
+			game_account = Profile_Connected_Game_Account.objects.get(game=session.game, profile=ses_p.profile)
+			# Initialise the player storage
+			context['prev_sessions'][str(i)]['players'][str(count)] = {}
+			# Assign details
+			context['prev_sessions'][str(i)]['players'][str(count)]['name'] = game_account.game_player_tag
+			context['prev_sessions'][str(i)]['players'][str(count)]['teamwork_commends'] = ses_p.profile.teamwork_commends
+			context['prev_sessions'][str(i)]['players'][str(count)]['sportsmanship_commends'] = ses_p.profile.sportsmanship_commends
+			context['prev_sessions'][str(i)]['players'][str(count)]['skill_commends'] = ses_p.profile.skill_commends
+			context['prev_sessions'][str(i)]['players'][str(count)]['communication_commends'] = ses_p.profile.communication_commends
+			
+			# Go to next connnected user
+			count += 1
+		# Go to next session
+		i += 1
 
 	# Redirect to an edit availability page, given the id of the profile to edit
 	if(request.GET.get('rate_session')):
@@ -820,10 +876,15 @@ def rate_session(request):
 	return render(request, 'registration/availability_form.html', context)
 
 @login_required
-def test_discord_token(request):
-	context = {'token_url': 'https://discordapp.com/api/oauth2/authorize?response_type=code&client_id='+private_settings.CLIENT_ID+'&scope=identify%20guilds.join&redirect_uri=https%3A%2F%2Fwww.meshwell.ml%2Fdiscord_callback'}
-	return render(request, 'testing/test_discord_token.html', context)
+def discord_disconnect_account(request):
+	'''
+	Removes the reference to the user id from the profile that is currently logged in
+	'''
+	request.user.profile.discord_id = None
+	request.user,profile.save()
+	return redirect('dashboard')
 
+@login_required
 def discord_callback(request):
 	'''
 	When a user authenticates via discord, this is where discord sends them. 
@@ -838,6 +899,8 @@ def discord_callback(request):
 		return redirect('dashboard')
 
 	code = request.GET.get('code')
+	if code is None:
+		return redirect('dashboard')
 	access_token = discord_get_access_token(code)
 	id = discord_get_user_id(access_token)
 

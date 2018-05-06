@@ -46,7 +46,7 @@
 												Username
 											</td>
 											<td class="value" style="border: none;">
-												{{ username }}
+												{{ profile.username }}
 											</td>
 										</tr>
 										<tr>
@@ -54,7 +54,7 @@
 												First Name
 											</td>
 											<td class="value" style="border: none;">
-												{{ first_name }}
+												{{ profile.first_name }}
 											</td>
 										</tr>
 										<tr>
@@ -62,7 +62,7 @@
 												Last Name
 											</td>
 											<td class="value" style="border: none;">
-												{{ last_name }}
+												{{ profile.last_name }}
 											</td>
 										</tr>
 										<tr>
@@ -70,7 +70,7 @@
 												Email
 											</td>
 											<td class="value" style="border: none;">
-												{{ email }}
+												{{ profile.email }}
 											</td>
 										</tr>
 										<tr>
@@ -78,7 +78,7 @@
 												Birth Date
 											</td>
 											<td class="value" style="border: none;">
-												{{ birth_date }}
+												{{ profile.birth_date }}
 											</td>
 										</tr>
 										<tr>
@@ -86,7 +86,7 @@
 												Sessions Played
 											</td>
 											<td class="value" style="border: none;">
-												{{ sessions_played }}
+												{{ profile.sessions_played }}
 											</td>
 										</tr>
 										<tr>
@@ -94,7 +94,19 @@
 												Region
 											</td>
 											<td class="value" style="border: none;">
-												{{ pref_server }}
+												{{ profile.pref_server }}
+											</td>
+										</tr>
+										<tr>
+											<td style="border: none;">
+												Discord
+											</td>
+											<td class="value" style="border: none;">
+												{% if profile.discord_id %}
+												<a href="{% url 'discord_disconnect_account' %}" class="btn btn-danger btn-sm" role="button">Disconnect</a> 
+												{% else %}
+												<a href="https://discordapp.com/api/oauth2/authorize?response_type=code&client_id=440712654370373632&scope=identify%20guilds.join&redirect_uri=https%3A%2F%2Fwww.meshwell.ml%2Fdiscord_callback" class="btn btn-info btn-sm" role="button">Connect</a> 
+												{% endif %}
 											</td>
 										</tr>
 									</tbody>
@@ -110,7 +122,7 @@
 												Teamwork
 											</td>
 											<td class="value" style="border: none;">
-												{{ teamwork_commends }}
+												{{ profile.teamwork_commends }}
 											</td>
 										</tr>
 										<tr>
@@ -121,7 +133,7 @@
 												Communication
 											</td>
 											<td class="value" style="border: none;">
-												{{ communication_commends }}
+												{{ profile.communication_commends }}
 											</td>
 										</tr>
 										<tr>
@@ -132,7 +144,7 @@
 												Skill Level
 											</td>
 											<td class="value" style="border: none;">
-												{{ skill_commends }}
+												{{ profile.skill_commends }}
 											</td>
 										</tr>
 										<tr>
@@ -143,7 +155,7 @@
 												Sportsmanship
 											</td>
 											<td class="value" style="border: none;">
-												{{ sportsmanship_commends }}
+												{{ profile.sportsmanship_commends }}
 											</td>
 										</tr>
 									</tbody>

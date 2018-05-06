@@ -35,6 +35,7 @@ urlpatterns = [
     # Account pages
     path('dashboard/', site_views.dashboard, name='dashboard'),
     path('dashboard/profile/', site_views.profile, name='profile'),
+    path('dashboard/discord_disconnect_account/', site_views.discord_disconnect_account, name='discord_disconnect_account'),
     path('register/', site_views.register, name='register'),
     path('dashboard/connect_account/', site_views.connect_account, name='connect_account'),
     path('dashboard/connected_accounts/', site_views.connected_accounts, name='connected_accounts'),
@@ -63,7 +64,6 @@ urlpatterns = [
     url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
     # Discord Authentication
     url(r'^discord_callback/', site_views.discord_callback, name='discord_callback'),
-    path('test_discord/', site_views.test_discord_token, name='test_discord_token'),
 ]
 
 # Development serving of media files (game images)
