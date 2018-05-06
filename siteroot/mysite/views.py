@@ -653,7 +653,7 @@ def get_suitable_sessions(profile):
 		return None
 	# Add any sessions that meet viability requirements
 	sorted_sessions = []
-	for session in viable_sessions:
+	for session in viable_sessions[0]:
 		v = calc_match_viablity(profile, session[0])
 		if v > min_accepted_viability:
 			sorted_sessions.append([v, session])
