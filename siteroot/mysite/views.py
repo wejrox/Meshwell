@@ -139,7 +139,7 @@ def dashboard(request):
 	for session in sessions:
 		# Find the session profiles, viability, game details
 		session_profiles = Session_Profile.objects.filter(session=session)
-		session_viability = calc_match_viablity(usr_ses_prof, session)
+		session_viability = calc_match_viablity(usr_ses_prof.profile, session)
 		game_icon = session.game.image.url
 		game_name = session.game.name
 		start_time = session.start_time
@@ -653,7 +653,7 @@ def get_suitable_sessions(profile):
 		return None
 	# Add any sessions that meet viability requirements
 	sorted_sessions = []
-	for session in viable_sessions[0]:
+	for session in viable_sessions:
 		v = calc_match_viablity(profile, session[0])
 		if v > min_accepted_viability:
 			sorted_sessions.append([v, session])
