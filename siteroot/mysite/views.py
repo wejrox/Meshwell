@@ -139,6 +139,7 @@ def dashboard(request):
 	for session in sessions:
 		# Find the session profiles, viability, game details
 		session_profiles = Session_Profile.objects.filter(session=session)
+		user_session_profile = session_profiles.filter(profile=request.user.profile)
 		session_viability = calc_match_viablity(request.user.profile, session)
 		game_icon = session.game.image.url
 		game_name = session.game.name
@@ -152,9 +153,9 @@ def dashboard(request):
 				'start':session.start,
 				'end_time':session.end_time,
 				'viability':session_viability,
-				'rating':usr_ses_prof.rating,
+				'rating':user_session_profile.rating,
 			},
-			'session_profile_id':usr_ses_prof.id,
+			'session_profile_id':user_session_profile.id,
 		}
 
 		count = 0
