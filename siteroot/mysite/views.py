@@ -153,9 +153,9 @@ def dashboard(request):
 				'start':session.start,
 				'end_time':session.end_time,
 				'viability':session_viability,
-				'rating':user_session_profile.profile.rating,
+				'rating':user_session_profile[0].rating,
 			},
-			'session_profile_id':user_session_profile.id,
+			'session_profile_id':user_session_profile[0].id,
 		}
 
 		count = 0
