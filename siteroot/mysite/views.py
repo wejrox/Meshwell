@@ -142,7 +142,7 @@ def dashboard(request):
 		session_viability = calc_match_viablity(request.user.profile, session)
 		game_icon = session.game.image.url
 		game_name = session.game.name
-		start_time = session.start_time
+		start_time = session.start
 		context['prev_sessions'][str(i)] = {
 			'game':{
 				'icon':session.game.image.url,
