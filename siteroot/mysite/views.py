@@ -161,7 +161,7 @@ def dashboard(request):
 		count = 0
 		context['prev_sessions'][str(i)]['players'] = {}
 		# Assign each player to this session
-		for ses_p in sessions_profiles:
+		for ses_p in session_profiles:
 			# Get their attached account
 			game_account = Profile_Connected_Game_Account.objects.get(game=session.game, profile=ses_p.profile)
 			# Initialise the player storage
