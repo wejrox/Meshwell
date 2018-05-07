@@ -11,6 +11,21 @@ body{
   background-repeat: repeat-y;
 }
 
+@font-face {
+  font-family: 'Ubuntu-R';
+  src: url('../static/fonts/Ubuntu-R.ttf')  format("truetype"),
+       local('Ubuntu-R');
+}
+
+@font-face {
+    font-family: 'ubunturegular';
+    src: url('ubuntu-r-webfont.woff2') format('woff2'),
+         url('ubuntu-r-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 /*Index Page*/
 .bg{
   /* The image used */
@@ -290,7 +305,7 @@ section h1 {
 
 .headerContent{
   font-size: 4em;
-  font-weight: 100;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
   text-align: left;
   background: rgba(0, 0, 0, 0.4); 
   color: #00a2ff; 

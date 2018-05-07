@@ -88,7 +88,8 @@
 						<a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
 					{% else %}
 						<!-- Button trigger modal -->
-						<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">Login</button>
+						<a href="/register/" class="btn btn-primary" role="button">Sign up!</a>
+						<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModalCenter">Login</button>
 				    	{% endif %}
 						<!-- Modal -->
 						<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
