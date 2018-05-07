@@ -582,29 +582,33 @@ td.value{
 }
 
 /*Buttons*/
-.btn-danger{
+.btn-secondary{
   color: #fff;
-  background-color: #00a2ff;
-  border-color: #00a2ff;
+  background-color: #2660A4;
+  border-color: #2660A4;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
 }
 
-.btn-outline-danger{
+.btn-secondary-danger{
   color: #00a2ff;
   background-color: transparent;
   background-image: none;
-  border-color: #00a2ff;
+  border-color: #2660A4;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
 }
 
 .btn-outline-danger:not(:disabled):not(.disabled).active, .btn-outline-danger:not(:disabled):not(.disabled):active, .show>.btn-outline-danger.dropdown-toggle{
   color: #fff;
-  background-color: #00a2ff;
-  border-color: #00a2ff;
+  background-color: #2F97C1;
+  border-color: #2F97C1;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
 }
 
 .btn-primary{
   color: #fff;
-  background-color: #419ef4;
-  border-color: #419ef4;
+  background-color: #2F97C1;
+  border-color: #2F97C1;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
 }
 
 /*Carousel*/
@@ -629,11 +633,13 @@ td.value{
 .navbar-light .navbar-nav .nav-link{
   color: #00a2ff;
   margin-left: 10px;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
 }
 
 .navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link{
   color: #00a2ff;
   border-bottom: 2px solid #00a2ff;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
 }
 
 .navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover{
