@@ -46,7 +46,7 @@
 												Username
 											</td>
 											<td class="value" style="border: none;">
-												{{ username }}
+												{{ profile.username }}
 											</td>
 										</tr>
 										<tr>
@@ -54,7 +54,7 @@
 												First Name
 											</td>
 											<td class="value" style="border: none;">
-												{{ first_name }}
+												{{ profile.first_name }}
 											</td>
 										</tr>
 										<tr>
@@ -62,7 +62,7 @@
 												Last Name
 											</td>
 											<td class="value" style="border: none;">
-												{{ last_name }}
+												{{ profile.last_name }}
 											</td>
 										</tr>
 										<tr>
@@ -70,7 +70,7 @@
 												Email
 											</td>
 											<td class="value" style="border: none;">
-												{{ email }}
+												{{ profile.email }}
 											</td>
 										</tr>
 										<tr>
@@ -78,7 +78,7 @@
 												Birth Date
 											</td>
 											<td class="value" style="border: none;">
-												{{ birth_date }}
+												{{ profile.birth_date }}
 											</td>
 										</tr>
 										<tr>
@@ -86,7 +86,7 @@
 												Sessions Played
 											</td>
 											<td class="value" style="border: none;">
-												{{ sessions_played }}
+												{{ profile.sessions_played }}
 											</td>
 										</tr>
 										<tr>
@@ -94,7 +94,19 @@
 												Region
 											</td>
 											<td class="value" style="border: none;">
-												{{ pref_server }}
+												{{ profile.pref_server }}
+											</td>
+										</tr>
+										<tr>
+											<td style="border: none;">
+												Discord
+											</td>
+											<td class="value" style="border: none;">
+												{% if profile.discord_id %}
+												<a href="{% url 'discord_disconnect_account' %}" class="btn btn-danger btn-sm" role="button">Disconnect</a> 
+												{% else %}
+												<a href="https://discordapp.com/api/oauth2/authorize?response_type=code&client_id=440712654370373632&scope=identify%20guilds.join&redirect_uri=https%3A%2F%2Fwww.meshwell.ml%2Fdiscord_callback" class="btn btn-info btn-sm" role="button">Connect</a> 
+												{% endif %}
 											</td>
 										</tr>
 									</tbody>
@@ -110,7 +122,7 @@
 												Teamwork
 											</td>
 											<td class="value" style="border: none;">
-												{{ teamwork_commends }}
+												{{ profile.teamwork_commends }}
 											</td>
 										</tr>
 										<tr>
@@ -121,7 +133,7 @@
 												Communication
 											</td>
 											<td class="value" style="border: none;">
-												{{ communication_commends }}
+												{{ profile.communication_commends }}
 											</td>
 										</tr>
 										<tr>
@@ -132,7 +144,7 @@
 												Skill Level
 											</td>
 											<td class="value" style="border: none;">
-												{{ skill_commends }}
+												{{ profile.skill_commends }}
 											</td>
 										</tr>
 										<tr>
@@ -143,7 +155,7 @@
 												Sportsmanship
 											</td>
 											<td class="value" style="border: none;">
-												{{ sportsmanship_commends }}
+												{{ profile.sportsmanship_commends }}
 											</td>
 										</tr>
 									</tbody>
@@ -166,10 +178,16 @@
 				<div class="profileColumn2">
 					<div class="container">
 						<div class="row">
+							{% if not user.profile.in_queue %}
 							<div class="matchmakingButtons">
-								<button type="button" class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="bottom" title="Use our algorithm to find other compatible players." style="font-weight: 100;">Smart Matchmaking</button>
-								<button type="button" class="btn btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="Select from a list of potential players you can play with. Compatibility metrics will be shown." style="font-weight: 100;">Manual Matchmaking</button>
+								<a href="{% url 'enter_queue' %}" type="button" class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="bottom" title="Use our algorithm to find other compatible players." style="font-weight: 100;">Smart Matchmaking</a>
+								<a href="{% url 'manual_matchmaking' %}" type="button" class="btn btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="Select from a list of potential players you can play with. Compatibility metrics will be shown." style="font-weight: 100;">Manual Matchmaking</a>
 							</div>
+							{% else %}
+							<div class="matchmakingButtons">
+								<a href="{% url 'exit_queue' %}" type="button" class="btn btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom" title="Cancel your current search for a session." style="font-weight: 100;">Cancel Matchmaking</a>
+							</div>
+							{% endif %}
 						</div>
 						<hr>
 						<div class="row"> <!--Table-->
@@ -266,25 +284,43 @@
 										</div>
 									</a>
 									<div class="col col-lg-10">
+									 <div class="scrollable">
 										<table class="table table-curved table-striped">
 										  <thead class="thead-dark">
 										    <tr>
-										      <th scope="col">Game</th>
-										      <th scope="col">Date</th>
-										      <th scope="col">Time Started</th>
-										      <th scope="col">Time Ended</th>
-										      <th scope="col">Competitive</th>
-										      <th scope="col">Rating</th>
+										      <th scope="col" colspan="5">Session Details</th>
 										    </tr>
 										  </thead>
 											  <tbody>
 												<tr>
 												{% for value in prev_sessions %}
-													<td>{{ value.session.game }}</td>
-													<td>{{ value.session.start|date:'D d-m-Y' }}</td>
-													<td>{{ value.session.start|date:'H:i' }}</td>
-													<td>{{ value.session.end_time|time:'H:i' }}</td>
-													<td>{{ value.session.competitive }}</td>
+													<td style="border: none;">
+														<img src= "{{ value.session.game.image.url }}" height="50" width="50/>" <br><br>
+														{{ value.session.start|date:'D d-m-Y' }}<br>
+														{{ value.session.start|date:'H:i' }} - {{ value.session.end_time|time:'H:i' }}
+													</td>
+													<td style="border: none;">
+														<div class="pscrollable">
+															<table class="table table-curved table-striped">
+																<tr>
+																	<td style="border: none;">{{ username }}</td>
+																	<td style="border: none;" align="center">
+																		<img src="{% static "css/images/dashboard/tw_icon.png" %}" width="20"> {{ value.profile.teamwork_commends }}
+																	</td>
+																	<td style="border: none;" align="center">
+																		<img src="{% static "css/images/dashboard/cm_icon.png" %}" width="20"> {{ value.profile.communication_commends }}
+																	</td>
+																	<td style="border: none;" align="center">
+																		<img src="{% static "css/images/dashboard/sl_icon.png" %}" width="20"> {{ value.profile.skill_commends }}
+																	</td>
+																	<td style="border: none;" align="center">
+																		<img src="{% static "css/images/dashboard/ps_icon.png" %}" width="20"> {{ value.profile.sportsmanship_commends }}
+																	</td>
+																</tr>
+															</table>
+														</div>
+													</td>
+													<td style="border: none;"></td>
 													<!-- Show the rating they gave the session, or allow them to rate it -->
 													{% if value.rating %}
 													<td><b>{{ value.rating }}/5</b></td>
@@ -300,6 +336,7 @@
 												{% endfor %}
 											</tbody>
 										</table>
+									 </div>
 									</div>
 								</div>
 							</div>

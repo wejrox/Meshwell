@@ -307,4 +307,5 @@ class RateSessionForm(forms.Form):
 			if self.cleaned_data['player_%s_report' % i]:
 				report = Report.objects.create(session=self.session, user_reported=profile, sent_by=self.profile, report_reason='toxic')
 				report.save()
+			profile.received_ratings += 1
 			profile.save()

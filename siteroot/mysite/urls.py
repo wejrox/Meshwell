@@ -35,6 +35,7 @@ urlpatterns = [
     # Account pages
     path('dashboard/', site_views.dashboard, name='dashboard'),
     path('dashboard/profile/', site_views.profile, name='profile'),
+    path('dashboard/discord_disconnect_account/', site_views.discord_disconnect_account, name='discord_disconnect_account'),
     path('register/', site_views.register, name='register'),
     path('dashboard/connect_account/', site_views.connect_account, name='connect_account'),
     path('dashboard/connected_accounts/', site_views.connected_accounts, name='connected_accounts'),
@@ -48,6 +49,7 @@ urlpatterns = [
     path('dashboard/availability/add', site_views.add_availability, name='add_availability'),
     path('dashboard/availability/edit', site_views.edit_availability, name='edit_availability'),
     path('dashboard/session/rate', site_views.rate_session, name='rate_session'),
+    path('dashboard/manual_matchmaking/', site_views.manual_matchmaking, name='manual_matchmaking'),
     # Admin
     url(r'^admin/', admin.site.urls),
     # API
@@ -60,6 +62,8 @@ urlpatterns = [
     url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         auth_views.password_reset_confirm, name='password_reset_confirm'),
     url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
+    # Discord Authentication
+    url(r'^discord_callback/', site_views.discord_callback, name='discord_callback'),
 ]
 
 # Development serving of media files (game images)
