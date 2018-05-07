@@ -314,6 +314,8 @@ section h1 {
 
 .headerContent2{
   margin-bottom: 1cm;
+  margin-left: -1cm;
+  margin-right: -1cm;
   font-size: 4em;
   font-weight: 100;
   text-align: left;
