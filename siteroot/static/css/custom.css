@@ -589,15 +589,23 @@ td.value{
   font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
 }
 
-.btn-secondary-danger{
-  color: #00a2ff;
+.btn-outline-secondary{
+  color: #2660A4;
   background-color: transparent;
   background-image: none;
   border-color: #2660A4;
   font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
 }
 
-.btn-outline-danger:not(:disabled):not(.disabled).active, .btn-outline-danger:not(:disabled):not(.disabled):active, .show>.btn-outline-danger.dropdown-toggle{
+.btn-outline-secondary:hover{
+  color: #fff;
+  background-color: #2660A4;
+  border-color: #2660A4;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
+}
+
+/* Remove if not needed */
+.btn-outline-secondary:not(:disabled):not(.disabled).active, .btn-outline-secondary:not(:disabled):not(.disabled):active, .show>.btn-outline-secondary.dropdown-toggle{
   color: #fff;
   background-color: #2F97C1;
   border-color: #2F97C1;
