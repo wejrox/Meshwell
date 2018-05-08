@@ -32,7 +32,7 @@ body{
 /*Index Page*/
 .bg{
   /* The image used */
-  background-image: url("https://i.imgur.com/CXO7SzZ.jpg");
+  background-image: url("https://i.imgur.com/O6G3IRE.jpg");
 
   /* Full height */
   height: 100%; 
@@ -102,8 +102,10 @@ body{
 }
 
 .welcomeMessage{
-  font-size: 20pt;
+  font-size: 48pt;
   padding-top: 15px;
+  text-shadow: 0 0 20px #000000;
+  margin-bottom: 15%;
 }
 
 .hr.indexPage {
