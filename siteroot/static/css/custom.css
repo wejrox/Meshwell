@@ -819,22 +819,21 @@ Use the standardised CSS tags I have created if possible.*/
 }
 
 #myFooter {
-  background-color: #fff;
+  background-color: #2D363F;
   color:white;
-  border-top: 2px solid #00a2ff;
+  border-top: 2px solid #222b33;
 }
 
 #myFooter .footer-copyright{
-  background: #fff;
-  border-top: 1px solid #ececec;
-  padding-top:3px;
+  background: #272e35;
+  padding-top:4px;
   padding-bottom:3px;
   text-align: center;
 }
 
 #myFooter .footer-copyright p{
   margin:10px;
-  color: #ccc;
+  color: #FFFFFF;
   font-weight: 100;
 }
 
@@ -848,21 +847,23 @@ Use the standardised CSS tags I have created if possible.*/
 .myFooter.title{
   font-size: 16pt;
   font-weight: 100 !important;
-  color: #2d363F;
+  color: #FFFFFF;
   font-weight: bold;
   margin-top: 30px;
+  text-shadow: 6px 6px 6px #000000;
 }
 
 #myFooter a{
-  color:#2d363F;
+  color:#FFFFFF;
   font-weight: 100;
   text-decoration: none;
 }
 
 #myFooter a:hover, #myFooter a:focus{
-  color:#2f97c1;
+  color:#7890a9;
   font-weight: 400;
   text-decoration: none;
+  text-shadow: 6px 6px 6px #000000;
 }
 
 #myFooter .myCols{
@@ -872,16 +873,17 @@ Use the standardised CSS tags I have created if possible.*/
 #myFooter .social-networks{
   text-align: center;
   padding-top: 30px;
-  padding-bottom: 15px;
+  padding-bottom: 25px;
 }
 
 #myFooter .social-networks a{
   font-size: 32px;
   margin-right: 5px;
   margin-left: 5px;
-  color: #2d363F;
+  color: #FFF;
   padding: 10px;
   transition: 0.2s;
+  text-shadow: 6px 6px 15px #0000008a;
 }
 
 #myFooter .social-networks a:hover{
