@@ -116,6 +116,7 @@ class EditProfileForm(forms.ModelForm):
 
 	def save(self):
 		user = super(EditProfileForm, self).save(commit=False)
+		user.save()
 		user.profile.birth_date = self.cleaned_data['birth_date']
 		user.profile.pref_server = self.cleaned_data['pref_server']
 		user.profile.save()

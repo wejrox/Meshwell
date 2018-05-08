@@ -1,4 +1,4 @@
-// Smooth Scrolling Code by Chris Coyier - https://css-tricks.com/snippets/jquery/smooth-scrolling/
+$(function() {// Smooth Scrolling Code by Chris Coyier - https://css-tricks.com/snippets/jquery/smooth-scrolling/
 // Select all links with hashes
 $('a[href*="#"]')
   // Remove links that don't actually link to anything
@@ -35,3 +35,4 @@ $('a[href*="#"]')
       }
     }
   });
+});

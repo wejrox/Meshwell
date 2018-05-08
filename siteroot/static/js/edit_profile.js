@@ -7,11 +7,11 @@ $(function () {
             type: 'get',
             dataType: 'json',
             beforeSend: function() {
-                $("#modal-login .modal-content").html("");
-                $("#modal-login").modal("show");
+                $("#modal-edit-profile .modal-content").html("");
+                $("#modal-edit-profile").modal("show");
             },
             success: function(data) {
-                $("#modal-login .modal-content").html(data.html_form);
+                $("#modal-edit-profile .modal-content").html(data.html_form);
             }
         });
     };
@@ -31,7 +31,7 @@ $(function () {
                     window.location.replace(protocol+"//"+host+"/dashboard");
                 }
                 else {
-                    $("#modal-login .modal-content").html(data.html_form);
+                    $("#modal-edit-profile .modal-content").html(data.html_form);
                 }
             }
         });
@@ -39,6 +39,6 @@ $(function () {
     };
 
     // Bind to buttons
-    $(".js-login").click(loadForm);
-    $("#modal-login").on("submit", ".js-login-form", saveForm);
+    $(".js-edit-profile").click(loadForm);
+    $("#modal-edit-profile").on("submit", ".js-edit-profile-form", saveForm);
 });

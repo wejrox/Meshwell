@@ -34,9 +34,14 @@
 									<span style="color: #fff;">
 										.
 									</span>
-									<a href="{% url 'edit_profile' %}">
-										<span class="pull-right" style="color: #ddd;">Edit Profile</span>
-									</a>
+									<button type="button" class="btn btn-outline-secondary js-edit-profile" data-url="{% url 'edit_profile' %}">Edit</button>
+									<div class="modal fade" id="modal-edit-profile">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<!--Dynamically created-->
+											</div>
+										</div>
+									</div>
 								</div>
 								<table class="table">
 									<tbody>
@@ -371,4 +376,7 @@
 <!--Debug for mobile <div class="d-lg-none">Hidden for lg view. Visible only on smaller views.</div>
 <div class="d-none d-lg-block">Visible only on lg view</div> -->
 
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/edit_profile.js' %}" type="text/javascript"></script>
 {% endblock %}

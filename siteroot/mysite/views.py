@@ -286,18 +286,25 @@ def register(request):
 #Views for Edit Profile page
 @login_required
 def edit_profile(request):
+	data = dict()
 	context = {'title':'Edit Profile'}
 	if request.method == 'POST':
 		form = EditProfileForm(request.POST, instance=request.user, profile=request.user.profile)
 
 		if form.is_valid():
+			data['form_is_valid'] = True
 			form.save()
-			return redirect('profile')
+		else:
+			data['form_is_valid'] = False
 	else:
 		form = EditProfileForm(instance=request.user, profile=request.user.profile)
 
 	context['form'] = form
-	return render(request, 'mysite/edit_profile.html', context)
+	data['html_form'] = render_to_string('mysite/edit_profile.html',
+										context,
+										request=request
+										)
+	return JsonResponse(data)
 
 # Login. Implemented here to prevent logged in users from accessing the page
 def a_login(request):
