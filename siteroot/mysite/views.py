@@ -1,9 +1,9 @@
 from apps.api.models import Profile, Profile_Connected_Game_Account, Availability, Session, Session_Profile, Game
 from rest_framework import viewsets
-from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
+from django.http import HttpResponse, HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 import requests, requests.auth, json, urllib.parse, datetime
-from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, RateSessionForm
+from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, RateSessionForm, LoginForm
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User, Group
@@ -16,6 +16,7 @@ from django.core.signals import request_finished
 from django.dispatch import receiver
 from django.urls import reverse, resolve
 from django.utils import timezone
+from django.template.loader import render_to_string
 # Import settings
 from django.conf import settings
 from mysite import private_settings
@@ -300,20 +301,25 @@ def edit_profile(request):
 
 # Login. Implemented here to prevent logged in users from accessing the page
 def a_login(request):
+	data = dict()
+	data['user_inactive'] = False
 	if request.method == 'POST':
-		username = request.POST['username']
-		password = request.POST['password']
-		user = authenticate(username=username, password=password)
-		if user is not None:
-			if user.is_active:
-				login(request, user)
-				return redirect('dashboard')
-			else:
-				return redirect('about-us')
+		form = LoginForm(request.POST)
+		if form.is_valid():
+			data['form_is_valid'] = True
+			user = authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
+			login(request, user)
 		else:
-			return render(request, 'registration/login.html', {})
+			data['form_is_valid'] = False
 	else:
-		return render(request, 'registration/login.html', {})
+		form = LoginForm()
+
+	context = {'form': form}
+	data['html_form'] = render_to_string('registration/login.html',
+										context,
+										request=request
+										)
+	return JsonResponse(data)
 
 # Logging out. Currently loads a page. Recommend logging out to open a popup box that the user must click 'OK' to and be redirected to index.
 @login_required
@@ -750,7 +756,7 @@ def availability(request):
 		del request.session['avail_url']
 
 	avail = retrieve_data('availability', 'profile='+str(request.user.profile.id))
-	context = {'title':'Availability', 'Message':'Below is a list of your current availabilities', 'availabilities':avail}
+	context = {'title':'Availability', 'message':'Below is a list of your current availabilities', 'availabilities':avail}
 
 	# Delete data based on the the id provided by the html page
 	if request.GET.get('Remove Availability'):
