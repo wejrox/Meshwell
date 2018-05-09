@@ -133,6 +133,37 @@ body{
   width: 100%;
 }
 
+/*Original code by Abbey Fitzgerald - https://getflywheel.com/layout/add-sticky-back-top-button-website/*/
+/*Note: This code has been modified.*/
+.back-to-top {
+  background: none;
+  margin: 0;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+  margin-right: 1%;
+  margin-bottom: 1%;
+  padding: 10px;
+  display: none;
+  text-decoration: none;
+  color: #ffffff;
+  background-color: #00000094;
+  border-radius: 12px;
+}
+
+.back-to-top:hover{
+  color: #2F97C1 !important;
+  text-decoration: none !important;
+}
+ 
+.back-to-top i {
+  font-size: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /*Scroller by Naoya - https://codepen.io/nxworld/pen/OyRrGy*/
 section {
   position: absolute;
