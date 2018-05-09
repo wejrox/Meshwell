@@ -151,6 +151,7 @@ def dashboard(request):
 				'name':session.game.name,
 			},
 			'session':{
+				'id':session.id,
 				'start':session.start,
 				'end_time':session.end_time,
 				'viability':session_viability,
@@ -180,11 +181,6 @@ def dashboard(request):
 			count += 1
 		# Go to next session
 		i += 1
-
-	# Redirect to an edit availability page, given the id of the profile to edit
-	if(request.GET.get('rate_session')):
-		request.session['session_profile_id'] = request.GET.get('session_profile_id')
-		return redirect('rate_session')
 
 	return render(request, 'mysite/dashboard.html', context)
 
@@ -859,37 +855,48 @@ def edit_availability(request):
 
 # User rating a sessions
 @login_required
-def rate_session(request):
+def rate_session(request, pk):
 	context = {
 		'title': 'Rate Session',
 		'message' : 'We hope you\'ve enjoyed your session! Please rate how well it was matched below.',
 	}
+	data = dict()
+	print('in function')
 
+	# Get the session we would rate
+	session = Session.objects.filter(pk=pk).first()
 	# Redirect to dashboard if the user has already rated this session
-	if 'session_profile_id' in request.session:
-		session_profile = Session_Profile.objects.filter(id=request.session['session_profile_id']).first()
+	if session is not None:
+		session_profile = Session_Profile.objects.filter(session__pk=pk, profile=request.user.profile).first()
 		if session_profile:
 			if session_profile.rating is not None:
-				del request.session['session_profile_id']
-				return redirect('dashboard')
+				data['already_rated'] = True
 	else:
-		return redirect('dashboard')
+		data['doesnt_exist'] = True
 
-	# Get the session we're rating
-	user_session = Session.objects.get(pk=session_profile.session.id)
+	# Don't try to make a form if the session doesn't exist or has already been rated
+	if 'doesnt_exist' in data or 'already_rated' in data:
+		print('denied')
+		raise PermissionDenied
 
-	# Creae a new entry, or edit the existing one if it has been given
+	# Attempt to rate if data 'post'ed, or return the form
 	if request.method == 'POST':
-		form = RateSessionForm(request.POST, session=user_session, profile=request.user.profile)
+		form = RateSessionForm(request.POST, session=session, profile=request.user.profile)
 		if form.is_valid():
 			form.save()
-			return redirect('dashboard')
+			data['form_is_valid'] = True
+		else:
+			data['form_is_valid'] = False
 	else:
-		form = RateSessionForm(session=user_session, profile=request.user.profile)
+		form = RateSessionForm(session=session, profile=request.user.profile)
 
 	# Set the form to whichever form we are using
 	context['form'] = form
-	return render(request, 'registration/availability_form.html', context)
+	data['html_form'] = render_to_string('mysite/rate_session.html',
+										context,
+										request=request
+										)
+	return JsonResponse(data)
 
 @login_required
 def discord_disconnect_account(request):
