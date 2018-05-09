@@ -32,7 +32,7 @@ body{
 /*Index Page*/
 .bg{
   /* The image used */
-  background-image: url("https://i.imgur.com/CXO7SzZ.jpg");
+  background-image: url("https://i.imgur.com/O6G3IRE.jpg");
 
   /* Full height */
   height: 100%; 
@@ -102,8 +102,10 @@ body{
 }
 
 .welcomeMessage{
-  font-size: 20pt;
+  font-size: 48pt;
   padding-top: 15px;
+  text-shadow: 0 0 20px #000000;
+  margin-bottom: 15%;
 }
 
 .hr.indexPage {
@@ -639,20 +641,20 @@ td.value{
 
 /*Navbar*/
 .navbar-light .navbar-nav .nav-link{
-  color: #00a2ff;
+  color: #2660A4;
   margin-left: 10px;
   font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
 }
 
 .navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link{
-  color: #00a2ff;
-  border-bottom: 2px solid #00a2ff;
+  color: #2F97C1;
+  border-bottom: 2px solid #2F97C1;
   font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
 }
 
 .navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover{
-  color: #265fa3;
-  border-bottom: 2px solid #265fa3;
+  color: #2F97C1;
+  border-bottom: 2px solid #2F97C1;
 }
 
 .li.nav-item{
@@ -661,7 +663,7 @@ td.value{
 
 .bg-light {
   background-color: #ffffff !important;
-  background-image: url("https://i.imgur.com/meVKk9f.png");
+  background-image: url("");
   background-position: center;
   background-size: 100%;
   background-repeat: repeat-y;
@@ -819,22 +821,21 @@ Use the standardised CSS tags I have created if possible.*/
 }
 
 #myFooter {
-  background-color: #fff;
+  background-color: #2D363F;
   color:white;
-  border-top: 2px solid #00a2ff;
+  border-top: 2px solid #222b33;
 }
 
 #myFooter .footer-copyright{
-  background: #fff;
-  border-top: 1px solid #ececec;
-  padding-top:3px;
+  background: #272e35;
+  padding-top:4px;
   padding-bottom:3px;
   text-align: center;
 }
 
 #myFooter .footer-copyright p{
   margin:10px;
-  color: #ccc;
+  color: #FFFFFF;
   font-weight: 100;
 }
 
@@ -848,21 +849,23 @@ Use the standardised CSS tags I have created if possible.*/
 .myFooter.title{
   font-size: 16pt;
   font-weight: 100 !important;
-  color: #2d363F;
+  color: #FFFFFF;
   font-weight: bold;
   margin-top: 30px;
+  text-shadow: 6px 6px 6px #000000;
 }
 
 #myFooter a{
-  color:#2d363F;
+  color:#FFFFFF;
   font-weight: 100;
   text-decoration: none;
 }
 
 #myFooter a:hover, #myFooter a:focus{
-  color:#2f97c1;
+  color:#7890a9;
   font-weight: 400;
   text-decoration: none;
+  text-shadow: 6px 6px 6px #000000;
 }
 
 #myFooter .myCols{
@@ -872,16 +875,17 @@ Use the standardised CSS tags I have created if possible.*/
 #myFooter .social-networks{
   text-align: center;
   padding-top: 30px;
-  padding-bottom: 15px;
+  padding-bottom: 25px;
 }
 
 #myFooter .social-networks a{
   font-size: 32px;
   margin-right: 5px;
   margin-left: 5px;
-  color: #2d363F;
+  color: #FFF;
   padding: 10px;
   transition: 0.2s;
+  text-shadow: 6px 6px 15px #0000008a;
 }
 
 #myFooter .social-networks a:hover{

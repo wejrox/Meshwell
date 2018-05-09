@@ -1,6 +1,7 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
 from django import forms
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from apps.api.models import Profile, Feedback, Profile_Connected_Game_Account, Availability, Session, Session_Profile, Report
@@ -115,6 +116,7 @@ class EditProfileForm(forms.ModelForm):
 
 	def save(self):
 		user = super(EditProfileForm, self).save(commit=False)
+		user.save()
 		user.profile.birth_date = self.cleaned_data['birth_date']
 		user.profile.pref_server = self.cleaned_data['pref_server']
 		user.profile.save()
@@ -130,6 +132,27 @@ class FeedbackForm(forms.ModelForm):
 class LoginForm(forms.Form):
 	username = forms.CharField(help_text="Enter your username.")
 	password = forms.CharField(help_text="Enter your password.", widget=forms.PasswordInput())
+
+	def clean(self):
+		# Get cleaned data
+		cleaned_data = super().clean()
+		# Basic data check
+		if 'username' in cleaned_data and 'password' in cleaned_data:
+			user = authenticate(username=cleaned_data.get('username'), password=cleaned_data.get('password'))
+			# User authentication check
+			if user is not None:
+				# Inactive or banned check
+				if not user.is_active:
+					raise forms.ValidationError("This account is either banned or deactivated")
+				else:
+					# Form is all good, process login
+					cleaned_data['user'] = user
+			else:
+				raise forms.ValidationError("Username or password is incorrect")
+		else:
+			raise forms.ValidationError("Username or password is missing")
+		# Return the data
+		return cleaned_data
 
 # User deactivation
 class DeactivateUser(forms.Form):
