@@ -167,7 +167,7 @@
 								</table>
 							</div>
 						</div>
-						<!--Profile Details-->
+						<!--/Profile Details-->
 					</div>
 					<br>
 					<div class="row-fluid">
@@ -187,6 +187,7 @@
 			<div class="col col-lg-7">
 				<div class="profileColumn2">
 					<div class="container">
+						<!--Matchmaking-->
 						<div class="row">
 							{% if not user.profile.in_queue %}
 							<div class="matchmakingButtons">
@@ -202,7 +203,9 @@
 							</div>
 							{% endif %}
 						</div>
+						<!--/Matchmaking-->
 						<hr>
+						<!--Connected Accounts-->
 						<div class="row">
 							<!--Table-->
 							<div class="container">
@@ -244,10 +247,10 @@
 								</div>
 							</div>
 						</div>
-						<!--Table-->
+						<!--/Connected Accounts-->
 						<br>
+						<!--Availabilities-->
 						<div class="row">
-							<!--Table-->
 							<div class="container">
 								<div class="row">
 									<div class="customTableTitle">
@@ -285,10 +288,10 @@
 								</div>
 							</div>
 						</div>
-						<!--Table-->
+						<!--/Availabilities-->
+						<!--Session History-->
 						<br>
 						<div class="row">
-							<!--Table-->
 							<div class="container">
 								<div class="row">
 									<div class="customTableTitle">
@@ -301,6 +304,16 @@
 											<img class="mx-auto my-auto" src="{% static 'css/images/dashboard/ht.png' %}" height="90px" style="border-radius: 12px;">
 										</div>
 									</a>
+									<!--Rate session modal-->
+									<button class="btn btn-info btn-sm js-rate-session" data-url="{% url 'rate_session' pk=13 %}">Rate</button>
+									<div class="modal fade" id="modal-rate-session">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<!--Dynamically created-->
+											</div>
+										</div>
+									</div>
+									<!--/Rate session modal-->
 									<div class="col col-lg-10">
 										<div class="scrollable">
 											<table class="table table-curved table-striped">
@@ -311,7 +324,7 @@
 												</thead>
 												<tbody>
 													<tr>
-														{% for value in prev_sessions %}
+														{% for key, value in prev_sessions.items %}
 														<td style="border: none;">
 															<img src="{{ value.session.game.image.url }}" height="50" width="50/>" <br>
 															<br> {{ value.session.start|date:'D d-m-Y' }}
@@ -323,16 +336,16 @@
 																	<tr>
 																		<td style="border: none;">{{ username }}</td>
 																		<td style="border: none;" align="center">
-																			<img src="{% static " css/images/dashboard/tw_icon.png " %}" width="20"> {{ value.profile.teamwork_commends }}
+																			<img src="{% static 'css/images/dashboard/tw_icon.png' %}" width="20"> {{ value.profile.teamwork_commends }}
 																		</td>
 																		<td style="border: none;" align="center">
-																			<img src="{% static " css/images/dashboard/cm_icon.png " %}" width="20"> {{ value.profile.communication_commends }}
+																			<img src="{% static 'css/images/dashboard/cm_icon.png' %}" width="20"> {{ value.profile.communication_commends }}
 																		</td>
 																		<td style="border: none;" align="center">
-																			<img src="{% static " css/images/dashboard/sl_icon.png " %}" width="20"> {{ value.profile.skill_commends }}
+																			<img src="{% static 'css/images/dashboard/sl_icon.png' %}" width="20"> {{ value.profile.skill_commends }}
 																		</td>
 																		<td style="border: none;" align="center">
-																			<img src="{% static " css/images/dashboard/ps_icon.png " %}" width="20"> {{ value.profile.sportsmanship_commends }}
+																			<img src="{% static 'css/images/dashboard/ps_icon.png' %}" width="20"> {{ value.profile.sportsmanship_commends }}
 																		</td>
 																	</tr>
 																</table>
@@ -346,10 +359,7 @@
 														</td>
 														{% else %}
 														<td>
-															<form action="#" method="get">
-																<input type="hidden" name="session_profile_id" value="{{ value.id }}">
-																<input type="submit" class="btn btn-info btn-sm" value="Rate" name="rate_session">
-															</form>
+															<button class="btn btn-info btn-sm js-rate-session" data-url="{% url 'rate_session' pk=value.session.id %}">Rate</button>
 														</td>
 														{% endif %}
 													</tr>
@@ -361,11 +371,11 @@
 								</div>
 							</div>
 						</div>
-						<!--Table-->
+						<!--/Session History-->
 					</div>
 				</div>
 			</div>
-			<!--Matchmaking and Tables-->
+			<!--/Matchmaking and Tables-->
 			<div class="col-lg-1"></div>
 		</div>
 	</div>
@@ -379,4 +389,5 @@
 {% endblock %}
 {% block javascript %}
 <script src="{% static 'js/edit_profile.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/rate_session.js' %}" type="text/javascript"></script>
 {% endblock %}
