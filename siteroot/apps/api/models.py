@@ -325,7 +325,8 @@ class Feedback(models.Model):
 #Banned Users model
 class Banned_User(models.Model):
 	def __str__(self):
-		return self.user.get_username
+		return self.user.username
+		#return str.join(str(self.profile), str(self.report_reason))
 
 	profile = models.ForeignKey(
 		'Profile',

@@ -17,27 +17,65 @@ admin.site.register(Session)
 admin.site.register(Session_Profile)
 admin.site.register(Profile_Connected_Game_Account)
 admin.site.register(Feedback)
+#admin.site.register(Banned_User)
+
+#User Banning and emailing Function(CURRENTLY TESTING THIS)
+#def banning_users(user, request, queryset):
+
+#	for obj in queryset:
+#		if hasattr(obj, 'user'):
+			# This object is a Profile, so lookup the user
+#			obj = obj.user
+#		obj.is_active = False
+		#rep = get_report.report_reason
+		#banned_user = Banned_User.objects.create(profile=request.user.profile)
+		#banned_user.report_reason.add(request.user.profile.user_reported_report.all())
+		#banned_user = Banned_User.objects.create(profile=request.user.profile)
+		#banned_user.report_reason.set(request.user.profile.user_reported_report.all())
+#		banned_user = Banned_User.objects.create(profile=request.user.profile)
+#		banned_user.report_reason.add(request.user.profile.user_reported_report.all())
+		#banned_user.save()
+		#Sends ban email to user,does not send through the variables yet
+#		subject = 'Ban'
+#		message =   'You have been banned for being trash'
+#		email_from = settings.EMAIL_HOST_USER
+#		recipient_list = [obj.email]
+#		send_mail( subject, message,email_from, recipient_list )
+		#obj.save()
 
 
-#User Banning and emailing Function
+#	self.message_user(request, "User is banned and Email has been sent")
+
 def banning_users(self, request, queryset):
 
 	for obj in queryset:
 		if hasattr(obj, 'user'):
 			# This object is a Profile, so lookup the user
-			obj = obj.user
-		obj.is_active = False
-		#rep = report.get_report_reason
-		banned_user = Banned_User.objects.create(profile=request.user.profile, report_reason=request.report.report_reason)
-		banned_user.save()
-		#Sends ban email to user,does not send through the variables yet
-		subject = 'Ban'
-		message =   'You have been banned for being trash'
-		email_from = settings.EMAIL_HOST_USER
-		recipient_list = [obj.email]
-		send_mail( subject, message,email_from, recipient_list )
-		obj.save()
+			profile = obj
+			user = obj.user
+		user.is_active = False
 
+		# Get the report(s) for this user
+		user_reports = Report.objects.filter(user_reported=profile)
+
+		# Go through each report, in case there are multiples,
+		# add a record in the ban table
+
+		banned_reasons = []
+
+		for report in user_reports:
+			ban_record = Banned_User.objects.create(profile=profile, report_reason=report) #date_banned=datetime.datetime.today())
+			banned_reasons.append(report.get_report_reason_display())
+			#report_reason.set(report.get_report_reason_display())
+
+			#banned_user.save()
+		# Send the email
+		subject = 'Ban'
+		message = 'You have been banned for the following reasons: []'
+		message.format(','.join(banned_reasons))
+		email_from = settings.EMAIL_HOST_USER
+		recipient_list = [user.email]
+		send_mail( subject, message,email_from, recipient_list)
 
 	self.message_user(request, "User is banned and Email has been sent")
 
@@ -50,24 +88,8 @@ def unbanning_users(self, request, queryset):
 		obj.save()
 	self.message_user(request, "User is unbanned")
 
-#Ban only + add to database function
-def ban_users(self, request, queryset):
-	queryset.update(is_active = False)
-	banned_user = Banned_User.objects.create(profile=request.user.profile)
-	banned_user.save()
-	self.message_user(request, "user banned")
-
-
-
-
-def remove_ban(self, request, queryset):
-	print(queryset)
-	queryset.update(is_active = True)
-	#banned_user = Banned_User.objects.delete(profile=request.user.profile,report_reason=profile.report.report_reason)
-	#banned_user.save()
-	self.message_user(request, "Users ban has been lifted")
-
 class ReportAdmin(admin.ModelAdmin):
+	prof = Profile.user
 	list_display = ('user_reported', 'report_reason', 'sent_by', 'session')
 
 
@@ -84,7 +106,7 @@ class ProfileAdmin(admin.ModelAdmin):
 	def total_reports(self, obj):
 		return Report.objects.filter(user_reported=obj).count()
 	def reason_reported_sent(self, obj):
-		return Report.report_reason
+		return Report.objects.filter(report_reason=obj).count()
 		#return instance.report.sent_by
 
 admin.site.register(Profile, ProfileAdmin)
@@ -92,7 +114,7 @@ admin.site.register(Profile, ProfileAdmin)
 class MyUserAdmin(UserAdmin):
 	list_display = ('userprofile','username', 'first_name', 'last_name' , 'email')
 	readonly_fields = ('first_name' , ('last_name') , ('email') , ('username'))
-	actions = [banning_users, remove_ban]
+	actions = [banning_users, unbanning_users]
 
 	#ban = ban_users
 	#unban = remove_ban
@@ -102,3 +124,8 @@ class MyUserAdmin(UserAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, MyUserAdmin)
+
+class Banned_UserAdmin(admin.ModelAdmin):
+	list_display = ('profile','profile')
+
+admin.site.register(Banned_User, Banned_UserAdmin)
