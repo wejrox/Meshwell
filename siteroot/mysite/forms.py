@@ -310,7 +310,6 @@ class RateSessionForm(forms.Form):
 	def save(self):
 		# Get their session Details
 		session_profile = Session_Profile.objects.filter(profile=self.profile, session=self.session).first()
-		print(self.session.id, self.profile.id)
 		# Save rating
 		session_profile.rating = self.cleaned_data.get('rating')
 		session_profile.save()
