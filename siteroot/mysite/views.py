@@ -16,7 +16,11 @@ from django.core.signals import request_finished
 from django.dispatch import receiver
 from django.urls import reverse, resolve
 from django.utils import timezone
+
+from django.core.mail import send_mail
+
 from django.template.loader import render_to_string
+
 # Import settings
 from django.conf import settings
 from mysite import private_settings
@@ -94,7 +98,7 @@ def tos(request):
 def dashboard(request):
 	'''
 	Displays the dashboard hub to the user.
-	Final context layout can be accessed via: 
+	Final context layout can be accessed via:
 	(where id = the unique identifier of that entry. Use loops on that aspect to loop through the entries.)
 	title
 	message
@@ -177,7 +181,7 @@ def dashboard(request):
 			context['prev_sessions'][str(i)]['players'][str(count)]['sportsmanship_commends'] = ses_p.profile.sportsmanship_commends
 			context['prev_sessions'][str(i)]['players'][str(count)]['skill_commends'] = ses_p.profile.skill_commends
 			context['prev_sessions'][str(i)]['players'][str(count)]['communication_commends'] = ses_p.profile.communication_commends
-			
+
 			# Go to next connnected user
 			count += 1
 		# Go to next session
@@ -924,9 +928,9 @@ def discord_disconnect_account(request):
 @login_required
 def discord_callback(request):
 	'''
-	When a user authenticates via discord, this is where discord sends them. 
+	When a user authenticates via discord, this is where discord sends them.
 	discord gives a 'user' object but we only take the snowflake (user id) as its all we need.
-	Steps are: Get user permission (token), get user details (using token as authentication), 
+	Steps are: Get user permission (token), get user details (using token as authentication),
 	store id, add user to server (using bot token in header and user token in json)
 	'''
 	error = request.GET.get('error', '')
@@ -981,7 +985,7 @@ def discord_get_access_token(code):
 
 def discord_get_user_id(access_token):
 	'''
-	Returns a user id (snowflake) 
+	Returns a user id (snowflake)
 	Uses a users access token to get user details
 	'''
 	headers = {'Authorization': 'Bearer ' + access_token}
@@ -1037,4 +1041,4 @@ def manual_matchmaking(request):
 
 		join_session(player_session, session, avail)
 		return redirect('edit_availability')
-	return render(request, 'mysite/manual_matchmaking_list.html', context)
+	return render(request, 'mysite/manual_matchmaking.html', context)
