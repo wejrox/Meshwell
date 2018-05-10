@@ -326,7 +326,6 @@
 										</div>
 									</a>
 									<!--Rate session modal-->
-									<button class="btn btn-info btn-sm js-rate-session" data-url="{% url 'rate_session' pk=13 %}">Rate</button>
 									<div class="modal fade" id="modal-rate-session">
 										<div class="modal-dialog">
 											<div class="modal-content">
@@ -374,9 +373,9 @@
 														</td>
 														<td style="border: none;"></td>
 														<!-- Show the rating they gave the session, or allow them to rate it -->
-														{% if value.rating %}
+														{% if value.session.rating %}
 														<td>
-															<b>{{ value.rating }}/5</b>
+															<b>{{ value.session.rating }}/5</b>
 														</td>
 														{% else %}
 														<td>

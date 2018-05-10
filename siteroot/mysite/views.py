@@ -187,7 +187,7 @@ def dashboard(request):
 	if request.user.profile.in_queue:
 		p_ses = Session_Profile.objects.filter(profile=request.user.profile, session__start__gt=datetime.datetime.now()).first()
 		context['queue'] = {}
-		if p_ses.session is not None:
+		if p_ses is not None and p_ses.session is not None:
 			context['queue']['session'] = {
 				'game_name':p_ses.session.game.name,
 				'start':p_ses.session.start,
@@ -606,7 +606,7 @@ def get_suitable_sessions(profile):
 	'''
 	# Modifiers
 	acceptable_mmr_range = 100 # How much above/below us should they be to be viable?
-	min_accepted_viability = 0.6 # A value (out of 1) which states how viable a session must be to be included
+	min_accepted_viability = 0.4 # A value (out of 1) which states how viable a session must be to be included
 	# Queueing players details
 	user_availabilities = Availability.objects.filter(profile=profile)
 	user_connected_accounts = Profile_Connected_Game_Account.objects.filter(profile=profile)
@@ -717,7 +717,7 @@ def calc_match_viablity(user_profile, session):
 
 	# Players connected to the session
 	players = Session_Profile.objects.filter(session=session)
-
+	players = players.exclude(profile=user_profile)
 	# How much the sessions commends are worth after they have been weighted
 	weighted_commends = { 'Teamwork':0.0, 'Communication':0.0, 'Skill':0.0, 'Sportsmanship':0.0, }
 	total_commends = { 'Teamwork':0, 'Communication':0, 'Skill':0, 'Sportsmanship':0, }
@@ -744,7 +744,10 @@ def calc_match_viablity(user_profile, session):
 		total_viability += player_viability[key]
 
 	# Get the average viability to return as our viability percentage
-	averaged_viability = total_viability / len(players)
+	if len(players) > 0:
+		averaged_viability = total_viability / len(players)
+	else:
+		averaged_viability = 0.5
 
 	return averaged_viability
 
