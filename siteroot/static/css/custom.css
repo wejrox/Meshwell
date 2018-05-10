@@ -78,6 +78,22 @@ body{
   align-items:center;
 }
 
+#casualCompetitive{
+  /* The image used */
+  background-image: url("https://i.imgur.com/6TlG6lZ.jpg");
+
+  /* Full height */
+  height: 100%; 
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
 #supportedGames{
   /* The image used */
   background-image: url("https://i.imgur.com/zbFTgGv.jpg");
@@ -102,10 +118,10 @@ body{
 }
 
 .welcomeMessage{
-  font-size: 48pt;
+  font-size: 5rem;
   padding-top: 15px;
   text-shadow: 0 0 20px #000000;
-  margin-bottom: 15%;
+  margin-bottom: 1%;
 }
 
 .hr.indexPage {
@@ -650,6 +666,25 @@ td.value{
   background-color: #2F97C1;
   border-color: #2F97C1;
   font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
+}
+
+.btn-primary-alternative{
+  color: #fff;
+  background-color: #2F97C1;
+  border-color: #2F97C1;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
+}
+
+.btn-primary-alternative:hover{
+  color: #fff;
+  background-color: #0069d9;
+  border-color: #0069d9;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
+}
+
+.btn-primary-alternative a{
+  font-size: 2.25rem;
+  text-decoration: none;
 }
 
 /*Carousel*/

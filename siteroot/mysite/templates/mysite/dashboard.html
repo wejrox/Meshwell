@@ -201,6 +201,27 @@
 								<a href="{% url 'exit_queue' %}" type="button" class="btn btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom"
 								 title="Cancel your current search for a session." style="font-weight: 100;">Cancel Matchmaking</a>
 							</div>
+								<!--Show matching status-->
+								{% if queue.session %}
+							</div>
+								<div class="text-center">
+									<p>
+										<b>You have found a session!</b> <br>
+										<b>Game: </b>{{ queue.session.game_name }} <br>
+										<b>Date: </b>{{ queue.session.start|date:'D d-m-Y' }}<br>
+										<b>Start Time: </b>{{ queue.session.start|date:'H:i a' }}<br>
+										<b>End Time: </b>{{ queue.session.end_time|date:'H:i a' }}<br>
+										<b>Viability: </b>{{ queue.session.viability }}<br>
+									</p>
+								</div>
+								{% else %}
+								<div>
+									<p>
+										Searching for a session...<br>
+										Time elapsed: X seconds<br>
+									</p>
+								</div>
+								{% endif %}
 							{% endif %}
 						</div>
 						<!--/Matchmaking-->
@@ -305,7 +326,6 @@
 										</div>
 									</a>
 									<!--Rate session modal-->
-									<button class="btn btn-info btn-sm js-rate-session" data-url="{% url 'rate_session' pk=13 %}">Rate</button>
 									<div class="modal fade" id="modal-rate-session">
 										<div class="modal-dialog">
 											<div class="modal-content">
@@ -353,9 +373,9 @@
 														</td>
 														<td style="border: none;"></td>
 														<!-- Show the rating they gave the session, or allow them to rate it -->
-														{% if value.rating %}
+														{% if value.session.rating %}
 														<td>
-															<b>{{ value.rating }}/5</b>
+															<b>{{ value.session.rating }}/5</b>
 														</td>
 														{% else %}
 														<td>
