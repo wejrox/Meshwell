@@ -336,7 +336,7 @@ class Banned_User(models.Model):
 	)
 
 	report_reason = models.ForeignKey(
-		'report',
+		'Report',
 		on_delete=models.PROTECT,
 		blank=True,
 		null=True,

@@ -21,18 +21,24 @@ admin.site.register(Feedback)
 
 #User Banning and emailing Function
 def banning_users(self, request, queryset):
+
 	for obj in queryset:
 		if hasattr(obj, 'user'):
 			# This object is a Profile, so lookup the user
 			obj = obj.user
 		obj.is_active = False
+		#rep = report.get_report_reason
+		banned_user = Banned_User.objects.create(profile=request.user.profile, report_reason=request.report.report_reason)
+		banned_user.save()
 		#Sends ban email to user,does not send through the variables yet
 		subject = 'Ban'
-		message = ' You have been banned for being trash '
+		message =   'You have been banned for being trash'
 		email_from = settings.EMAIL_HOST_USER
 		recipient_list = [obj.email]
 		send_mail( subject, message,email_from, recipient_list )
 		obj.save()
+
+
 	self.message_user(request, "User is banned and Email has been sent")
 
 def unbanning_users(self, request, queryset):
@@ -50,6 +56,7 @@ def ban_users(self, request, queryset):
 	banned_user = Banned_User.objects.create(profile=request.user.profile)
 	banned_user.save()
 	self.message_user(request, "user banned")
+
 
 
 
