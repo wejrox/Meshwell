@@ -80,7 +80,7 @@ body{
 
 #casualCompetitive{
   /* The image used */
-  background-image: url("https://i.imgur.com/xmcqlq1.jpg");
+  background-image: url("https://i.imgur.com/6TlG6lZ.jpg");
 
   /* Full height */
   height: 100%; 
@@ -121,7 +121,7 @@ body{
   font-size: 5rem;
   padding-top: 15px;
   text-shadow: 0 0 20px #000000;
-  margin-bottom: 15%;
+  margin-bottom: 1%;
 }
 
 .hr.indexPage {
