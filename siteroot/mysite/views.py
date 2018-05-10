@@ -2,7 +2,7 @@ from apps.api.models import Profile, Profile_Connected_Game_Account, Availabilit
 from rest_framework import viewsets
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
-import requests, requests.auth, json, urllib.parse, datetime
+import requests, requests.auth, json, urllib.parse, datetime, math
 from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, RateSessionForm, LoginForm
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
@@ -108,6 +108,7 @@ def dashboard(request):
 	prev_sessions.{id}.session.viability
 	prev_sessions.{id}.session.rating
 	prev_sessions.{id}.players.{id}.<name/teamwork_commends/sportsmanship_commends/skill_commends/communication_commends>
+	queue.session.<game_name, start, end_time, viability>
 	'''
 	context = {
 		'title':'Dashboard',
@@ -181,6 +182,20 @@ def dashboard(request):
 			count += 1
 		# Go to next session
 		i += 1
+
+	# Get the current queue's session if it exists
+	if request.user.profile.in_queue:
+		p_ses = Session_Profile.objects.filter(profile=request.user.profile, session__start__gt=datetime.datetime.now()).first()
+		context['queue'] = {}
+		if p_ses.session is not None:
+			context['queue']['session'] = {
+				'game_name':p_ses.session.game.name,
+				'start':p_ses.session.start,
+				'end_time':p_ses.session.end_time,
+				'viability':str(math.floor(calc_match_viablity(request.user.profile, p_ses.session) * 10000) / 100) + " %"
+			}
+		# Can't do timer yet, since it isn't in the model. Can add in next week.
+		#context['queue']['start'] = p_ses.datetime_created
 
 	return render(request, 'mysite/dashboard.html', context)
 
@@ -646,7 +661,6 @@ def get_suitable_sessions(profile):
 				# Check if their MMR is within the range we want
 				for player_s in player_sessions:
 					prof_acc = Profile_Connected_Game_Account.objects.filter(profile=player_s.profile, game=session.game).first()
-
 					# Cancel if mmr out of range
 					if session.competitive:
 						if (prof_acc.comp_rank < user_acc.comp_rank - acceptable_mmr_range) or (prof_acc.comp_rank > user_acc.comp_rank + acceptable_mmr_range):
@@ -677,7 +691,6 @@ def get_suitable_sessions(profile):
 	# Sort based on viability, highest to lowest
 	sorted_sessions.sort(key=lambda v: v[0], reverse=True)
 
-	print(sorted_sessions)
 	# Get the best match
 	# Exhausted all availabilities and no sessions were matching criteria
 	return sorted_sessions
@@ -861,7 +874,6 @@ def rate_session(request, pk):
 		'message' : 'We hope you\'ve enjoyed your session! Please rate how well it was matched below.',
 	}
 	data = dict()
-	print('in function')
 
 	# Get the session we would rate
 	session = Session.objects.filter(pk=pk).first()
@@ -876,7 +888,6 @@ def rate_session(request, pk):
 
 	# Don't try to make a form if the session doesn't exist or has already been rated
 	if 'doesnt_exist' in data or 'already_rated' in data:
-		print('denied')
 		raise PermissionDenied
 
 	# Attempt to rate if data 'post'ed, or return the form
@@ -1001,15 +1012,17 @@ def manual_matchmaking(request):
 	context['sessions'] = {}
 	sessions = get_suitable_sessions(request.user.profile)
 	i = 0
-	for sv in sessions:
-		context['sessions'][str(i)] = {}
-		context['sessions'][str(i)]['session'] = {}
-		context['sessions'][str(i)]['session']['id'] = sv[1][0].id
-		context['sessions'][str(i)]['session']['viability'] = str(sv[0])
-		context['sessions'][str(i)]['session']['start'] = sv[1][0].start
-		context['sessions'][str(i)]['session']['end_time'] = sv[1][0].end_time
-		context['sessions'][str(i)]['session']['competitive'] = sv[1][0].competitive
-		context['sessions'][str(i)]['game_image'] = sv[1][0].game.image.url
+	if sessions is not None:
+		for sv in sessions:
+			context['sessions'][str(i)] = {}
+			context['sessions'][str(i)]['session'] = {}
+			context['sessions'][str(i)]['session']['id'] = sv[1][0].id
+			# Get the percentage to 2 decimal places
+			context['sessions'][str(i)]['session']['viability'] = str(math.floor(sv[0] * 10000) / 100) + " %"
+			context['sessions'][str(i)]['session']['start'] = sv[1][0].start
+			context['sessions'][str(i)]['session']['end_time'] = sv[1][0].end_time
+			context['sessions'][str(i)]['session']['competitive'] = sv[1][0].competitive
+			context['sessions'][str(i)]['game_image'] = sv[1][0].game.image.url
 
 	if request.GET.get('Join Session'):
 		session_id = request.GET.get('id')
@@ -1021,4 +1034,4 @@ def manual_matchmaking(request):
 
 		join_session(player_session, session, avail)
 		return redirect('edit_availability')
-	return render(request, 'mysite/manual_matchmaking.html', context)
+	return render(request, 'mysite/manual_matchmaking_list.html', context)
