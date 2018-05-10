@@ -108,6 +108,7 @@ def dashboard(request):
 	prev_sessions.{id}.session.viability
 	prev_sessions.{id}.session.rating
 	prev_sessions.{id}.players.{id}.<name/teamwork_commends/sportsmanship_commends/skill_commends/communication_commends>
+	queue.session.<game_name, start, end_time, viability>
 	'''
 	context = {
 		'title':'Dashboard',
@@ -181,6 +182,20 @@ def dashboard(request):
 			count += 1
 		# Go to next session
 		i += 1
+
+	# Get the current queue's session if it exists
+	if request.user.profile.in_queue:
+		p_ses = Session_Profile.objects.filter(profile=request.user.profile, session__start__gt=datetime.datetime.now()).first()
+		context['queue'] = {}
+		if p_ses.session is not None:
+			context['queue']['session'] = {
+				'game_name':p_ses.session.game.name,
+				'start':p_ses.session.start,
+				'end_time':p_ses.session.end_time,
+				'viability':str(math.floor(calc_match_viablity(request.user.profile, p_ses.session) * 10000) / 100) + " %"
+			}
+		# Can't do timer yet, since it isn't in the model. Can add in next week.
+		#context['queue']['start'] = p_ses.datetime_created
 
 	return render(request, 'mysite/dashboard.html', context)
 
