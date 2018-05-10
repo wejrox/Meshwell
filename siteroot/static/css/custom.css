@@ -102,7 +102,7 @@ body{
 }
 
 .welcomeMessage{
-  font-size: 48pt;
+  font-size: 5rem;
   padding-top: 15px;
   text-shadow: 0 0 20px #000000;
   margin-bottom: 15%;
@@ -650,6 +650,25 @@ td.value{
   background-color: #2F97C1;
   border-color: #2F97C1;
   font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
+}
+
+.btn-primary-alternative{
+  color: #fff;
+  background-color: #2F97C1;
+  border-color: #2F97C1;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
+}
+
+.btn-primary-alternative:hover{
+  color: #fff;
+  background-color: #0069d9;
+  border-color: #0069d9;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
+}
+
+.btn-primary-alternative a{
+  font-size: 2.25rem;
+  text-decoration: none;
 }
 
 /*Carousel*/
