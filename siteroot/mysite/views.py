@@ -1041,4 +1041,4 @@ def manual_matchmaking(request):
 
 		join_session(player_session, session, avail)
 		return redirect('edit_availability')
-	return render(request, 'mysite/manual_matchmaking.html', context)
+	return render(request, 'mysite/manual_matchmaking_list.html', context)
