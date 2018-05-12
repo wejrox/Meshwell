@@ -5,7 +5,7 @@ body, html {
 
 body{
   background-color: #131313 !important;
-  background-image: url("https://i.imgur.com/meVKk9f.png");
+  background-image: url("");
   background-position: center;
   background-size: 100%;
   background-repeat: repeat-y;
@@ -352,7 +352,8 @@ section h1 {
 .mainContent{
   margin-left: 15%;
   margin-right: 15%;
-  margin-top: 65px;
+  margin-top: 3%;
+  margin-bottom: 3%;
 }
 
 .headerContent{

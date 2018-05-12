@@ -229,12 +229,37 @@ def profile(request):
 	}
 	return render(request, 'mysite/profile.html', context)
 
-# CSS Standarisation Page
-def css_standard(request):
+# About us
+def about_us(request):
 	context = {
-		'title':'CSS Standard',
+		'title':'About Us',
+		'message':'The About Us page for Meshwell.',
 	}
-	return render(request, 'mysite/css_standard.html', context)
+	return render(request, 'mysite/about_us.html', context)
+
+# Terms of Service
+def terms_of_service(request):
+	context = {
+		'title':'Terms of Service',
+		'message':'Terms of service page for Meshwell.',
+	}
+	return render(request, 'mysite/terms_of_service.html', context)
+
+# Privacy Policy
+def privacy_policy(request):
+	context = {
+		'title':'Privacy Policy',
+		'message':'The privacy policy for Meshwell.',
+	}
+	return render(request, 'mysite/privacy_policy.html', context)
+
+# Feedback page
+def privacy_policy(request):
+	context = {
+		'title':'Feedback Page',
+		'message':'Feedback page for Meshwell.',
+	}
+	return render(request, 'mysite/feedback.html', context)
 
 # Catalog of games
 def catalog(request):
@@ -243,14 +268,6 @@ def catalog(request):
 		'message':'This is a stub page for our games catalog. No functionality has been added yet.',
 	}
 	return render(request, 'mysite/catalog.html', context)
-
-# About us
-def about_us(request):
-	context = {
-		'title':'About Us',
-		'message':'This is a stub page for the about us page. No functionality has been added yet.',
-	}
-	return render(request, 'mysite/about_us.html', context)
 
 #views for the feedback form page
 def feedback(request):

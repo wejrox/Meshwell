@@ -51,17 +51,19 @@
 			  </button>
 			  <div class="collapse navbar-collapse" id="navbarSupportedContent">
 			    <ul class="navbar-nav mr-auto">
+			      {% if user.is_authenticated %}
+			     	<li class="nav-item {% if request.resolver_match.url_name == "index" %}active{% endif %}">
+			        	<a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+			        </li>
+			      {% endif %}
 			      <li class="nav-item {% if request.resolver_match.url_name == "index" %}active{% endif %}">
 			        <a class="nav-link" href="{% url 'index' %}">Home<span class="sr-only">(current)</span></a>
 			      </li>
 			      <li class="nav-item {% if request.resolver_match.url_name == "catalog" %}active{% endif %}">
-			        <a class="nav-link" href="{% url 'catalog' %}">Catalog</a>
+			        <a class="nav-link" href="{% url 'catalog' %}">Supported Games</a>
 			      </li>
 			      <li class="nav-item {% if request.resolver_match.url_name == "about-us" %}active{% endif %}">
 			        <a class="nav-link" href="{% url 'about-us' %}">About Us</a>
-			      </li>
-			      <li class="nav-item {% if request.resolver_match.url_name == "css-standard" %}active{% endif %}">
-			        <a class="nav-link" href="{% url 'css-standard' %}">CSS Standard</a>
 			      </li>
 			    </ul>
 			    <ul class="navbar-nav ml-auto">
@@ -179,26 +181,28 @@
 									<div class="myFooter title">Get started</div>
 									<hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
 									<ul>
-											<li><a href="#">Homepage</a></li>
+											<li><a href="{% url 'index' %}">Homepage</a></li>
 											<li><a href="#">Register</a></li>
-											<li><a href="#">Supported Games</a></li>
+											<!-- Modal element goes here -->
+											<li><a href="{% url 'catalog' %}">Supported Games</a></li>
 									</ul>
 							</div>
 							<div class="col-sm-4 myCols">
 									<div class="myFooter title">About Us</div>
 									<hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
 									<ul>
-											<li><a href="#">Company Information</a></li>
+											<li><a href="{% url 'about_us' %}">Company Information</a></li>
 											<li><a href="#">Contact us</a></li>
+											<!-- Modal element goes here -->
 									</ul>
 							</div>
 							<div class="col-sm-4 myCols">
 									<div class="myFooter title">Legal</div>
 									<hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
 									<ul>
-											<li><a href="#">Terms of Service</a></li>
-											<li><a href="#">Terms of Use</a></li>
-											<li><a href="#">Privacy Policy</a></li>
+											<li><a href="{% url 'terms_of_service' %}">Terms of Service</a></li>
+											<li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+											<li><a href="{% url 'feedback' %}">Feedback</a></li>
 									</ul>
 							</div>
 					</div>
