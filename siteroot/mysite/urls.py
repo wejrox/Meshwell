@@ -31,7 +31,8 @@ urlpatterns = [
     path('feedback/', site_views.feedback, name='feedback'),
     path('catalog/', site_views.catalog, name='catalog'),
     path('about-us/', site_views.about_us, name='about-us'),
-    path('tos/', site_views.tos, name='tos'),
+    path('terms-of-service/', site_views.terms_of_service, name='terms-of-service'),
+    path('privacy-policy/', site_views.privacy_policy, name='privacy-policy'),
     # Account pages
     path('dashboard/', site_views.dashboard, name='dashboard'),
     path('dashboard/profile/', site_views.profile, name='profile'),
@@ -55,8 +56,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     # API
     url(r'^api/', include(api_router.urls)),
-    # Temporary Development
-    path('css-standard/', site_views.css_standard, name='css-standard'),
     # Password reset
     url(r'^password_reset/$', auth_views.password_reset, name='password_reset'),
     url(r'^password_reset/done/$', auth_views.password_reset_done, name='password_reset_done'),
