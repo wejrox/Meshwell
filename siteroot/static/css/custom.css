@@ -763,6 +763,15 @@ td.value{
   border-color: #00a2ff;
 }
 
+.navName{
+  color: #2f97c1;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
+  padding-right: 20px;
+  display: flex;
+  justify-content:center;
+  align-items:center;
+}
+
 /*Dropdown Menu Style Override*/
 .dropdown-menu{
   background-color: #373737 !important;
