@@ -253,14 +253,6 @@ def privacy_policy(request):
 	}
 	return render(request, 'mysite/privacy_policy.html', context)
 
-# Feedback page
-def privacy_policy(request):
-	context = {
-		'title':'Feedback Page',
-		'message':'Feedback page for Meshwell.',
-	}
-	return render(request, 'mysite/feedback.html', context)
-
 # Catalog of games
 def catalog(request):
 	context = {
