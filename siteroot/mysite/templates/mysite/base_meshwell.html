@@ -78,9 +78,9 @@
 			    	<li class="nav-item">
 						{% if user.is_authenticated %}
 					    {% if user.profile.in_queue %}
-							<a class="btn btn-danger" href="{% url 'exit_queue' %}">Exit Queue</a>
+							<a class="btn btn-danger" href="{% url 'exit_queue' %}">Exit Matchmake</a>
 							{% else %}
-							<a class="btn btn-primary" href="{% url 'enter_queue' %}">Queue</a>
+							<a class="btn btn-primary" href="{% url 'enter_queue' %}">Matchmake</a>
 							{% endif %}
 						{% endif %}
 						{% if user.is_authenticated %}
