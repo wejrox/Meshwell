@@ -7,11 +7,11 @@ $(function () {
             type: 'get',
             dataType: 'json',
             beforeSend: function() {
-                $("#modal-rate-session .modal-content").html("");
-                $("#modal-rate-session").modal("show");
+                $("#modal-edit-availability .modal-content").html("");
+                $("#modal-edit-availability").modal("show");
             },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                alert(errorThrown);
+            success: function(data) {
+                $("#modal-edit-availability .modal-content").html(data.html_form);
             }
         });
     };
@@ -31,7 +31,7 @@ $(function () {
                     window.location.replace(protocol+"//"+host+"/dashboard");
                 }
                 else {
-                    $("#modal-rate-session .modal-content").html(data.html_form);
+                    $("#modal-edit-availability .modal-content").html(data.html_form);
                 }
             }
         });
@@ -39,6 +39,6 @@ $(function () {
     };
 
     // Bind to buttons
-    $(".js-rate-session").click(loadForm);
-    $("#modal-rate-session").on("submit", ".js-rate-session-form", saveForm);
+    $(".js-edit-availability").click(loadForm);
+    $("#modal-edit-availability").on("submit", ".js-edit-availability-form", saveForm);
 });

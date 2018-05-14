@@ -778,33 +778,14 @@ def is_time_acceptable(session, availability):
 	# To reach here, the session isn't within our availability and it doesn't overlap
 	return False
 
-def availability(request):
-	# Ensure that user is not queued!
-	if request.user.profile.in_queue:
-		return redirect('dashboard')
-
-	# Remove the reference to an editable availability if it exists.
-	if 'avail_url' in request.session:
-		del request.session['avail_url']
-
-	avail = retrieve_data('availability', 'profile='+str(request.user.profile.id))
-	context = {'title':'Availability', 'message':'Below is a list of your current availabilities', 'availabilities':avail}
-
-	# Delete data based on the the id provided by the html page
-	if request.GET.get('Remove Availability'):
-		delete_availability(request.GET.get('url'))
-		return redirect('availability')
-
-	# Redirect to an edit availability page, given the id of the profile to edit
-	if request.GET.get('Edit Availability'):
-		request.session['avail_url'] = request.GET.get('url')
-		return redirect('edit_availability')
-
-	return render(request, 'mysite/availability.html', context)
-
 # Handles anything that must happen when availability is removed via API
-def delete_availability(url):
-	delete_data(url)
+@login_required
+def remove_availability(request, pk):
+	avail = Availability.objects.filter(pk=pk).first()
+	if avail:
+		if avail.profile == request.user.profile:
+			avail.delete()
+	return redirect('dashboard')
 
 # Handles new availabilities and editable availabilities
 @login_required
@@ -813,12 +794,12 @@ def add_availability(request):
 	if request.user.profile.in_queue:
 		return redirect('dashboard')
 
-	context = {
-		'title': 'New Availability',
-		'message' : 'Please enter the details for your new availability.',
-		'editing' : False
-	}
+	data = dict()
 
+	context = {
+		'title': 'Add Availability',
+		'message' : 'Please enter the details for your new availability.',
+	}
 	# Creae a new entry, or edit the existing one if it has been given
 	if request.method == 'POST':
 		form = UserAvailabilityForm(request.POST, user=request.user)
@@ -827,60 +808,59 @@ def add_availability(request):
 			instance = form.save(commit=False)
 			instance.profile = request.user.profile
 			instance.save()
-
-			return redirect('availability')
+			data['form_is_valid'] = True
+		else:
+			data['form_is_valid'] = False
 	else:
 		form = UserAvailabilityForm()
 
 	# Set the form to whichever form we are using
 	context['form'] = form
-	return render(request, 'registration/availability_form.html', context)
+	data['html_form'] = render_to_string('account/add_availability.html',
+									context,
+									request=request
+									)
+	return JsonResponse(data)
 
 # Handles new availabilities and editable availabilities
 @login_required
-def edit_availability(request):
+def edit_availability(request, pk):
 	# Ensure that user is not queued!
 	if request.user.profile.in_queue:
 		return redirect('dashboard')
+	data = dict()
 
-	# Get a potentially editable object from a given url
-	if 'avail_url' in request.session:
-		url_parts = request.session['avail_url'].split('/')
-		# Get the id, which is located at the 6th element in the split list
-		id = int(url_parts[5])
-		# Get the availability, or send to availability page if it doesnt exist
-		try:
-			obj = Availability.objects.get(pk=id)
-		except model.DoesNotExist:
-			return redirect('availability')
-		context = {
-			'title': 'Update Availability',
-			'message' : 'Please enter the new details for this availability.'
-		}
-	# Not editing an entry
-	else:
-		redirect('add_availability')
+	context = {
+		'title': 'Edit Availability',
+		'message' : 'Please enter the new details for your availability.',
+	}
+	# Ensure availability exists to edit
+	avail = Availability.objects.filter(pk=pk).first()
+	if avail is None:
+		raise PermissionDenied
 
 	# Creae a new entry, or edit the existing one if it has been given
 	if request.method == 'POST':
-		form = UserAvailabilityForm(request.POST, instance=obj, user=request.user)
+		form = UserAvailabilityForm(request.POST, instance=avail, user=request.user)
 
 		if form.is_valid():
 			instance = form.save(commit=False)
 			instance.profile = request.user.profile
 			instance.save()
+			data['form_is_valid'] = True
 
-			# Remove the availability url so that the form doesn't default to it
-			if 'avail_url' in request.session:
-				del request.session['avail_url']
-
-			return redirect('availability')
-	# If user just entered page, generate the correct form to display
+		else:
+			data['form_is_valid'] = False
+	# If user not tried to post, give them the form
 	else:
-		form = UserAvailabilityForm(instance=obj)
+		form = UserAvailabilityForm(instance=avail)
 	# Set the form to whichever form we are using
 	context['form'] = form
-	return render(request, 'registration/availability_form.html', context)
+	data['html_form'] = render_to_string('account/edit_availability.html',
+										context,
+										request=request
+										)
+	return JsonResponse(data)
 
 # User rating a sessions
 @login_required
