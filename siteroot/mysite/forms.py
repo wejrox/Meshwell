@@ -169,6 +169,24 @@ class ConnectAccountForm(forms.ModelForm):
 			'platform',
 		)
 
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user')
+		super(ConnectAccountForm, self).__init__(*args, **kwargs)
+	
+	def clean(self):
+		cleaned_data = super().clean()
+		
+		# Make sure account not already connected
+		c_acc = cleaned_data.get('game_player_tag')
+		if c_acc is not None:
+			if Profile_Connected_Game_Account.objects.filter(game_player_tag=c_acc).first() is not None:
+				self.add_error('game_player_tag', 'This account is already connected to another user!')
+			game = cleaned_data.get('game')
+			if game is not None:
+				if Profile_Connected_Game_Account.objects.filter(profile=self.user.profile, game=game).first() is not None:
+					self.add_error('game', 'This account already has this game connected.')
+		return cleaned_data
+
 # When a user can play games
 class UserAvailabilityForm(forms.ModelForm):
 	pref_day = forms.ChoiceField(

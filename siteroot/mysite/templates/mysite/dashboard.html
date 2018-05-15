@@ -227,6 +227,15 @@
 						<!--/Matchmaking-->
 						<hr>
 						<!--Connected Accounts-->
+						<!--Connect account modal-->
+						<div class="modal fade" id="modal-connect-account">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<!--Dynamically created-->
+								</div>
+							</div>
+						</div>
+						<!--/Connect account modal-->
 						<div class="row">
 							<!--Table-->
 							<div class="container">
@@ -250,19 +259,24 @@
 													<th scope="col">Platform</th>
 													<th scope="col">Casual MMR</th>
 													<th scope="col">Competitive MMR</th>
+													<th scope="col"></th>
 												</tr>
 											</thead>
 											<tbody>
+												{% for value in connected_accounts %}
 												<tr>
-													{% for value in connected_accounts %}
 													<td>{{ value.game.name }}</td>
 													<td>{{ value.game_player_tag }}</td>
 													<td>{{ value.platform }}</td>
 													<td>{{ value.cas_rank }}</td>
 													<td>{{ value.comp_rank }}</td>
+													<td><a href="{% url 'remove_connected_account' pk=value.id %}" class="btn btn-danger btn-sm" >Unlink</button></td>
 												</tr>
 												{% endfor %}
 											</tbody>
+											<tfoot>
+												<td><button class="btn btn-info js-connect-account" data-url="{% url 'connect_account' %}">Connect Account</button></td>
+											</tfoot>
 										</table>
 									</div>
 								</div>
@@ -439,4 +453,5 @@
 <script src="{% static 'js/add_availability.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/edit_availability.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/rate_session.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/connect_account.js' %}" type="text/javascript"></script>
 {% endblock %}

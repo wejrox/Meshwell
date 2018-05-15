@@ -394,25 +394,17 @@ def deactivate_user(request):
 
 @login_required
 def connect_account(request):
-	form = ConnectAccountForm()
 	context = {
 		'title':'Connect Game Account',
-		'form':form,
 	}
-
+	data = dict()
 	if request.method == 'POST':
-		form = ConnectAccountForm(request.POST)
+		form = ConnectAccountForm(request.POST, user=request.user)
 		if form.is_valid():
 			ranks = None
 			# Get the rank depending on which game was selected
 			if form.cleaned_data['game'].name == 'Rainbow Six Siege':
-				# Ensure profile's game doesn't already have an account connected to it
-				connected_account = retrieve_data('profile_connected_game_account', 'profile='+str(request.user.profile.id))
-				if not connected_account:
-					ranks = get_r6siege_ranks(request, form.cleaned_data['game_player_tag'])
-				else:
-					context['error'] = 'You already have an account connected for this game.'
-					return render(request, 'registration/connect_account.html', context)
+				ranks = get_r6siege_ranks(request, form.cleaned_data['game_player_tag'])
 
 			# Create a new instance so long as we found some ranks
 			if ranks is not None:
@@ -423,17 +415,29 @@ def connect_account(request):
 				instance.comp_rank = ranks['comp_rank']
 				instance.save()
 
-				return redirect('connected_accounts')
+				data['form_is_valid'] = True
 			else:
-				context['error'] = 'The account name you have entered does not exist'
-				return render(request, 'registration/connect_account.html', context)
+				data['form_is_valid'] = False
 		else:
-			return render(request, 'registration/connect_account.html', context)
-
+			data['form_is_valid'] = False
 	else:
-		return render(request, 'registration/connect_account.html', context)
+		form = ConnectAccountForm(user=request.user)
 
-	return render(request, 'registration/connect_account.html', context)
+	# Set the form to whichever form we are using
+	context['form'] = form
+	data['html_form'] = render_to_string('account/connect_account.html',
+										context,
+										request=request
+										)
+	return JsonResponse(data)
+
+@login_required
+def remove_connected_account(request, pk):
+	acc = Profile_Connected_Game_Account.objects.filter(pk=pk).first()
+	if acc:
+		if acc.profile == request.user.profile:
+			acc.delete()
+	return redirect('dashboard')
 
 @login_required
 def connected_accounts(request):
@@ -497,11 +501,11 @@ def get_r6siege_ranks(request, player_tag):
 
 	# Decide which region to check
 	region = request.user.profile.pref_server
-	if region == 'oce' or region == 'as' or region == 'me':
+	if region == 'Oceania' or region == 'Asia' or region == 'Middle-East':
 		region = 'apac'
-	elif region == 'saf' or region == 'usw' or region == 'use':
+	elif region == 'South America' or region == 'US-West' or region == 'US-East':
 		region = 'ncsa'
-	elif region == 'eu' or region == 'saf':
+	elif region == 'Europe' or region == 'South Africa':
 		region = 'emea'
 
 	ranks = { 'cas_rank':0, 'comp_rank':0 }
