@@ -173,25 +173,21 @@ class ConnectAccountForm(forms.ModelForm):
 class UserAvailabilityForm(forms.ModelForm):
 	pref_day = forms.ChoiceField(
 		choices=Availability.PREF_DAY_CHOICES,
-		widget=forms.Select(attrs={'class':'form-control'})
 	)
 	start_time = forms.TimeField(
 		required = True,
 		help_text= 'Required.',
 		initial='00:00',
-		widget=forms.TimeInput(attrs={'class':'form-control', 'type':'time'}),
 		input_formats=['%H:%M', '%H:%M:%S'],
 	)
 	end_time = forms.TimeField(
 		required = True,
 		help_text= 'Required.',
 		initial='01:00',
-		widget=forms.TimeInput(attrs={'class':'form-control', 'type':'time'}),
 		input_formats=['%H:%M', '%H:%M:%S'],
 	)
 	competitive = forms.BooleanField(
 		required = False,
-		widget=forms.CheckboxInput(attrs={'class':'form-check-label', 'type':'checkbox'}),
 	)
 	class Meta:
 		model = Availability

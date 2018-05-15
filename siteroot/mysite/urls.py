@@ -31,7 +31,8 @@ urlpatterns = [
     path('feedback/', site_views.feedback, name='feedback'),
     path('catalog/', site_views.catalog, name='catalog'),
     path('about-us/', site_views.about_us, name='about-us'),
-    path('tos/', site_views.tos, name='tos'),
+    path('terms-of-service/', site_views.terms_of_service, name='terms-of-service'),
+    path('privacy-policy/', site_views.privacy_policy, name='privacy-policy'),
     # Account pages
     path('dashboard/', site_views.dashboard, name='dashboard'),
     path('dashboard/profile/', site_views.profile, name='profile'),
@@ -45,9 +46,10 @@ urlpatterns = [
     path('dashboard/edit_profile/', site_views.edit_profile, name='edit_profile'),
     path('dashboard/enter_queue/', site_views.enter_queue, name='enter_queue'),
     path('dashboard/exit_queue/', site_views.exit_queue, name='exit_queue'),
-    path('dashboard/availability/', site_views.availability, name='availability'),
+    path('dashboard/availability/<int:pk>/remove/', site_views.remove_availability, name='remove_availability'),
     path('dashboard/availability/add/', site_views.add_availability, name='add_availability'),
     path('dashboard/availability/edit/', site_views.edit_availability, name='edit_availability'),
+    path('dashboard/availability/<int:pk>/edit/', site_views.edit_availability, name='edit_availability'),
     path('dashboard/session/rate/', site_views.rate_session, name='rate_session'),
     path('dashboard/session/<int:pk>/rate/', site_views.rate_session, name='rate_session'),
     path('dashboard/manual_matchmaking/', site_views.manual_matchmaking, name='manual_matchmaking'),
@@ -55,8 +57,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     # API
     url(r'^api/', include(api_router.urls)),
-    # Temporary Development
-    path('css-standard/', site_views.css_standard, name='css-standard'),
     # Password reset
     url(r'^password_reset/$', auth_views.password_reset, name='password_reset'),
     url(r'^password_reset/done/$', auth_views.password_reset_done, name='password_reset_done'),

@@ -4,8 +4,8 @@ body, html {
 }
 
 body{
-  background-color: #131313 !important;
-  background-image: url("https://i.imgur.com/meVKk9f.png");
+  background-color: #fff !important;
+  background-image: url("");
   background-position: center;
   background-size: 100%;
   background-repeat: repeat-y;
@@ -352,7 +352,8 @@ section h1 {
 .mainContent{
   margin-left: 15%;
   margin-right: 15%;
-  margin-top: 65px;
+  margin-top: 3%;
+  margin-bottom: 3%;
 }
 
 .headerContent{
@@ -377,7 +378,7 @@ section h1 {
   width: 100%;
   padding-left: 20px;
   border-radius: 12px;
-  padding: 1cm;
+  padding: 30px;
 }
 
 .imgAndText{
@@ -762,6 +763,15 @@ td.value{
   border-color: #00a2ff;
 }
 
+.navName{
+  color: #2f97c1;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
+  padding-right: 20px;
+  display: flex;
+  justify-content:center;
+  align-items:center;
+}
+
 /*Dropdown Menu Style Override*/
 .dropdown-menu{
   background-color: #373737 !important;
@@ -813,11 +823,12 @@ td.value{
 }
 
 /*About Us CSS*/
-.headerContent.aboutMe{
-  text-align: center;
+.aboutUsHeaderContent{
+  margin-bottom: 1cm;
   font-size: 3em;
-  font-weight: 100;
-  color: #fff;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
+  text-align: center;
+  color: #2d363f; 
 }
 
 .paragraphContent.aboutMe{
@@ -825,16 +836,20 @@ td.value{
   text-align: center;
   font-weight: 100;
   font-size: 19pt;
+  background: none;
+  color: #2d363f;
 }
 
 .h2.aboutMe {
   margin-top: 5%;
   font-weight: 100;
+  color: #2d363f;
 }
 
 .hr.devTeam {
   margin-left: 20%;
   margin-right: 20%;
+  color: #2d363f;
 }
 
 /* Shine by Noaya - https://codepen.io/nxworld/pen/ZYNOBZ */
