@@ -401,23 +401,8 @@ def connect_account(request):
 	if request.method == 'POST':
 		form = ConnectAccountForm(request.POST, user=request.user)
 		if form.is_valid():
-			ranks = None
-			# Get the rank depending on which game was selected
-			if form.cleaned_data['game'].name == 'Rainbow Six Siege':
-				ranks = get_r6siege_ranks(request, form.cleaned_data['game_player_tag'])
-
-			# Create a new instance so long as we found some ranks
-			if ranks is not None:
-				# Create a new instance from the form
-				instance = form.save(commit=False)
-				instance.profile = request.user.profile
-				instance.cas_rank = ranks['cas_rank']
-				instance.comp_rank = ranks['comp_rank']
-				instance.save()
-
-				data['form_is_valid'] = True
-			else:
-				data['form_is_valid'] = False
+			form.save()
+			data['form_is_valid'] = True
 		else:
 			data['form_is_valid'] = False
 	else:
@@ -483,8 +468,7 @@ def unlink_account(profile, game_name):
 
 # Gets the player details specified, or None if there are multiple entries
 # Decides on region based on the profiles region. (Perhaps change later?)
-@login_required
-def get_r6siege_ranks(request, player_tag):
+def get_r6siege_ranks(pref_server, player_tag):
 	url = 'https://r6db.com/api/v2/players?name=' + player_tag
 	headers = { 'X-App-Id':'MyRequest' }
 	response = requests.get(url, headers=headers)
@@ -500,7 +484,7 @@ def get_r6siege_ranks(request, player_tag):
 		return None
 
 	# Decide which region to check
-	region = request.user.profile.pref_server
+	region = pref_server
 	if region == 'Oceania' or region == 'Asia' or region == 'Middle-East':
 		region = 'apac'
 	elif region == 'South America' or region == 'US-West' or region == 'US-East':

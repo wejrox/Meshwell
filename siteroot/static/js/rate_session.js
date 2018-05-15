@@ -10,6 +10,9 @@ $(function () {
                 $("#modal-rate-session .modal-content").html("");
                 $("#modal-rate-session").modal("show");
             },
+            success: function(data) {
+                $("#modal-rate-session .modal-content").html(data.html_form);
+            },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 alert(errorThrown);
             }

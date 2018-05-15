@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from apps.api.models import Profile, Feedback, Profile_Connected_Game_Account, Availability, Session, Session_Profile, Report
+from mysite import views
 from django.forms import ModelForm
 from django.utils.safestring import mark_safe
 
@@ -173,18 +174,55 @@ class ConnectAccountForm(forms.ModelForm):
 		self.user = kwargs.pop('user')
 		super(ConnectAccountForm, self).__init__(*args, **kwargs)
 	
+	def save(self):
+		print(self.cleaned_data)
+		connected_account = Profile_Connected_Game_Account.objects.create(
+			profile = self.user.profile,
+			platform = self.cleaned_data['platform'],
+			game = self.cleaned_data['game'],
+			game_player_tag = self.cleaned_data['game_player_tag'],
+			cas_rank = self.cleaned_data['cas_rank'],
+			comp_rank = self.cleaned_data['comp_rank'],
+			)
+
+		connected_account.save()
+
 	def clean(self):
 		cleaned_data = super().clean()
-		
 		# Make sure account not already connected
 		c_acc = cleaned_data.get('game_player_tag')
+		game = cleaned_data.get('game')
+
+		# Clean only if account entered
 		if c_acc is not None:
-			if Profile_Connected_Game_Account.objects.filter(game_player_tag=c_acc).first() is not None:
+			# Account exists already
+			p_acc = Profile_Connected_Game_Account.objects.filter(game_player_tag=c_acc).first()
+			if p_acc is not None:
 				self.add_error('game_player_tag', 'This account is already connected to another user!')
-			game = cleaned_data.get('game')
+			# Profile already has an account for this game
 			if game is not None:
 				if Profile_Connected_Game_Account.objects.filter(profile=self.user.profile, game=game).first() is not None:
 					self.add_error('game', 'This account already has this game connected.')
+			
+			# Set the rank if above checks are clear
+			if p_acc is None and game is not None:
+				ranks = None
+				# Get ranks depending on game selected
+				if game.name == 'Rainbow Six Siege':
+					ranks = views.get_r6siege_ranks(self.user.profile.pref_server, cleaned_data.get('game_player_tag'))
+				else:
+					raise forms.ValidationError("%s isn't a supported game" % str(game))
+				
+				# Assign the ranks
+				if ranks is not None:
+					if 'cas_rank' in ranks and 'comp_rank' in ranks:
+						cleaned_data['cas_rank'] = ranks['cas_rank']
+						cleaned_data['comp_rank'] = ranks['comp_rank']
+					else:
+						self.add_error('game_player_tag', 'Ranks not found for this account.')
+				else:
+					self.add_error('game_player_tag', 'Ranks not found for this account.')
+			
 		return cleaned_data
 
 # When a user can play games
