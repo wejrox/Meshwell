@@ -320,7 +320,7 @@ class UserAvailabilityForm(forms.ModelForm):
 class RateSessionForm(forms.Form):
 	# A tuple for rating numbers user can give
 	RATINGS=((0, '0'),(1, '1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'))
-	COMMENDS=(('Skill', 'Skill'), ('Positivity', 'Positivity'), ('Communication', 'Communication'), ('Teamwork', 'Teamwork'))
+	COMMENDS=Profile.COMMENDS_CHOICES
 	# Create fields for rating
 	rating = forms.ChoiceField(
 		choices=RATINGS,
@@ -384,3 +384,33 @@ class RateSessionForm(forms.Form):
 				report.save()
 			profile.received_ratings += 1
 			profile.save()
+
+class SelectMatchmakingOptionsForm(forms.Form):
+	commend_priority_1 = forms.ChoiceField(
+		choices=Profile.COMMENDS_CHOICES,
+	)
+	commend_priority_2 = forms.ChoiceField(
+		choices=Profile.COMMENDS_CHOICES,
+	)
+	commend_priority_3 = forms.ChoiceField(
+		choices=Profile.COMMENDS_CHOICES,
+	)
+	commend_priority_4 = forms.ChoiceField(
+		choices=Profile.COMMENDS_CHOICES,
+	)
+
+	# Should the matchmaking ignore commends etc.?
+	ignore_matching = forms.BooleanField()
+	# Should we search for competitive sessions? 
+	# CURRENTLY DISABLED, COMPETITIVE PREF IS SET ON AVAILABILITIES
+	# competitive = forms.BooleanField()
+
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user')
+		super(SelectMatchmakingOptionsForm, self).__init__(*args, **kwargs)
+		# Get the weighting details of current profile
+		commend_priority_1.initial = self.user.profile.commend_priority_1
+		# Get preferred game
+		games = Profile_Connected_Game_Account.objects.filter(profile=self.user.profile)
+		self.fields['pref_game'] = forms.ChoiceField(choices=games)
+		self.feilds['pref_game'].initial = self.user.profile.pref_game
