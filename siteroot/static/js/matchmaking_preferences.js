@@ -7,14 +7,11 @@ $(function () {
             type: 'get',
             dataType: 'json',
             beforeSend: function() {
-                $("#modal-rate-session .modal-content").html("");
-                $("#modal-rate-session").modal("show");
+                $("#modal-matchmaking-preferences .modal-content").html("");
+                $("#modal-matchmaking-preferences").modal("show");
             },
             success: function(data) {
-                $("#modal-rate-session .modal-content").html(data.html_form);
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                alert(errorThrown);
+                $("#modal-matchmaking-preferences .modal-content").html(data.html_form);
             }
         });
     };
@@ -34,7 +31,7 @@ $(function () {
                     window.location.replace(protocol+"//"+host+"/dashboard");
                 }
                 else {
-                    $("#modal-rate-session .modal-content").html(data.html_form);
+                    $("#modal-matchmaking-preferences .modal-content").html(data.html_form);
                 }
             }
         });
@@ -42,6 +39,6 @@ $(function () {
     };
 
     // Bind to buttons
-    $(".js-rate-session").click(loadForm);
-    $("#modal-rate-session").on("submit", ".js-rate-session-form", saveForm);
+    $(".js-matchmaking-preferences").click(loadForm);
+    $("#modal-matchmaking-preferences").on("submit", ".js-matchmaking-preferences-form", saveForm);
 });

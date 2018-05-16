@@ -60,7 +60,15 @@ class Profile(models.Model):
 	commend_priority_2 = models.CharField(null=False, blank=False, max_length=20, default=COMMUNICATION, choices=COMMENDS_CHOICES,)
 	commend_priority_3 = models.CharField(null=False, blank=False, max_length=20, default=SKILL, choices=COMMENDS_CHOICES,)
 	commend_priority_4 = models.CharField(null=False, blank=False, max_length=20, default=SPORTSMANSHIP, choices=COMMENDS_CHOICES,)
+	ignore_matchmaking = models.BooleanField(null=False, blank=False, default=False,)
 
+	# The default game to prefer
+	pref_game = models.ForeignKey(
+		'Game',
+		on_delete=models.CASCADE,
+		blank=True,
+		null=True,
+	)
 	# Other details
 	birth_date = models.DateField(null=True, blank=False,)
 	sessions_played = models.IntegerField(null=False, blank=False, default=0,)

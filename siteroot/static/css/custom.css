@@ -118,8 +118,7 @@ body{
 }
 
 .welcomeMessage{
-  font-size: 5rem;
-  padding-top: 15px;
+  font-size: 3vw;
   text-shadow: 0 0 20px #000000;
   margin-bottom: 1%;
 }
@@ -174,7 +173,7 @@ body{
 }
  
 .back-to-top i {
-  font-size: 60px;
+  font-size: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -359,12 +358,12 @@ section h1 {
 .headerContent{
   margin-bottom: 1cm;
   margin-left: -1cm;
-  margin-right: -1cm;
+  margin-right: -0.60vw;
   font-size: 4em;
   font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
   text-align: left;
   background: rgba(0, 0, 0, 0.4); 
-  color: #00a2ff; 
+  color: #2f97c1; 
   padding-left: 4cm;
 }
 

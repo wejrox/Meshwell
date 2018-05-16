@@ -7,14 +7,11 @@ $(function () {
             type: 'get',
             dataType: 'json',
             beforeSend: function() {
-                $("#modal-rate-session .modal-content").html("");
-                $("#modal-rate-session").modal("show");
+                $("#modal-connect-account .modal-content").html("");
+                $("#modal-connect-account").modal("show");
             },
             success: function(data) {
-                $("#modal-rate-session .modal-content").html(data.html_form);
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                alert(errorThrown);
+                $("#modal-connect-account .modal-content").html(data.html_form);
             }
         });
     };
@@ -34,7 +31,7 @@ $(function () {
                     window.location.replace(protocol+"//"+host+"/dashboard");
                 }
                 else {
-                    $("#modal-rate-session .modal-content").html(data.html_form);
+                    $("#modal-connect-account .modal-content").html(data.html_form);
                 }
             }
         });
@@ -42,6 +39,6 @@ $(function () {
     };
 
     // Bind to buttons
-    $(".js-rate-session").click(loadForm);
-    $("#modal-rate-session").on("submit", ".js-rate-session-form", saveForm);
+    $(".js-connect-account").click(loadForm);
+    $("#modal-connect-account").on("submit", ".js-connect-account-form", saveForm);
 });

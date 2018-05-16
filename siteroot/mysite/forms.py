@@ -4,7 +4,8 @@ from django import forms
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from apps.api.models import Profile, Feedback, Profile_Connected_Game_Account, Availability, Session, Session_Profile, Report
+from apps.api.models import Profile, Feedback, Profile_Connected_Game_Account, Availability, Session, Session_Profile, Report, Game
+from mysite import views
 from django.forms import ModelForm
 from django.utils.safestring import mark_safe
 
@@ -169,6 +170,61 @@ class ConnectAccountForm(forms.ModelForm):
 			'platform',
 		)
 
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user')
+		super(ConnectAccountForm, self).__init__(*args, **kwargs)
+	
+	def save(self):
+		print(self.cleaned_data)
+		connected_account = Profile_Connected_Game_Account.objects.create(
+			profile = self.user.profile,
+			platform = self.cleaned_data['platform'],
+			game = self.cleaned_data['game'],
+			game_player_tag = self.cleaned_data['game_player_tag'],
+			cas_rank = self.cleaned_data['cas_rank'],
+			comp_rank = self.cleaned_data['comp_rank'],
+			)
+
+		connected_account.save()
+
+	def clean(self):
+		cleaned_data = super().clean()
+		# Make sure account not already connected
+		c_acc = cleaned_data.get('game_player_tag')
+		game = cleaned_data.get('game')
+
+		# Clean only if account entered
+		if c_acc is not None:
+			# Account exists already
+			p_acc = Profile_Connected_Game_Account.objects.filter(game_player_tag=c_acc).first()
+			if p_acc is not None:
+				self.add_error('game_player_tag', 'This account is already connected to another user!')
+			# Profile already has an account for this game
+			if game is not None:
+				if Profile_Connected_Game_Account.objects.filter(profile=self.user.profile, game=game).first() is not None:
+					self.add_error('game', 'This account already has this game connected.')
+			
+			# Set the rank if above checks are clear
+			if p_acc is None and game is not None:
+				ranks = None
+				# Get ranks depending on game selected
+				if game.name == 'Rainbow Six Siege':
+					ranks = views.get_r6siege_ranks(self.user.profile.pref_server, cleaned_data.get('game_player_tag'))
+				else:
+					raise forms.ValidationError("%s isn't a supported game" % str(game))
+				
+				# Assign the ranks
+				if ranks is not None:
+					if 'cas_rank' in ranks and 'comp_rank' in ranks:
+						cleaned_data['cas_rank'] = ranks['cas_rank']
+						cleaned_data['comp_rank'] = ranks['comp_rank']
+					else:
+						self.add_error('game_player_tag', 'Ranks not found for this account.')
+				else:
+					self.add_error('game_player_tag', 'Ranks not found for this account.')
+			
+		return cleaned_data
+
 # When a user can play games
 class UserAvailabilityForm(forms.ModelForm):
 	pref_day = forms.ChoiceField(
@@ -264,7 +320,7 @@ class UserAvailabilityForm(forms.ModelForm):
 class RateSessionForm(forms.Form):
 	# A tuple for rating numbers user can give
 	RATINGS=((0, '0'),(1, '1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'))
-	COMMENDS=(('Skill', 'Skill'), ('Positivity', 'Positivity'), ('Communication', 'Communication'), ('Teamwork', 'Teamwork'))
+	COMMENDS=Profile.COMMENDS_CHOICES
 	# Create fields for rating
 	rating = forms.ChoiceField(
 		choices=RATINGS,
@@ -328,3 +384,70 @@ class RateSessionForm(forms.Form):
 				report.save()
 			profile.received_ratings += 1
 			profile.save()
+
+class SelectMatchmakingOptionsForm(forms.Form):
+	'''
+	Form displayed as modal on dashboard
+	'''
+	commend_priority_1 = forms.ChoiceField(
+		choices=Profile.COMMENDS_CHOICES,
+	)
+	commend_priority_2 = forms.ChoiceField(
+		choices=Profile.COMMENDS_CHOICES,
+	)
+	commend_priority_3 = forms.ChoiceField(
+		choices=Profile.COMMENDS_CHOICES,
+	)
+	commend_priority_4 = forms.ChoiceField(
+		choices=Profile.COMMENDS_CHOICES,
+	)
+
+	# Should the matchmaking ignore commends etc.?
+	ignore_matchmaking = forms.BooleanField(required=False)
+	# Should we search for competitive sessions? 
+	# CURRENTLY DISABLED, COMPETITIVE PREF IS SET ON AVAILABILITIES
+	# competitive = forms.BooleanField()
+
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user')
+		super(SelectMatchmakingOptionsForm, self).__init__(*args, **kwargs)
+		# Get the weighting details of current profile
+		self.fields['commend_priority_1'].initial = self.user.profile.commend_priority_1
+		self.fields['commend_priority_2'].initial = self.user.profile.commend_priority_2
+		self.fields['commend_priority_3'].initial = self.user.profile.commend_priority_3
+		self.fields['commend_priority_4'].initial = self.user.profile.commend_priority_4
+		# Get preferred game
+		games_a = Profile_Connected_Game_Account.objects.filter(profile=self.user.profile)
+		self.fields['pref_game'] = forms.ChoiceField(choices=[(g.game.id, g.game.name) for g in games_a])
+		if self.user.profile.pref_game is not None:
+			self.fields['pref_game'].initial = self.user.profile.pref_game.name
+		elif len(games_a) > 0:
+			self.fields['pref_game'].initial = games_a[0].game.name
+		# Set matchmaking override
+		self.fields['ignore_matchmaking'].initial = self.user.profile.ignore_matchmaking
+
+	def save(self):
+		# Save user commend priorities
+		self.user.profile.commend_priority_1 = self.cleaned_data.get('commend_priority_1')
+		self.user.profile.commend_priority_2 = self.cleaned_data.get('commend_priority_2')
+		self.user.profile.commend_priority_3 = self.cleaned_data.get('commend_priority_3')
+		self.user.profile.commend_priority_4 = self.cleaned_data.get('commend_priority_4')
+		# Save override status
+		self.user.profile.ignore_matchmaking = self.cleaned_data.get('ignore_matchmaking')
+		# Save preferred game
+		self.user.profile.pref_game = Game.objects.get(id=self.cleaned_data.get('pref_game'))
+		# Save changes made
+		self.user.profile.save()
+
+	def clean(self):
+		cleaned_data = super().clean()
+		# Make sure no priorities occur more than once
+		if 	(cleaned_data['commend_priority_1'] == cleaned_data['commend_priority_2'] or
+			cleaned_data['commend_priority_1'] == cleaned_data['commend_priority_3'] or
+			cleaned_data['commend_priority_1'] == cleaned_data['commend_priority_4']):
+			self.add_error('commend_priority_1', 'You cannot have duplicate priorities.')
+		if 	(cleaned_data['commend_priority_2'] == cleaned_data['commend_priority_3'] or
+			cleaned_data['commend_priority_2'] == cleaned_data['commend_priority_4']):
+			self.add_error('commend_priority_2', 'You cannot have duplicate priorities.')
+		if 	(cleaned_data['commend_priority_3'] == cleaned_data['commend_priority_4']):
+			self.add_error('commend_priority_3', 'You cannot have duplicate priorities.')

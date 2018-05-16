@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 import requests, requests.auth, json, urllib.parse, datetime, math
-from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, RateSessionForm, LoginForm
+from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, RateSessionForm, LoginForm, SelectMatchmakingOptionsForm
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User, Group
@@ -394,46 +394,35 @@ def deactivate_user(request):
 
 @login_required
 def connect_account(request):
-	form = ConnectAccountForm()
 	context = {
 		'title':'Connect Game Account',
-		'form':form,
 	}
-
+	data = dict()
 	if request.method == 'POST':
-		form = ConnectAccountForm(request.POST)
+		form = ConnectAccountForm(request.POST, user=request.user)
 		if form.is_valid():
-			ranks = None
-			# Get the rank depending on which game was selected
-			if form.cleaned_data['game'].name == 'Rainbow Six Siege':
-				# Ensure profile's game doesn't already have an account connected to it
-				connected_account = retrieve_data('profile_connected_game_account', 'profile='+str(request.user.profile.id))
-				if not connected_account:
-					ranks = get_r6siege_ranks(request, form.cleaned_data['game_player_tag'])
-				else:
-					context['error'] = 'You already have an account connected for this game.'
-					return render(request, 'registration/connect_account.html', context)
-
-			# Create a new instance so long as we found some ranks
-			if ranks is not None:
-				# Create a new instance from the form
-				instance = form.save(commit=False)
-				instance.profile = request.user.profile
-				instance.cas_rank = ranks['cas_rank']
-				instance.comp_rank = ranks['comp_rank']
-				instance.save()
-
-				return redirect('connected_accounts')
-			else:
-				context['error'] = 'The account name you have entered does not exist'
-				return render(request, 'registration/connect_account.html', context)
+			form.save()
+			data['form_is_valid'] = True
 		else:
-			return render(request, 'registration/connect_account.html', context)
-
+			data['form_is_valid'] = False
 	else:
-		return render(request, 'registration/connect_account.html', context)
+		form = ConnectAccountForm(user=request.user)
 
-	return render(request, 'registration/connect_account.html', context)
+	# Set the form to whichever form we are using
+	context['form'] = form
+	data['html_form'] = render_to_string('account/connect_account.html',
+										context,
+										request=request
+										)
+	return JsonResponse(data)
+
+@login_required
+def remove_connected_account(request, pk):
+	acc = Profile_Connected_Game_Account.objects.filter(pk=pk).first()
+	if acc:
+		if acc.profile == request.user.profile:
+			acc.delete()
+	return redirect('dashboard')
 
 @login_required
 def connected_accounts(request):
@@ -479,8 +468,7 @@ def unlink_account(profile, game_name):
 
 # Gets the player details specified, or None if there are multiple entries
 # Decides on region based on the profiles region. (Perhaps change later?)
-@login_required
-def get_r6siege_ranks(request, player_tag):
+def get_r6siege_ranks(pref_server, player_tag):
 	url = 'https://r6db.com/api/v2/players?name=' + player_tag
 	headers = { 'X-App-Id':'MyRequest' }
 	response = requests.get(url, headers=headers)
@@ -496,12 +484,12 @@ def get_r6siege_ranks(request, player_tag):
 		return None
 
 	# Decide which region to check
-	region = request.user.profile.pref_server
-	if region == 'oce' or region == 'as' or region == 'me':
+	region = pref_server
+	if region == 'Oceania' or region == 'Asia' or region == 'Middle-East':
 		region = 'apac'
-	elif region == 'saf' or region == 'usw' or region == 'use':
+	elif region == 'South America' or region == 'US-West' or region == 'US-East':
 		region = 'ncsa'
-	elif region == 'eu' or region == 'saf':
+	elif region == 'Europe' or region == 'South Africa':
 		region = 'emea'
 
 	ranks = { 'cas_rank':0, 'comp_rank':0 }
@@ -1031,3 +1019,32 @@ def manual_matchmaking(request):
 		join_session(player_session, session, avail)
 		return redirect('edit_availability')
 	return render(request, 'mysite/manual_matchmaking_list.html', context)
+
+@login_required
+def matchmaking_preferences(request):
+	'''
+	Modal for setting matchmaking preferences
+	'''
+	context = {
+		'title': 'Preferences',
+	}
+	data = dict()
+
+	# Attempt to rate if data 'post'ed, or return the form
+	if request.method == 'POST':
+		form = SelectMatchmakingOptionsForm(request.POST, user=request.user)
+		if form.is_valid():
+			form.save()
+			data['form_is_valid'] = True
+		else:
+			data['form_is_valid'] = False
+	else:
+		form = SelectMatchmakingOptionsForm(user=request.user)
+
+	# Set the form to whichever form we are using
+	context['form'] = form
+	data['html_form'] = render_to_string('account/matchmaking_preferences.html',
+										context,
+										request=request
+										)
+	return JsonResponse(data)

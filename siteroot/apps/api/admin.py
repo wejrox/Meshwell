@@ -40,9 +40,6 @@ def banning_users1(self, request, queryset):
 		email_from = settings.EMAIL_HOST_USER
 		recipient_list = [obj.email]
 		send_mail( subject, message,email_from, recipient_list )
-		#obj.save()
-
-
 	self.message_user(request, "User is banned and Email has been sent")
 
 def banning_users(self, request, queryset):
@@ -55,7 +52,6 @@ def banning_users(self, request, queryset):
 		user.is_active = False
 		user.save()
 
-
 		# Get the report(s) for this user
 		user_reports = Report.objects.filter(user_reported=profile)
 
@@ -64,7 +60,7 @@ def banning_users(self, request, queryset):
 
 		banned_reasons = []
 
-		#import pdb; pdb.set_trace()
+		#import pdb; pdb.set_trace() ******DEBUGGING INPUT******
 		banned_user = profile.banned_profile.create(profile=profile)
 		reports = banned_user.profile.user_reported_report.all()
 		banned_user.save()
