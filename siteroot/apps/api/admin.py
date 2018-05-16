@@ -6,6 +6,12 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
+from django.template.loader import render_to_string
+from django.template.loader import get_template
+from django.template import Context
+from django.core.mail import EmailMessage
+
+
 
 
 
@@ -17,34 +23,38 @@ admin.site.register(Session)
 admin.site.register(Session_Profile)
 admin.site.register(Profile_Connected_Game_Account)
 admin.site.register(Feedback)
-#admin.site.register(Banned_User)
+
 
 #User Banning and emailing Function(CURRENTLY TESTING THIS)
-#def banning_users(user, request, queryset):
+def banning_users1(self, request, queryset):
 
-#	for obj in queryset:
-#		if hasattr(obj, 'user'):
+	for obj in queryset:
+		if hasattr(obj, 'user'):
 			# This object is a Profile, so lookup the user
-#			obj = obj.user
-#		obj.is_active = False
+			obj = obj.user
+		obj.is_active = False
 		#rep = get_report.report_reason
 		#banned_user = Banned_User.objects.create(profile=request.user.profile)
 		#banned_user.report_reason.add(request.user.profile.user_reported_report.all())
 		#banned_user = Banned_User.objects.create(profile=request.user.profile)
 		#banned_user.report_reason.set(request.user.profile.user_reported_report.all())
-#		banned_user = Banned_User.objects.create(profile=request.user.profile)
-#		banned_user.report_reason.add(request.user.profile.user_reported_report.all())
+		#banned_user = Banned_User.objects.create(profile=request.user.profile)
+		#banned_user.report_reason.add(request.user.profile.user_reported_report.all())
 		#banned_user.save()
 		#Sends ban email to user,does not send through the variables yet
-#		subject = 'Ban'
-#		message =   'You have been banned for being trash'
-#		email_from = settings.EMAIL_HOST_USER
-#		recipient_list = [obj.email]
-#		send_mail( subject, message,email_from, recipient_list )
+
+		#banned_user=Banned_User.objects.create(profile=request.user.profile,report_reason=request.user.profile.user_reported_report.all())
+		banned_user = Banned_User.objects.create(profile=request.user.profile)
+		banned_user.report_reason.add(request.user.profile.user_reported_report.all())
+		banned_user.save()
+		#message =   'You have been banned for Toxicity & or Bad SPORTSMANSHIP'
+		email_from = settings.EMAIL_HOST_USER
+		recipient_list = [obj.email]
+		send_mail( subject, message,email_from, recipient_list )
 		#obj.save()
 
 
-#	self.message_user(request, "User is banned and Email has been sent")
+	self.message_user(request, "User is banned and Email has been sent")
 
 def banning_users(self, request, queryset):
 
@@ -54,6 +64,8 @@ def banning_users(self, request, queryset):
 			profile = obj
 			user = obj.user
 		user.is_active = False
+		user.save()
+
 
 		# Get the report(s) for this user
 		user_reports = Report.objects.filter(user_reported=profile)
@@ -63,16 +75,29 @@ def banning_users(self, request, queryset):
 
 		banned_reasons = []
 
-		for report in user_reports:
-			ban_record = Banned_User.objects.create(profile=profile, report_reason=report) #date_banned=datetime.datetime.today())
+		#import pdb; pdb.set_trace()
+		banned_user = profile.banned_profile.create(profile=profile)
+		reports = banned_user.profile.user_reported_report.all()
+		banned_user.save()
+		for report in reports:
+			banned_user.report_reason.add(report)
 			banned_reasons.append(report.get_report_reason_display())
-			#report_reason.set(report.get_report_reason_display())
 
-			#banned_user.save()
+		def get_report_reason(self, obj):
+		#	return obj.banned_user.report_reason
+		#get_report_reason.short_description = 'Reason'
+			return "\n".join([r.report_reason for r in obj.report_reason.all()])
+
+
 		# Send the email
 		subject = 'Ban'
-		message = 'You have been banned for the following reasons: []'
-		message.format(','.join(banned_reasons))
+		message = '''Hello {},We are sorry to inform you that you have been banned from {},
+		for the following reasons: {}.
+		This will take place immediately.Thank you for understanding.
+
+		Regards,
+		The Meshwell Team
+		'''.format(user.username, "meshwell",banned_reasons )
 		email_from = settings.EMAIL_HOST_USER
 		recipient_list = [user.email]
 		send_mail( subject, message,email_from, recipient_list)
@@ -96,8 +121,11 @@ class ReportAdmin(admin.ModelAdmin):
 admin.site.register(Report, ReportAdmin)
 
 class ProfileAdmin(admin.ModelAdmin):
+	class Meta:
+		ordering = ['-total_reports',]
 
 	list_display = ('user', 'birth_date', 'sessions_played', 'total_reports', 'reason_reported_sent')
+	#list_filter = ('user','total_reports')
 	readonly_fields = (('sessions_played'),('birth_date'),('user'),('pref_server'),('teamwork_commends'),('skill_commends'),('sportsmanship_commends'),('communication_commends'),('discord_id'))#,'total_reports')
 	actions = ['ban1', 'unban1','email_ban']
 	ban1 = banning_users
@@ -126,6 +154,10 @@ admin.site.unregister(User)
 admin.site.register(User, MyUserAdmin)
 
 class Banned_UserAdmin(admin.ModelAdmin):
-	list_display = ('profile','profile')
+	fields = ['profile', 'report_reason']
+	list_display = ('profile','get_report_reason')
+
+	def get_report_reason(self, obj):
+		return "\n".join([r.report_reason for r in obj.report_reason.all()])
 
 admin.site.register(Banned_User, Banned_UserAdmin)

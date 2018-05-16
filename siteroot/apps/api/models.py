@@ -325,7 +325,8 @@ class Feedback(models.Model):
 #Banned Users model
 class Banned_User(models.Model):
 	def __str__(self):
-		return self.user.username
+		return str.join(str(self.profile) , str(self.report_reason.report_reason))
+		#return self.profile
 		#return str.join(str(self.profile), str(self.report_reason))
 
 	profile = models.ForeignKey(
@@ -336,11 +337,11 @@ class Banned_User(models.Model):
 		related_name='banned_profile'
 	)
 
-	report_reason = models.ForeignKey(
+	report_reason = models.ManyToManyField(
 		'Report',
-		on_delete=models.PROTECT,
+		#on_delete=models.PROTECT,
 		blank=True,
-		null=True,
+		#null=True,
 	)
 
 	date_banned = models.DateField(null=True, blank=False,)
