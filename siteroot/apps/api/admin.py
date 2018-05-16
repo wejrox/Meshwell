@@ -33,21 +33,10 @@ def banning_users1(self, request, queryset):
 			# This object is a Profile, so lookup the user
 			obj = obj.user
 		obj.is_active = False
-		#rep = get_report.report_reason
-		#banned_user = Banned_User.objects.create(profile=request.user.profile)
-		#banned_user.report_reason.add(request.user.profile.user_reported_report.all())
-		#banned_user = Banned_User.objects.create(profile=request.user.profile)
-		#banned_user.report_reason.set(request.user.profile.user_reported_report.all())
-		#banned_user = Banned_User.objects.create(profile=request.user.profile)
-		#banned_user.report_reason.add(request.user.profile.user_reported_report.all())
-		#banned_user.save()
-		#Sends ban email to user,does not send through the variables yet
-
-		#banned_user=Banned_User.objects.create(profile=request.user.profile,report_reason=request.user.profile.user_reported_report.all())
 		banned_user = Banned_User.objects.create(profile=request.user.profile)
 		banned_user.report_reason.add(request.user.profile.user_reported_report.all())
 		banned_user.save()
-		#message =   'You have been banned for Toxicity & or Bad SPORTSMANSHIP'
+		message =   'You have been banned for Toxicity & or Bad SPORTSMANSHIP'
 		email_from = settings.EMAIL_HOST_USER
 		recipient_list = [obj.email]
 		send_mail( subject, message,email_from, recipient_list )
