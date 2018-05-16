@@ -46,6 +46,7 @@ urlpatterns = [
     path('dashboard/edit_profile/', site_views.edit_profile, name='edit_profile'),
     path('dashboard/enter_queue/', site_views.enter_queue, name='enter_queue'),
     path('dashboard/exit_queue/', site_views.exit_queue, name='exit_queue'),
+    path('dashboard/matchmaking_preferences/', site_views.matchmaking_preferences, name='matchmaking_preferences'),
     path('dashboard/availability/<int:pk>/remove/', site_views.remove_availability, name='remove_availability'),
     path('dashboard/availability/add/', site_views.add_availability, name='add_availability'),
     path('dashboard/availability/edit/', site_views.edit_availability, name='edit_availability'),

@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 import requests, requests.auth, json, urllib.parse, datetime, math
-from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, RateSessionForm, LoginForm
+from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, RateSessionForm, LoginForm, SelectMatchmakingOptionsForm
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User, Group
@@ -1019,3 +1019,32 @@ def manual_matchmaking(request):
 		join_session(player_session, session, avail)
 		return redirect('edit_availability')
 	return render(request, 'mysite/manual_matchmaking_list.html', context)
+
+@login_required
+def matchmaking_preferences(request):
+	'''
+	Modal for setting matchmaking preferences
+	'''
+	context = {
+		'title': 'Preferences',
+	}
+	data = dict()
+
+	# Attempt to rate if data 'post'ed, or return the form
+	if request.method == 'POST':
+		form = SelectMatchmakingOptionsForm(request.POST, user=request.user)
+		if form.is_valid():
+			form.save()
+			data['form_is_valid'] = True
+		else:
+			data['form_is_valid'] = False
+	else:
+		form = SelectMatchmakingOptionsForm(user=request.user)
+
+	# Set the form to whichever form we are using
+	context['form'] = form
+	data['html_form'] = render_to_string('account/matchmaking_preferences.html',
+										context,
+										request=request
+										)
+	return JsonResponse(data)
