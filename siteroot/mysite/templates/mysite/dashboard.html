@@ -200,20 +200,19 @@
 							</div>
 							<!--/Preferences modal-->
 							<div class="matchmakingButtons">
-								<a href="{% url 'enter_queue' %}" type="button" class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="bottom"
-								 title="Use our algorithm to find other compatible players." style="font-weight: 100;">Smart Matchmaking</a>
-								<a href="{% url 'manual_matchmaking' %}" type="button" class="btn btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom"
-								 title="Select from a list of potential players you can play with. Compatibility metrics will be shown." style="font-weight: 100;">Manual Matchmaking</a>
-								<br>
-								<div class="text-center" style="padding-top:3pt;">
+								<a href="{% url 'enter_queue' %}" type="button" class="btn-danger btn-lg" data-toggle="tooltip" data-placement="bottom"
+								 title="Use our algorithm to find other compatible players." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Smart Matchmaking</a>
+								<a href="{% url 'manual_matchmaking' %}" type="button" class="btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom"
+								 title="Select from a list of potential players you can play with. Compatibility metrics will be shown." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Manual Matchmaking</a>
+								<div class="text-center" style="padding-top:1vh;">
 									<button type="button" class="btn btn-outline-secondary js-matchmaking-preferences" data-url="{% url 'matchmaking_preferences' %}" data-toggle="tooltip" data-placement="bottom"
-									title="Choose how you would like us to find you suitable matches." style="font-weight: 100;">Preferences</button>
+									title="Choose how you would like us to find you suitable matches." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Preferences</button>
 								</div>
 							</div>
 							{% else %}
 							<div class="matchmakingButtons">
-								<a href="{% url 'exit_queue' %}" type="button" class="btn btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom"
-								 title="Cancel your current search for a session." style="font-weight: 100;">Cancel Matchmaking</a>
+								<a href="{% url 'exit_queue' %}" type="button" class="btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom"
+								 title="Cancel your current search for a session." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Cancel Matchmaking</a>
 							</div>
 								<!--Show matching status-->
 								{% if queue.session %}
