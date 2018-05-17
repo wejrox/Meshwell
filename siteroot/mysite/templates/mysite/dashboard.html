@@ -401,28 +401,30 @@
 													<tr>
 														{% for key, value in prev_sessions.items %}
 														<td style="border: none;">
-															<img src="{{ value.session.game.image.url }}" height="50" width="50/>" <br>
+															<img src="{{ value.game.icon }}" height="50" width="50/>" <br>
 															<br> {{ value.session.start|date:'D d-m-Y' }}
 															<br> {{ value.session.start|date:'H:i' }} - {{ value.session.end_time|time:'H:i' }}
 														</td>
 														<td style="border: none;">
 															<div class="pscrollable">
 																<table class="table table-curved table-striped">
+																	{% for key, value in value.players.items %}
 																	<tr>
-																		<td style="border: none;">{{ username }}</td>
+																		<td style="border: none;">{{ value.name }}</td>
 																		<td style="border: none;" align="center">
-																			<img src="{% static 'css/images/dashboard/tw_icon.png' %}" width="20"> {{ value.profile.teamwork_commends }}
+																			<img src="{% static 'css/images/dashboard/tw_icon.png' %}" width="20"> {{ value.teamwork_commends }}
 																		</td>
 																		<td style="border: none;" align="center">
-																			<img src="{% static 'css/images/dashboard/cm_icon.png' %}" width="20"> {{ value.profile.communication_commends }}
+																			<img src="{% static 'css/images/dashboard/cm_icon.png' %}" width="20"> {{ value.communication_commends }}
 																		</td>
 																		<td style="border: none;" align="center">
-																			<img src="{% static 'css/images/dashboard/sl_icon.png' %}" width="20"> {{ value.profile.skill_commends }}
+																			<img src="{% static 'css/images/dashboard/sl_icon.png' %}" width="20"> {{ value.skill_commends }}
 																		</td>
 																		<td style="border: none;" align="center">
-																			<img src="{% static 'css/images/dashboard/ps_icon.png' %}" width="20"> {{ value.profile.sportsmanship_commends }}
+																			<img src="{% static 'css/images/dashboard/ps_icon.png' %}" width="20"> {{ value.sportsmanship_commends }}
 																		</td>
 																	</tr>
+																	{% endfor %}
 																</table>
 															</div>
 														</td>
