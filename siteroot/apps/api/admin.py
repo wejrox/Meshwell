@@ -37,15 +37,6 @@ def banning_users1(self, request, queryset):
 			obj = obj.user
 		obj.is_active = False
 		obj.save()
-
-		# Get the report(s) for this user
-		#user_reports = Report.objects.filter(user_reported=profile)
-
-		# Go through each report, in case there are multiples,
-		# add a record in the ban table
-
-		#banned_reasons = []
-
 		#import pdb; pdb.set_trace() ******DEBUGGING INPUT******
 		banned_user = profile.banned_profile.create(profile=profile)
 		reports = banned_user.profile.user_reported_report.all()
