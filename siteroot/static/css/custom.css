@@ -702,6 +702,10 @@ td.value{
   font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
 }
 
+[type=reset], [type=submit], button, html [type=button]{
+  -webkit-appearance: none;
+}
+
 /*Carousel*/
 .vertical-center {
   min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
