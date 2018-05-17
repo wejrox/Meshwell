@@ -5,10 +5,10 @@ body, html {
 
 body{
   background-color: #fff !important;
-  background-image: url("");
+  background-image: url("https://i.imgur.com/7YQP6C1.pngprofie");
   background-position: center;
-  background-size: 100%;
-  background-repeat: repeat-y;
+  background-size: 15%;
+  background-repeat: repeat;
 }
 
 @font-face {
@@ -27,6 +27,16 @@ body{
     font-weight: normal;
     font-style: normal;
 
+}
+
+@font-face {
+    font-family: 'ubuntulight';
+    src: url('/static/fonts/ubuntu-l/ubuntu-l-webfont.woff2') format('woff2'),
+         url('/static/fonts/ubuntu-l/ubuntu-l-webfont.woff') format('woff'),
+         url('fonts/ubuntu-l/ubuntu-l-webfont.woff2') format('woff2'),
+         url('fonts/ubuntu-l/ubuntu-l-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
 
 /*Index Page*/
@@ -426,7 +436,7 @@ section h1 {
   min-width: 820px;
   border: #cdcdcd 1px solid;
   border-radius: 10px;
-  background-color: whitesmoke;
+  background-color: white;
 }
 
 .profilePicture{
@@ -435,7 +445,7 @@ section h1 {
 .profileDetails{
   border: #cdcdcd 1px solid;
   border-radius: 10px;
-  background-color: whitesmoke;
+  background-color: white;
 }
 
 .discordCustom{
@@ -446,7 +456,7 @@ section h1 {
   width: 96%;
   display: block;
   color: #676767;
-  font-weight: 100;
+  padding-bottom: 2em;
 }
 
 .underline-game{
@@ -466,7 +476,6 @@ section h1 {
 .matchmakingButtons{
   margin: auto;
   margin-top: 2em;
-  margin-bottom: 1em;
 }
 
 .matchmakingInformation{
@@ -618,8 +627,9 @@ td.value{
   color: #676767;
 }
 
-.pscrollable {
-  height: 150px;
+/*Smaller scroll area*/
+.scrollable-sm {
+  height: 200px;
   overflow: auto;
   overflow-x: -moz-hidden-unscrollable;
 }
@@ -628,6 +638,18 @@ td.value{
   height: 500px;
   overflow: auto;
   overflow-x: -moz-hidden-unscrollable;
+}
+
+.rounded-sm{
+  border-radius: 0.5rem !important;
+}
+
+.rounded-md{
+  border-radius: 1rem !important;
+}
+
+.rounded-lg{
+  border-radius: 1.5rem !important;
 }
 
 /*Buttons*/
@@ -685,6 +707,15 @@ td.value{
 .btn-primary-alternative a{
   font-size: 2.25rem;
   text-decoration: none;
+}
+
+.btn-danger{
+  color: #fff;
+  font-family: ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;
+}
+
+[type=reset], [type=submit], button, html [type=button]{
+  -webkit-appearance: none;
 }
 
 /*Carousel*/
@@ -749,9 +780,9 @@ td.value{
     src: url("css/fonts/timeburner.eot");
     src:
     url("css/fonts/timeburner.woff") format("woff"),
-    url("{% static "fonts/timeburner.woff" %}") format("woff"),
-    url("{% static "fonts/timeburner.otf" %}") format("opentype"),
-    url("{% static "fonts/timeburner.svg#filename" %}") format("svg"),
+    url("{% static 'fonts/timeburner.woff' %}") format("woff"),
+    url("{% static 'fonts/timeburner.otf' %}") format("opentype"),
+    url("{% static 'fonts/timeburner.svg#filename' %}") format("svg");
 
   font-size: 24pt;
 }
