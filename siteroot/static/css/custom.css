@@ -7,8 +7,8 @@ body{
   background-color: #fff !important;
   background-image: url("https://i.imgur.com/7YQP6C1.pngprofie");
   background-position: center;
-  background-size: 100%;
-  background-repeat: repeat-y;
+  background-size: 15%;
+  background-repeat: repeat;
 }
 
 @font-face {
@@ -476,7 +476,6 @@ section h1 {
 .matchmakingButtons{
   margin: auto;
   margin-top: 2em;
-  margin-bottom: 1em;
 }
 
 .matchmakingInformation{
