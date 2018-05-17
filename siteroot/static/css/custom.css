@@ -5,7 +5,7 @@ body, html {
 
 body{
   background-color: #fff !important;
-  background-image: url("");
+  background-image: url("https://i.imgur.com/7YQP6C1.pngprofie");
   background-position: center;
   background-size: 100%;
   background-repeat: repeat-y;
@@ -436,7 +436,7 @@ section h1 {
   min-width: 820px;
   border: #cdcdcd 1px solid;
   border-radius: 10px;
-  background-color: whitesmoke;
+  background-color: white;
 }
 
 .profilePicture{
@@ -445,7 +445,7 @@ section h1 {
 .profileDetails{
   border: #cdcdcd 1px solid;
   border-radius: 10px;
-  background-color: whitesmoke;
+  background-color: white;
 }
 
 .discordCustom{
@@ -456,7 +456,7 @@ section h1 {
   width: 96%;
   display: block;
   color: #676767;
-  font-weight: 100;
+  padding-bottom: 2em;
 }
 
 .underline-game{
