@@ -372,26 +372,19 @@
 									Session History
 								</div>
 							</div>
-							<div class="row">
-								<a href="https://www.google.com">
-									<div class="col-md-2 text-center d-flex">
-										<img class="mx-auto my-auto" src="{% static 'css/images/dashboard/ht.png' %}" height="90px" style="border-radius: 12px;">
-									</div>
-								</a>
-								<!--Rate session modal-->
-								<div class="modal fade" id="modal-rate-session">
-									<div class="modal-dialog">
-										<div class="modal-content">
-											<!--Dynamically created-->
-										</div>
+							<!--Rate session modal-->
+							<div class="modal fade" id="modal-rate-session">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<!--Dynamically created-->
 									</div>
 								</div>
 							</div>
-							<div class="container scrollable">
 							<!--/Rate session modal-->
+							<div class="container scrollable">
 							<!--Previous Sessions-->
 							{% for key, value in prev_sessions.items %}
-							<div class="row shadow p-3 m-1 rounded-md">
+							<div class="row shadow p-3 m-3 rounded-md">
 								<div class="col p-0">
 									<div>
 									<img class="img-fluid rounded-md" src="{{ value.game.icon }}" height=100pt width=100pt/> 
@@ -408,16 +401,24 @@
 											<tr>
 												<td style="border: none;">{{ value.name }}</td>
 												<td style="border: none;" align="center">
-													<img src="{% static 'css/images/dashboard/tw_icon.png' %}" width="20"> {{ value.teamwork_commends }}
+													<img src="{% static 'css/images/dashboard/tw_icon.png' %}" width="20" data-toggle="tooltip" data-placement="bottom"
+													title="Teamwork" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
+													{{ value.teamwork_commends }}
 												</td>
 												<td style="border: none;" align="center">
-													<img src="{% static 'css/images/dashboard/cm_icon.png' %}" width="20"> {{ value.communication_commends }}
+													<img src="{% static 'css/images/dashboard/cm_icon.png' %}" width="20"data-toggle="tooltip" data-placement="bottom"
+													title="Communication" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
+													{{ value.communication_commends }}
 												</td>
 												<td style="border: none;" align="center">
-													<img src="{% static 'css/images/dashboard/sl_icon.png' %}" width="20"> {{ value.skill_commends }}
+													<img src="{% static 'css/images/dashboard/sl_icon.png' %}" width="20"data-toggle="tooltip" data-placement="bottom"
+													title="Skill" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
+													{{ value.skill_commends }}
 												</td>
 												<td style="border: none;" align="center">
-													<img src="{% static 'css/images/dashboard/ps_icon.png' %}" width="20"> {{ value.sportsmanship_commends }}
+													<img src="{% static 'css/images/dashboard/ps_icon.png' %}" width="20"data-toggle="tooltip" data-placement="bottom"
+													title="Sportsmanship" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
+													{{ value.sportsmanship_commends }}
 												</td>
 											</tr>
 											{% endfor %}
@@ -427,7 +428,9 @@
 								<div class="col p-0">
 									<!-- Show the rating they gave the session, or allow them to rate it -->
 									{% if value.session.rating %}
-										<b>{{ value.session.rating }}/5</b>
+									<div class="text-center">
+										<b>Your rating: {{ value.session.rating }}/5</b>
+									</div>
 									{% else %}
 										<button class="btn btn-info btn-sm btn-block js-rate-session" data-url="{% url 'rate_session' pk=value.session.id %}">Rate</button>
 									{% endif %}
