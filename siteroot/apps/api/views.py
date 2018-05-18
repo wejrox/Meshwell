@@ -1,7 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from ..api import serializers
-from ..api.models import Profile, Availability, Game, Game_Role, Session, Session_Profile, Report, Profile_Connected_Game_Account, Feedback
+from ..api.models import Profile, Availability, Game, Game_Role, Session, Session_Profile, Report, Profile_Connected_Game_Account, Feedback,Banned_User
 
 # API Methods
 class ProfileViewSet(viewsets.ModelViewSet):
@@ -64,3 +64,7 @@ class Profile_Connected_Game_AccountViewSet(viewsets.ModelViewSet):
 class FeedbackViewSet(viewsets.ModelViewSet):
 	queryset = Feedback.objects.all()
 	serializer_class = serializers.FeedbackSerializer
+
+class Banned_UserViewSet(viewsets.ModelViewSet):
+	queryset = Banned_User.objects.all()
+	serializer_class = serializers.Banned_UserSerializer

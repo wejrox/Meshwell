@@ -16,14 +16,12 @@ from django.core.signals import request_finished
 from django.dispatch import receiver
 from django.urls import reverse, resolve
 from django.utils import timezone
-
 from django.core.mail import send_mail
-
 from django.template.loader import render_to_string
 
 # Import settings
 from django.conf import settings
-from mysite import private_settings
+#from mysite import private_settings
 
 # Receiver to create a profile if the user doesn't have one for some reason
 @receiver(user_logged_in)
@@ -108,9 +106,6 @@ def dashboard(request):
 	prev_sessions.{id}.session_profile_id
 	prev_sessions.{id}.game.<icon/name>
 	prev_sessions.{id}.session.<start/end_time/viability/rating>
-	prev_sessions.{id}.session.end_time
-	prev_sessions.{id}.session.viability
-	prev_sessions.{id}.session.rating
 	prev_sessions.{id}.players.{id}.<name/teamwork_commends/sportsmanship_commends/skill_commends/communication_commends>
 	queue.session.<game_name, start, end_time, viability>
 	'''
@@ -146,7 +141,7 @@ def dashboard(request):
 		# Find the session profiles, viability, game details
 		session_profiles = Session_Profile.objects.filter(session=session)
 		user_session_profile = session_profiles.filter(profile=request.user.profile)
-		session_viability = calc_match_viablity(request.user.profile, session)
+		session_viability = math.floor(calc_match_viablity(request.user.profile, session) * 100)
 		game_icon = session.game.image.url
 		game_name = session.game.name
 		start_time = session.start

@@ -4,7 +4,7 @@ from django.contrib.auth import validators
 from django.forms import ValidationError
 from django.db import IntegrityError
 from django.utils.translation import gettext as _
-from ..api.models import Profile, Availability, Game, Game_Role, Session, Session_Profile, Report, Profile_Connected_Game_Account, Feedback
+from ..api.models import Profile, Availability, Game, Game_Role, Session, Session_Profile, Report, Profile_Connected_Game_Account, Feedback, Banned_User
 from django.contrib.auth.hashers import check_password, make_password
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -26,7 +26,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
 	class Meta:
 		model = Profile
-		fields = '__all__' 
+		fields = '__all__'
 
 	# Create a new User and Profile
 	def create(self, validated_data):
@@ -130,4 +130,8 @@ class Profile_Connected_Game_AccountSerializer(serializers.HyperlinkedModelSeria
 class FeedbackSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Feedback
+		fields = '__all__'
+class Banned_UserSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Banned_User
 		fields = '__all__'

@@ -18,3 +18,4 @@ router.register(r'session_profile', views.Session_ProfileViewSet, base_name='ses
 router.register(r'report', views.ReportViewSet, base_name='report')
 router.register(r'profile_connected_game_account', views.Profile_Connected_Game_AccountViewSet, base_name='profile_connected_game_account')
 router.register(r'feedback', views.FeedbackViewSet, base_name='feedback')
+router.register(r'banned_user', views.Banned_UserViewSet, base_name='banned_user')
