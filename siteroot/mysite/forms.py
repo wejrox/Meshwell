@@ -128,7 +128,6 @@ class FeedbackForm(forms.ModelForm):
 	class Meta:
 		model=Feedback
 		exclude=[]
-
 # User login
 class LoginForm(forms.Form):
 	username = forms.CharField(help_text="Enter your username.")

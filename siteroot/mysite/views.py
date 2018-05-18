@@ -281,6 +281,31 @@ def feedback(request):
 	else:
 		return render(request, 'mysite/feedback.html', context)
 
+#views for the Contact US form page
+def contact_us(request):
+	title = 'Contact Us'
+	form = FeedbackForm(request.POST)
+	context = {
+		'title': title,
+		'form': form,
+		'message': 'Please enter your details and we will get back to you very soon!',
+		'success': 'False',
+	}
+	if request.method == 'POST':
+		if form.is_valid():
+			#saving details from the feedback form
+			instance = form.save(commit=False)
+			instance.save()
+
+			context = {
+				'title': 'Message submittted',
+				'message': 'Thank you!',
+				'success': 'True',
+			}
+			return render(request, 'mysite/contact_us.html', context)
+	else:
+		return render(request, 'mysite/contact_us.html', context)
+
 #views for the registration page
 def register(request):
 	# Ensure there is nobody logged in

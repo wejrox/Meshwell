@@ -33,6 +33,7 @@ urlpatterns = [
     path('about-us/', site_views.about_us, name='about-us'),
     path('terms-of-service/', site_views.terms_of_service, name='terms-of-service'),
     path('privacy-policy/', site_views.privacy_policy, name='privacy-policy'),
+    path('contact-us/', site_views.contact_us, name='contact-us'),
     # Account pages
     path('dashboard/', site_views.dashboard, name='dashboard'),
     path('dashboard/profile/', site_views.profile, name='profile'),
