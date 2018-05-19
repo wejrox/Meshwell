@@ -8,11 +8,11 @@
 			<div class="col-lg-3">
 				<div class="profileColumn1">
 					<div class="row-fluid">
-						<div class="profilePicture img-thumbnail">
+						<div class="profilePicture img-thumbnail shadow">
 							<!--Profile Picture-->
 							<!-- Hover Effect 12 Code by Mike Young (https://miketricking.github.io/bootstrap-image-hover) -->
 							<div class="hovereffect">
-								<img class="img-responsive" src="{% static 'css/images/dashboard/pp.png' %}" alt="Profile Picture Placeholder">
+								<img class="img-responsive" src="{% static 'css/images/dashboard/pp.png' %}" alt="Profile Picture Placeholder" />
 								<div class="overlay">
 									<p>
 										<a href="#">Change Profile Picture</a>
@@ -25,10 +25,10 @@
 					</div>
 					<br>
 					<div class="row-fluid">
-						<div class="profileDetails">
+						<div class="profileDetails shadow">
 							<div class="profileDetailsContent">
 								<div style="text-align:center" class="underline">
-									<span class="pull-left" style="float: left;, margin-top: 1vh;">
+									<span class="pull-left" style="float: left; margin-top: 1vh;">
 										Personal
 									</span>
 									<span style="color: #fff;">
@@ -173,7 +173,7 @@
 					<div class="row-fluid">
 						<!--Discord Widget-->
 						<div class="discordCustom">
-							<div class="customWidget">
+							<div class="customWidget shadow">
 								<iframe src="https://discordapp.com/widget?id=418990653641588736&theme=light" width="100%" height="500" allowtransparency="true"
 								 frameborder="0"></iframe>
 							</div>
@@ -185,7 +185,7 @@
 			<!--/Profile and Discord-->
 
 			<div class="col col-lg-7">
-				<div class="profileColumn2">
+				<div class="profileColumn2 shadow">
 					<div class="container">
 						<!--Matchmaking-->
 						<div class="row">
@@ -214,9 +214,10 @@
 								<a href="{% url 'exit_queue' %}" type="button" class="btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom"
 								 title="Cancel your current search for a session." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Cancel Matchmaking</a>
 							</div>
-								<!--Show matching status-->
-								{% if queue.session %}
-							</div>
+						</div>
+						<div class="row">
+							<!--Show matching status-->
+							{% if queue.session %}
 								<div class="text-center">
 									<p>
 										<b>You have found a session!</b> <br>
@@ -228,7 +229,7 @@
 									</p>
 								</div>
 								{% else %}
-								<div>
+								<div class="text-center">
 									<p>
 										Searching for a session...<br>
 										Time elapsed: X seconds<br>
@@ -285,8 +286,8 @@
 										</table>
 									</div>
 								</div>
-								<div class="row" style="display: flex;justify-content:center;align-items:center;">
-								    <button class="btn btn-info js-connect-account" data-url="/dashboard/connected_accounts/add/">Connect Account</button>
+								<div class="row mx-0">
+								    <button class="btn btn-info btn-block js-connect-account" data-url="/dashboard/connected_accounts/add/">Connect Account</button>
 								</div>
 							</div>
 						</div>
@@ -346,8 +347,8 @@
 										</table>
 									</div>
 								</div>
-								<div class="row" style="display: flex;justify-content:center;align-items:center;">
-								    <button class="btn btn-info js-add-availability" data-url="{% url 'add_availability' %}">Add New Availability</button>
+								<div class="row mx-0">
+								    <button class="btn btn-info btn-block js-add-availability" data-url="{% url 'add_availability' %}">Add New Availability</button>
 								</div>
 							</div>
 						</div>

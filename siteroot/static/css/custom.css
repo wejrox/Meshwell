@@ -629,7 +629,6 @@ td.value{
 .scrollable-sm {
   height: 200px;
   overflow: auto;
-  overflow-x: -moz-hidden-unscrollable;
 }
 
 .scrollable{
