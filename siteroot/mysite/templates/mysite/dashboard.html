@@ -254,15 +254,10 @@
 							<div class="container">
 								<div class="row">
 									<div class="customTableTitle">
-										Connected Game Account
+										<img src="{% static 'css/images/dashboard/cn.png' %}" height="30px" style="border-radius: 12px;"> Connected Game Account
 									</div>
 								</div>
 								<div class="row">
-									<a href="{% url 'connect_account' %}">
-										<div class="col-md-2 text-center d-flex">
-											<img class="mx-auto my-auto" src="{% static 'css/images/dashboard/cn.png' %}" height="90px" style="border-radius: 12px;">
-										</div>
-									</a>
 									<div class="col col-lg-10">
 										<table class="table table-curved table-striped">
 											<thead class="thead-dark">
@@ -320,15 +315,10 @@
 							<div class="container">
 								<div class="row">
 									<div class="customTableTitle">
-										Availabilities
+										<img src="{% static 'css/images/dashboard/av.png' %}" height="30px" style="border-radius: 12px;"> Availabilities
 									</div>
 								</div>
 								<div class="row">
-									<a href="{% url 'add_availability' %}">
-										<div class="col-md-2 text-center d-flex">
-											<img class="mx-auto my-auto" src="{% static 'css/images/dashboard/av.png' %}" height="90px" style="border-radius: 12px;">
-										</div>
-									</a>
 									<div class="col col-lg-10">
 										<table class="table table-curved table-striped">
 											<thead class="thead-dark">
@@ -369,7 +359,7 @@
 						<div class="container">
 							<div class="row">
 								<div class="customTableTitle">
-									Session History
+									<img src="{% static 'css/images/dashboard/ht.png' %}" height="30px" style="border-radius: 12px;"> Session History
 								</div>
 							</div>
 							<!--Rate session modal-->
@@ -384,7 +374,7 @@
 							<div class="container scrollable">
 							<!--Previous Sessions-->
 							{% for key, value in prev_sessions.items %}
-							<div class="row shadow p-3 m-3 rounded-md">
+							<div class="row shadow p-3 m-3 rounded-md border">
 								<div class="col p-0">
 									<div>
 									<img class="img-fluid rounded-md" src="{{ value.game.icon }}" height=100pt width=100pt/> 
