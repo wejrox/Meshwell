@@ -258,8 +258,8 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col col-lg-10">
-										<table class="table table-curved table-striped">
+									<div class="col col-lg-12">
+										<table class="table table-curved table-striped shadow">
 											<thead class="thead-dark">
 												<tr>
 													<th scope="col">Game Name</th>
@@ -282,11 +282,11 @@
 												</tr>
 												{% endfor %}
 											</tbody>
-											<tfoot>
-												<td><button class="btn btn-info js-connect-account" data-url="{% url 'connect_account' %}">Connect Account</button></td>
-											</tfoot>
 										</table>
 									</div>
+								</div>
+								<div class="row" style="display: flex;justify-content:center;align-items:center;">
+								    <button class="btn btn-info js-connect-account" data-url="/dashboard/connected_accounts/add/">Connect Account</button>
 								</div>
 							</div>
 						</div>
@@ -319,8 +319,8 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col col-lg-10">
-										<table class="table table-curved table-striped">
+									<div class="col col-lg-12">
+										<table class="table table-curved table-striped shadow">
 											<thead class="thead-dark">
 												<tr>
 													<th scope="col">Day</th>
@@ -343,13 +343,11 @@
 												</tr>
 												{% endfor %}
 											</tbody>
-											<tfoot>
-												<span>
-												<td><button class="btn btn-info js-add-availability" data-url="{% url 'add_availability' %}">Add New Availability</button></td>
-												</span>
-											</tfoot>
 										</table>
 									</div>
+								</div>
+								<div class="row" style="display: flex;justify-content:center;align-items:center;">
+								    <button class="btn btn-info js-add-availability" data-url="{% url 'add_availability' %}">Add New Availability</button>
 								</div>
 							</div>
 						</div>
