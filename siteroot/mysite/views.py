@@ -788,9 +788,7 @@ def is_time_acceptable(session, availability):
 
 	# To reach here, the session isn't within our availability and it doesn't overlap
 	return False
-
-# MACHINE LEARNING
-def reorganise_sessions
+	
 # Handles anything that must happen when availability is removed via API
 @login_required
 def remove_availability(request, pk):
