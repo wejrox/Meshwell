@@ -1,4 +1,4 @@
-from apps.api.models import Profile, Profile_Connected_Game_Account, Availability, Session, Session_Profile, Game
+from apps.api.models import Profile, Profile_Connected_Game_Account, Availability, Session, Session_Profile, Game, Report
 from rest_framework import viewsets
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
@@ -640,6 +640,8 @@ def get_suitable_sessions(profile):
 	# All the sessions which meet basic requirements (mmr, time/day, playlist, game)
 	viable_sessions = []
 
+	player_reports = Report.objects.filter(sent_by=profile)
+
 	# Get any session that matches the availability given (1 hour min.)
 	for avail in user_availabilities:
 		# The value of the days for filtering by day
@@ -681,6 +683,10 @@ def get_suitable_sessions(profile):
 				suitable = True
 				# Check if their MMR is within the range we want
 				for player_s in player_sessions:
+					# Cancel if player has reported them before
+					if player_reports.filter(user_reported=player_s.profile).first() is not None:
+						suitable = False
+						break
 					prof_acc = Profile_Connected_Game_Account.objects.filter(profile=player_s.profile, game=session.game).first()
 					# Cancel if mmr out of range
 					if session.competitive:
@@ -698,6 +704,7 @@ def get_suitable_sessions(profile):
 	# Check existence
 	if len(viable_sessions) < 1:
 		return None
+
 	# Add any sessions that meet viability requirements
 	sorted_sessions = []
 	for session in viable_sessions:
@@ -716,7 +723,7 @@ def get_suitable_sessions(profile):
 	# Exhausted all availabilities and no sessions were matching criteria
 	return sorted_sessions
 
-# THE ACTUAL ALGORITHMIC CHECKS
+# MATCHMAKING ALGORITHM
 # Calculates how viable a session is for your current profile's weighting
 # (commendations create a % viability)
 # sum(each_player:(c1/tsp*w1)+(c2/tsp*w2)+(c3/tsp*w3)+(c4/tsp*w4)) / pc
@@ -786,6 +793,8 @@ def is_time_acceptable(session, availability):
 	# To reach here, the session isn't within our availability and it doesn't overlap
 	return False
 
+# MACHINE LEARNING
+def reorganise_sessions
 # Handles anything that must happen when availability is removed via API
 @login_required
 def remove_availability(request, pk):
