@@ -695,7 +695,7 @@ def get_suitable_sessions(profile):
 	for session in viable_sessions:
 		viability = calc_match_viablity(profile, session[0])
 		# Machine learning, disable on production due to Free Tier
-		recommended = get_match_recommended(profile, session[0])
+		recommended = is_match_recommended(profile, session[0])
 		if viability > min_accepted_viability:
 			sorted_sessions.append([viability, session, recommended])
 
@@ -768,12 +768,26 @@ def calc_match_viablity(user_profile, session):
 
 	return averaged_viability
 
-def get_match_recommended(profile, session[0]):
+def is_match_recommended(profile, session):
 	'''
-	Decides if a match is recommended based on previous match experiences 
-	with players in the session.
+	Decides how to recommend a match based on previous encounters with players
 	'''
-	return None
+	recommend_level = 0
+	# Get sessions the profile has rated
+	prev_session_profiles = Session_Profile.objects.filter(profile=profile).exclude(rating=None)
+	profiles = ()
+	for sp in prev_session_profiles:
+		profiles.append(sp.profile)
+
+	# Get players in the session given and that the user has rated
+	session_connected_players = Session_Profile.objects.filter(session=session, profile__in=profiles)
+
+	# Check each player and move up or down recommendation based on how the session they were in was rated
+	if len(session_connected_players) > 0:
+		for p in session_connected_players:
+			pass
+			
+	return recommend_level
 
 # Checks if the time is at least an hour inside availability
 # Returns True if so, else False
@@ -788,7 +802,7 @@ def is_time_acceptable(session, availability):
 
 	# To reach here, the session isn't within our availability and it doesn't overlap
 	return False
-	
+
 # Handles anything that must happen when availability is removed via API
 @login_required
 def remove_availability(request, pk):
