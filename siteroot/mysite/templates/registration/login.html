@@ -1,7 +1,7 @@
 <!-- Modal -->
 {% load crispy_forms_tags %}
 
-<form method="post" action="{% url 'login' %}" class="js-login-form">
+<form method="post" action="{% url 'login_modal' %}" class="js-login-form">
 	{% csrf_token %}
 	<div class="modal-header">
 		<h5 class="modal-title" id="exampleModalLongTitle">Enter Credentials</h5>

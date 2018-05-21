@@ -324,7 +324,27 @@ def edit_profile(request):
 										)
 	return JsonResponse(data)
 
-def a_login(request):
+def login_custom(request):
+	'''
+	Returns a page for logging in
+	'''
+	next = request.POST.get('next', request.GET.get('next', ''))
+	if request.method == 'POST':
+		form = LoginForm(request.POST)
+		if form.is_valid():
+			user = authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
+			if user is not None:
+				login(request, user)
+				if next:
+					return redirect(next)
+				return redirect('dashboard')
+	else:
+		form = LoginForm()
+
+	context = {'form': form}
+	return render(request, 'registration/login_static.html', context)
+
+def login_modal(request):
 	'''
 	Returns a form for logging in, in JSON format.
 	Displayed in Modal
@@ -1058,6 +1078,7 @@ def discord_put_user_on_server(access_token, discord_id):
 		return False
 	return True
 
+@login_required
 def manual_matchmaking(request):
 	'''
 	User selects from a list of current sessions, given the viability
