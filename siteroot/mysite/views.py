@@ -37,13 +37,11 @@ def index(request):
 	'''
 	Page displaying an overview of the service
 	'''
-	data = retrieve_data('game')
+	data = Game.objects.all()
 
 	context = {'games':{}}
-	if data:
-		for game in data:
-			g = { 'name':game['name'], 'description':game['description'] }
-			context['games'][game['name']] = g
+	for game in data:
+		context['games'][game.name] = game
 
 	# Give back the context to the index page
 	return render(request, 'mysite/index.html', context)
@@ -695,7 +693,7 @@ def get_suitable_sessions(profile):
 	for session in viable_sessions:
 		viability = calc_match_viablity(profile, session[0])
 		# Machine learning, disable on production due to Free Tier
-		recommended = is_match_recommended(profile, session[0])
+		recommended = get_match_recommendation_level(profile, session[0])
 		if viability > min_accepted_viability:
 			sorted_sessions.append([viability, session, recommended])
 
@@ -768,25 +766,36 @@ def calc_match_viablity(user_profile, session):
 
 	return averaged_viability
 
-def is_match_recommended(profile, session):
+def get_match_recommendation_level(profile, session):
 	'''
 	Decides how to recommend a match based on previous encounters with players
 	'''
 	recommend_level = 0
 	# Get sessions the profile has rated
 	prev_session_profiles = Session_Profile.objects.filter(profile=profile).exclude(rating=None)
-	profiles = ()
+	# Cancel if our user hasn't played before
+	if len(prev_session_profiles) == 0:
+		return 0
+
+	# Store the profiles
+	user_profiles = ()
 	for sp in prev_session_profiles:
-		profiles.append(sp.profile)
+		user_profiles.append(sp.profile)
 
 	# Get players in the session given and that the user has rated
-	session_connected_players = Session_Profile.objects.filter(session=session, profile__in=profiles)
+	session_connected_players = Session_Profile.objects.filter(session=session, profile__in=user_profiles)
 
 	# Check each player and move up or down recommendation based on how the session they were in was rated
-	if len(session_connected_players) > 0:
-		for p in session_connected_players:
-			pass
-			
+	for p in session_connected_players:
+		# Get the queuing users session_profile to check how they rated it
+		user_profile = prev_session_profiles.objects.filter(session=p.session).first()
+		if user_profile is not None:
+			# Move up or down based on rating
+			if user_profile.rating > 3:
+				recommend_level += 1
+			elif user_profile.rating < 3:
+				recommend_level -= 1
+
 	return recommend_level
 
 # Checks if the time is at least an hour inside availability
