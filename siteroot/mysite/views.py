@@ -1,4 +1,4 @@
-from apps.api.models import Profile, Profile_Connected_Game_Account, Availability, Session, Session_Profile, Game
+from apps.api.models import Profile, Profile_Connected_Game_Account, Availability, Session, Session_Profile, Game, Report
 from rest_framework import viewsets
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
@@ -21,77 +21,31 @@ from django.template.loader import render_to_string
 
 # Import settings
 from django.conf import settings
-#from mysite import private_settings
+from mysite import private_settings
 
-# Receiver to create a profile if the user doesn't have one for some reason
 @receiver(user_logged_in)
 def auto_profile(sender, request, user, **kwargs):
+	'''
+	Automatically creates a profile when a user logs in, if it doesn't already exist.
+	Should only happen in testing, when someone manually adds a user on the database.
+	'''
 	profile = Profile.objects.filter(user=user.id).first()
 	if not profile:
 		profile = Profile.objects.create(user=user)
 
-# Gets the object representation of a given url
-def retrieve_obj(url):
-	path = urllib.parse.urlparse(url).path
-	resolved_func, unused_args, resolved_kwargs = resolve(path)
-	return resolved_func.cls().get_queryset().get(id=resolved_kwargs['pk'])
-
-# Method to get data from INTERNAL API (Meshwell API)
-# Takes a table name, and parameters in the form of 'username=root' or similar
-def retrieve_data(table, *params):
-	url = 'http://127.0.0.1/api/'+table+'/?format=json'
-	# Add the additional parameters
-	for string in params:
-		url += '&'+string
-
-	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
-	response = requests.get(url, headers=headers)
-	if response.ok:
-		data = response.json()
-		return data
-	return None
-
-# Gets data from API given the direct URL
-def retrieve_data_url(url):
-	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
-	response = requests.get(url, headers=headers)
-	if response.ok:
-		data = response.json()
-		return data
-	return None
-
-# Deletes data from the database using the INTERNAL API (Meshwell API)
-# Takes an API url address to delete
-def delete_data(url):
-	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
-	response = requests.delete(url, headers=headers)
-
-	if response.ok:
-		print('deleted the entry')
-		return True
-	else:
-		print('couldn\'t unlink the entry')
-		print(response.status_code)
-		return False
-
-# Index page/Landing page
 def index(request):
-	data = retrieve_data('game')
+	'''
+	Page displaying an overview of the service
+	'''
+	data = Game.objects.all()
 
 	context = {'games':{}}
-	if data:
-		for game in data:
-			g = { 'name':game['name'], 'description':game['description'] }
-			context['games'][game['name']] = g
+	for game in data:
+		context['games'][game.name] = game
 
 	# Give back the context to the index page
 	return render(request, 'mysite/index.html', context)
 
-# Terms of Service
-def tos(request):
-	return render(request, 'mysite/tos.html')
-
-# User dashboard
 @login_required
 def dashboard(request):
 	'''
@@ -198,9 +152,12 @@ def dashboard(request):
 
 	return render(request, 'mysite/dashboard.html', context)
 
-#views for the profile page
 @login_required
 def profile(request):
+	'''
+	OBSELETE
+	Page listing profile details
+	'''
 	headers = { 'Authorization':'Token ' + settings.API_TOKEN }
 	profile = Profile.objects.filter(user=request.user.id).first()
 	if not profile:
@@ -224,40 +181,50 @@ def profile(request):
 	}
 	return render(request, 'mysite/profile.html', context)
 
-# About us
 def about_us(request):
+	'''
+	Page describing the service and the team
+	'''
 	context = {
 		'title':'About Us',
 		'message':'The About Us page for Meshwell.',
 	}
 	return render(request, 'mysite/about_us.html', context)
 
-# Terms of Service
 def terms_of_service(request):
+	'''
+	Page describing our terms of service, linked to from register page
+	'''
 	context = {
 		'title':'Terms of Service',
 		'message':'Terms of service page for Meshwell.',
 	}
 	return render(request, 'mysite/terms_of_service.html', context)
 
-# Privacy Policy
 def privacy_policy(request):
+	'''
+	Page describing our privacy policy
+	'''
 	context = {
 		'title':'Privacy Policy',
 		'message':'The privacy policy for Meshwell.',
 	}
 	return render(request, 'mysite/privacy_policy.html', context)
 
-# Catalog of games
 def catalog(request):
+	'''
+	Page listing the games we support
+	'''
 	context = {
 		'title':'Games Catalog',
 		'message':'This is a stub page for our games catalog. No functionality has been added yet.',
 	}
 	return render(request, 'mysite/catalog.html', context)
 
-#views for the feedback form page
 def feedback(request):
+	'''
+	Page for submitting feedback to the team
+	'''
 	title = 'Feedback'
 	form = FeedbackForm(request.POST)
 	context = {
@@ -281,8 +248,10 @@ def feedback(request):
 	else:
 		return render(request, 'mysite/feedback.html', context)
 
-#views for the Contact US form page
 def contact_us(request):
+	'''
+	Page for submitting a contact request
+	'''
 	title = 'Contact Us'
 	form = FeedbackForm(request.POST)
 	context = {
@@ -306,8 +275,10 @@ def contact_us(request):
 	else:
 		return render(request, 'mysite/contact_us.html', context)
 
-#views for the registration page
 def register(request):
+	'''
+	Page for user signup
+	'''
 	# Ensure there is nobody logged in
 	if request.user.is_authenticated:
 		return redirect('dashboard')
@@ -327,9 +298,12 @@ def register(request):
 	# Return the form if the form isn't valid or user just entered page
 	return render(request, 'registration/register.html', {'form':form, 'title':title})
 
-#Views for Edit Profile page
 @login_required
 def edit_profile(request):
+	'''
+	Returns a form for editing profile, in JSON format.
+	Displayed in Modal
+	'''
 	data = dict()
 	context = {'title':'Edit Profile'}
 	if request.method == 'POST':
@@ -350,8 +324,11 @@ def edit_profile(request):
 										)
 	return JsonResponse(data)
 
-# Login. Implemented here to prevent logged in users from accessing the page
 def a_login(request):
+	'''
+	Returns a form for logging in, in JSON format.
+	Displayed in Modal
+	'''
 	data = dict()
 	data['user_inactive'] = False
 	if request.method == 'POST':
@@ -375,11 +352,17 @@ def a_login(request):
 # Logging out. Currently loads a page. Recommend logging out to open a popup box that the user must click 'OK' to and be redirected to index.
 @login_required
 def a_logout(request):
+	'''
+	Logs out the current user, redirects to index page
+	'''
 	logout(request)
 	return redirect(reverse('index'))
 
 @login_required
 def deactivate_user(request):
+	'''
+	Prompts user to confirm details before deactivating their account
+	'''
 	form = DeactivateUser()
 	context = {
 		'title': 'Confirm Details',
@@ -389,9 +372,6 @@ def deactivate_user(request):
 	}
 	if request.method == 'POST':
 		form = DeactivateUser(request.POST)
-		#using built-in Authentication Form
-		#username = request.POST['username']
-		#password = request.POST['password']
 
 		if form.is_valid():
 			# Authenticate the user details they entered
@@ -414,6 +394,10 @@ def deactivate_user(request):
 
 @login_required
 def connect_account(request):
+	'''
+	Returns a form for connecting account, in JSON format.
+	Displayed in Modal
+	'''
 	context = {
 		'title':'Connect Game Account',
 	}
@@ -438,6 +422,9 @@ def connect_account(request):
 
 @login_required
 def remove_connected_account(request, pk):
+	'''
+	Removes the connection to the given game account for the player currently logged in
+	'''
 	acc = Profile_Connected_Game_Account.objects.filter(pk=pk).first()
 	if acc:
 		if acc.profile == request.user.profile:
@@ -479,16 +466,11 @@ def connected_accounts(request):
 
 	return render(request, 'mysite/connected_accounts.html', context)
 
-# Remove the record of the connected account
-@login_required
-def unlink_account(profile, game_name):
-	record = retrieve_data('profile_connected_game_account', 'profile='+str(profile.id), 'game='+game_name)
-	if record:
-		delete_data(record[0]['url'])
-
-# Gets the player details specified, or None if there are multiple entries
-# Decides on region based on the profiles region. (Perhaps change later?)
 def get_r6siege_ranks(pref_server, player_tag):
+	'''
+	Gets the player details specified, or None if there are multiple entries
+	Decides on region based on the profiles region.
+	'''
 	url = 'https://r6db.com/api/v2/players?name=' + player_tag
 	headers = { 'X-App-Id':'MyRequest' }
 	response = requests.get(url, headers=headers)
@@ -544,8 +526,6 @@ def enter_queue(request):
 		else:
 			session = None
 
-	# Testing, don't run the rest
-#	return redirect('dashboard')
 
 	# Suitable session?
 	if session:
@@ -597,9 +577,12 @@ def join_session(session_profile, session, avail):
 
 	return True
 
-# Removes the authenticated player from the queue
 @login_required
 def exit_queue(request):
+	'''
+	Removes the authenticated player from the queue, 
+	Deletes session if it's empty
+	'''
 	if not request.user.profile.in_queue:
 		redirect('dashboard')
 
@@ -618,10 +601,9 @@ def exit_queue(request):
 	request.user.profile.save()
 	return redirect('dashboard')
 
-# Get all suitable sessions for a user to join
-# Availability existence should be verified prior to this point.
 def get_suitable_sessions(profile):
 	'''
+	Availability existence should be verified prior to this point.
 	Gets all suitable sessions for a user, above the minimum amount specified.
 	Returns the sessions as a list of 2 elements [viability, [session, availability]]
 	'''
@@ -639,6 +621,9 @@ def get_suitable_sessions(profile):
 
 	# All the sessions which meet basic requirements (mmr, time/day, playlist, game)
 	viable_sessions = []
+
+	# Get any players that the profile queuing has reported before, for filtration
+	player_reports = Report.objects.filter(sent_by=profile)
 
 	# Get any session that matches the availability given (1 hour min.)
 	for avail in user_availabilities:
@@ -681,6 +666,10 @@ def get_suitable_sessions(profile):
 				suitable = True
 				# Check if their MMR is within the range we want
 				for player_s in player_sessions:
+					# Cancel if player has reported them before
+					if player_reports.filter(user_reported=player_s.profile).first() is not None:
+						suitable = False
+						break
 					prof_acc = Profile_Connected_Game_Account.objects.filter(profile=player_s.profile, game=session.game).first()
 					# Cancel if mmr out of range
 					if session.competitive:
@@ -698,12 +687,15 @@ def get_suitable_sessions(profile):
 	# Check existence
 	if len(viable_sessions) < 1:
 		return None
+
 	# Add any sessions that meet viability requirements
 	sorted_sessions = []
 	for session in viable_sessions:
-		v = calc_match_viablity(profile, session[0])
-		if v > min_accepted_viability:
-			sorted_sessions.append([v, session])
+		viability = calc_match_viablity(profile, session[0])
+		# Machine learning, disable on production due to Free Tier
+		recommended = get_match_recommendation_level(profile, session[0])
+		if viability > min_accepted_viability:
+			sorted_sessions.append([viability, session, recommended])
 
 	# Check existence
 	if len(sorted_sessions) < 1:
@@ -716,12 +708,14 @@ def get_suitable_sessions(profile):
 	# Exhausted all availabilities and no sessions were matching criteria
 	return sorted_sessions
 
-# THE ACTUAL ALGORITHMIC CHECKS
-# Calculates how viable a session is for your current profile's weighting
-# (commendations create a % viability)
-# sum(each_player:(c1/tsp*w1)+(c2/tsp*w2)+(c3/tsp*w3)+(c4/tsp*w4)) / pc
-# Where c=commendations, , tsp=total sessions played, w=weighting, pc=Player Count
 def calc_match_viablity(user_profile, session):
+	'''
+	Main Matchmaking Algorithm.
+	Calculates how viable a session is for your current profile's weighting
+	(commendations create a % viability)
+	sum(each_player:(c1/tsp*w1)+(c2/tsp*w2)+(c3/tsp*w3)+(c4/tsp*w4)) / pc
+	Where c=commendations, , tsp=total sessions played, w=weighting, pc=Player Count
+	'''
 	# What each should be worth out of 1 (Team, Comm, Skill, Sport)
 	weight = [ 0.5, 0.25, 0.125, 0.125 ]
 	# Assign weights to commends by checking if their names are the same
@@ -772,6 +766,47 @@ def calc_match_viablity(user_profile, session):
 
 	return averaged_viability
 
+def get_match_recommendation_level(profile, session):
+	'''
+	Decides how to recommend a match based on previous encounters with players
+	'''
+	recommend_level = 0
+	# Get session_profiles of the user which have been rated in the past
+	prev_session_profiles = Session_Profile.objects.filter(profile=profile).exclude(rating=None)
+	# Cancel if our user hasn't played before
+	if len(prev_session_profiles) == 0:
+		return 0
+
+	# Store the previous sessions so that they can be used to filter
+	user_sessions = []
+	for sp in prev_session_profiles:
+		user_sessions.append(sp.session)
+
+	# Get players in any session that the user has rated, excluding the user
+	previous_session_players = Session_Profile.objects.filter(session__in=user_sessions).exclude(profile=profile)
+
+	# Get players in current session
+	current_session_players = Session_Profile.objects.filter(session=session)
+	current_session_players_profiles = []
+	for sp in current_session_players:
+		current_session_players_profiles.append(sp.profile)
+
+	# Get anyone that is in this session that the user has rated before
+	profiles_to_check = previous_session_players.filter(profile__in=current_session_players_profiles)
+
+	# Check each player and move up or down recommendation based on how the session they were in was rated
+	for p in profiles_to_check:
+		# Get the queuing users session_profile for that past session to check how they rated it
+		user_profile = prev_session_profiles.filter(session=p.session).first()
+		# Move up or down based on rating
+		if user_profile is not None:
+			if user_profile.rating > 3:
+				recommend_level += 1
+			elif user_profile.rating < 3:
+				recommend_level -= 1
+
+	return recommend_level
+
 # Checks if the time is at least an hour inside availability
 # Returns True if so, else False
 def is_time_acceptable(session, availability):
@@ -786,18 +821,25 @@ def is_time_acceptable(session, availability):
 	# To reach here, the session isn't within our availability and it doesn't overlap
 	return False
 
-# Handles anything that must happen when availability is removed via API
 @login_required
 def remove_availability(request, pk):
+	'''
+	Deletes the given availability if it exists
+	Sends user to dashboard on success or failure
+	'''
 	avail = Availability.objects.filter(pk=pk).first()
 	if avail:
 		if avail.profile == request.user.profile:
 			avail.delete()
 	return redirect('dashboard')
 
-# Handles new availabilities and editable availabilities
 @login_required
 def add_availability(request):
+	'''
+	Returns a JSON version of the add availability form.
+	Used to populate a modal.
+	Allows a user to add a new availability if not in a queue
+	'''
 	# Ensure that user is not queued!
 	if request.user.profile.in_queue:
 		return redirect('dashboard')
@@ -830,9 +872,13 @@ def add_availability(request):
 									)
 	return JsonResponse(data)
 
-# Handles new availabilities and editable availabilities
 @login_required
 def edit_availability(request, pk):
+	'''
+	Returns a JSON version of the edit availability form.
+	Used to populate a modal.
+	Allows a user to edit their availabilities if not in queue
+	'''
 	# Ensure that user is not queued!
 	if request.user.profile.in_queue:
 		return redirect('dashboard')
@@ -870,9 +916,13 @@ def edit_availability(request, pk):
 										)
 	return JsonResponse(data)
 
-# User rating a sessions
 @login_required
 def rate_session(request, pk):
+	'''
+	Returns a JSON version of the rate session form.
+	Used to populate a modal.
+	Allows a user to rate a session, and commend players involved.
+	'''
 	context = {
 		'title': 'Rate Session',
 		'message' : 'We hope you\'ve enjoyed your session! Please rate how well it was matched below.',
@@ -1018,6 +1068,7 @@ def manual_matchmaking(request):
 	i = 0
 	if sessions is not None:
 		for sv in sessions:
+			# Format: sv[<Viability, [Session, Availability], Recommend-Level>]
 			context['sessions'][str(i)] = {}
 			context['sessions'][str(i)]['session'] = {}
 			context['sessions'][str(i)]['session']['id'] = sv[1][0].id
@@ -1026,6 +1077,7 @@ def manual_matchmaking(request):
 			context['sessions'][str(i)]['session']['start'] = sv[1][0].start
 			context['sessions'][str(i)]['session']['end_time'] = sv[1][0].end_time
 			context['sessions'][str(i)]['session']['competitive'] = sv[1][0].competitive
+			context['sessions'][str(i)]['session']['recommend_level'] = sv[2]
 			context['sessions'][str(i)]['game_image'] = sv[1][0].game.image.url
 
 	if request.GET.get('Join Session'):
