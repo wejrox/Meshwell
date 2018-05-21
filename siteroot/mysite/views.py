@@ -771,26 +771,35 @@ def get_match_recommendation_level(profile, session):
 	Decides how to recommend a match based on previous encounters with players
 	'''
 	recommend_level = 0
-	# Get sessions the profile has rated
+	# Get session_profiles of the user which have been rated in the past
 	prev_session_profiles = Session_Profile.objects.filter(profile=profile).exclude(rating=None)
 	# Cancel if our user hasn't played before
 	if len(prev_session_profiles) == 0:
 		return 0
 
-	# Store the profiles
-	user_profiles = ()
+	# Store the previous sessions so that they can be used to filter
+	user_sessions = []
 	for sp in prev_session_profiles:
-		user_profiles.append(sp.profile)
+		user_sessions.append(sp.session)
 
-	# Get players in the session given and that the user has rated
-	session_connected_players = Session_Profile.objects.filter(session=session, profile__in=user_profiles)
+	# Get players in any session that the user has rated, excluding the user
+	previous_session_players = Session_Profile.objects.filter(session__in=user_sessions).exclude(profile=profile)
+
+	# Get players in current session
+	current_session_players = Session_Profile.objects.filter(session=session)
+	current_session_players_profiles = []
+	for sp in current_session_players:
+		current_session_players_profiles.append(sp.profile)
+
+	# Get anyone that is in this session that the user has rated before
+	profiles_to_check = previous_session_players.filter(profile__in=current_session_players_profiles)
 
 	# Check each player and move up or down recommendation based on how the session they were in was rated
-	for p in session_connected_players:
-		# Get the queuing users session_profile to check how they rated it
-		user_profile = prev_session_profiles.objects.filter(session=p.session).first()
+	for p in profiles_to_check:
+		# Get the queuing users session_profile for that past session to check how they rated it
+		user_profile = prev_session_profiles.filter(session=p.session).first()
+		# Move up or down based on rating
 		if user_profile is not None:
-			# Move up or down based on rating
 			if user_profile.rating > 3:
 				recommend_level += 1
 			elif user_profile.rating < 3:
@@ -812,18 +821,25 @@ def is_time_acceptable(session, availability):
 	# To reach here, the session isn't within our availability and it doesn't overlap
 	return False
 
-# Handles anything that must happen when availability is removed via API
 @login_required
 def remove_availability(request, pk):
+	'''
+	Deletes the given availability if it exists
+	Sends user to dashboard on success or failure
+	'''
 	avail = Availability.objects.filter(pk=pk).first()
 	if avail:
 		if avail.profile == request.user.profile:
 			avail.delete()
 	return redirect('dashboard')
 
-# Handles new availabilities and editable availabilities
 @login_required
 def add_availability(request):
+	'''
+	Returns a JSON version of the add availability form.
+	Used to populate a modal.
+	Allows a user to add a new availability if not in a queue
+	'''
 	# Ensure that user is not queued!
 	if request.user.profile.in_queue:
 		return redirect('dashboard')
@@ -856,9 +872,13 @@ def add_availability(request):
 									)
 	return JsonResponse(data)
 
-# Handles new availabilities and editable availabilities
 @login_required
 def edit_availability(request, pk):
+	'''
+	Returns a JSON version of the edit availability form.
+	Used to populate a modal.
+	Allows a user to edit their availabilities if not in queue
+	'''
 	# Ensure that user is not queued!
 	if request.user.profile.in_queue:
 		return redirect('dashboard')
@@ -896,9 +916,13 @@ def edit_availability(request, pk):
 										)
 	return JsonResponse(data)
 
-# User rating a sessions
 @login_required
 def rate_session(request, pk):
+	'''
+	Returns a JSON version of the rate session form.
+	Used to populate a modal.
+	Allows a user to rate a session, and commend players involved.
+	'''
 	context = {
 		'title': 'Rate Session',
 		'message' : 'We hope you\'ve enjoyed your session! Please rate how well it was matched below.',
@@ -1044,6 +1068,7 @@ def manual_matchmaking(request):
 	i = 0
 	if sessions is not None:
 		for sv in sessions:
+			# Format: sv[<Viability, [Session, Availability], Recommend-Level>]
 			context['sessions'][str(i)] = {}
 			context['sessions'][str(i)]['session'] = {}
 			context['sessions'][str(i)]['session']['id'] = sv[1][0].id
@@ -1052,6 +1077,7 @@ def manual_matchmaking(request):
 			context['sessions'][str(i)]['session']['start'] = sv[1][0].start
 			context['sessions'][str(i)]['session']['end_time'] = sv[1][0].end_time
 			context['sessions'][str(i)]['session']['competitive'] = sv[1][0].competitive
+			context['sessions'][str(i)]['session']['recommend_level'] = sv[2]
 			context['sessions'][str(i)]['game_image'] = sv[1][0].game.image.url
 
 	if request.GET.get('Join Session'):

@@ -16,6 +16,7 @@
 				<th scope="col">End</th>
 				<th scope="col">Competitive</th>
 				<th scope="col">Viability</th>
+				<th scope="col">Recommended Level</th>
 				<th scope="col"></th>
 			</tr>
 		</thead>
@@ -28,6 +29,7 @@
 				<td>{{ value.session.end_time }}</td>
 				<td>{{ value.session.competitive }}</td>
 				<td>{{ value.session.viability }}</td>
+				<td>{{ value.session.recommend_level }}</td>
 				<td>
                     <form action="#" method="get">
                         {% csrf_token %}
