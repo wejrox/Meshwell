@@ -2,6 +2,9 @@
 {% load static %}
 {% block title %}Homepage{% endblock %}
 {% block content %}
+<!--Content for Desktop/Laptop devices-->
+<div class="d-none d-lg-block">
+
 <div id="landingSlide">
 	<div class="meshwellIntroduction">
 		<div class="welcomeMessage">
@@ -16,9 +19,6 @@
 		</section>
 	</div>
 </div>
-
-<!--Content for Desktop/Laptop devices-->
-<div class="d-none d-lg-block">
 
 <div id="howItWorks">
 	<div id="" class="container fullFluid">
@@ -128,7 +128,93 @@
 
 <!--Content for Mobile devices-->
 <div class="d-lg-none">
-	<p>Under Construction!</p>
+	<div id="landingSlide">
+		<div class="meshwellIntroduction">
+			<div class="welcomeMessage">
+				A smart matchmaking system to find your new team and friends.
+			</div> 
+			<br><br>
+			<a href="/register/" class="btn-lg btn-primary" role="button" style="font-size:1.75rem; text-decoration:none;">Sign up!</a>
+			</div>
+		</div>
+	</div>
+
+	<div id="howItWorks">
+		<div id="" class="container fullFluid">
+		 	<div class="row">
+			    <div class="col textStyle">
+					<div class="imgAndText">
+						<i class="fas fa-code-branch"></i><h1>How it works</h1>
+						<div class="row">
+							<div class="col-lg-3">
+								<img class="rounded-circle" src="https://i.imgur.com/IhZtCpF.png" alt="Generic placeholder image" width="140" height="140">
+								<h2>Connect!</h2>
+								<p>Connect your discord and game accounts. Add your preferences, connect your account, and start searching.</p>
+							</div><!-- /.col-lg-3 -->
+							<div class="col-lg-3">
+								<img class="rounded-circle" src="https://i.imgur.com/uGt6Msq.png" alt="Generic placeholder image" width="140" height="140">
+								<h2>Matchmake!</h2>
+								<p>Using our algorithm, we'll find other gamers who match your preferences.</p>
+							</div><!-- /.col-lg-3 -->
+							<div class="col-lg-3">
+								<img class="rounded-circle" src="https://i.imgur.com/PM6qCoX.png" alt="Generic placeholder image" width="140" height="140">
+								<h2>Communicate!</h2>
+								<p>Connect to our Discord server, communicate and have fun.</p>
+							</div><!-- /.col-lg-3 -->
+							<div class="col-lg-3">
+								<img class="rounded-circle" src="https://i.imgur.com/M8VO1dt.png" alt="Generic placeholder image" width="140" height="140">
+								<h2>Review!</h2>
+								<p>Rate and commend your teammates to improve future sessions!</p>
+							</div><!-- /.col-lg-3 -->
+						</div>
+					</div>
+			    </div>
+		 	</div>
+		</div>
+	</div>
+
+	<div id="casualCompetitive">
+		<div id="" class="container fullFluid">
+		 	<div class="row">
+			    <div class="col textStyle">
+					<div class="imgAndText">
+						<div class="row">
+							<i class="fas fa-filter"></i><h1>Casual and competitive players welcome</h1>
+							<div class="col-lg-6">
+								<img class="rounded-circle" src="https://i.imgur.com/dffbWmB.png" alt="Generic placeholder image" width="300" height="300">
+								<h2 style="margin-top: 1rem;">Casual</h2>
+								<p>Find other players who just want to have fun and play games.</p>
+							</div><!-- /.col-lg-6 -->
+							<div class="col-lg-6">
+								<img class="rounded-circle" src="https://i.imgur.com/M6rcTSt.png" alt="Generic placeholder image" width="300" height="300">
+								<h2 style="margin-top: 1rem;">Competitive</h2>
+								<p>Find other teammates to take your games to a competitive level!</p>
+							</div><!-- /.col-lg-6 -->
+						</div>
+					</div>
+			    </div>
+		 	</div>
+		</div>
+	</div>
+
+	<div id="supportedGames">
+		<div id="" class="container fullFluid">
+		 	<div class="row">
+			    <div class="col textStyle">
+			     	<div class="imgAndText">
+						<i class="fas fa-hands-helping"></i><h1>Currently Supported Games</h1>
+						<div class="row">
+							<div class="col-lg-12">
+								<img class="rounded-circle" src="https://i.imgur.com/vyodKdo.jpg" alt="Generic placeholder image" width="140" height="140">
+								<h2>Rainbow Six Siege</h2>
+								<p>Tom Clancy's Rainbow Six Siege is a tactical shooter video game developed by Ubisoft Montreal and published by Ubisoft.</p>
+							</div><!-- /.col-lg-12 -->
+						</div>
+					</div>
+			    </div>
+		 	</div>
+		</div>
+	</div>
 </div>
 
 {% endblock %}
