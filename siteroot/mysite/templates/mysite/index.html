@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}Homepage{% endblock %}
 {% block content %}
-<div class="bg">
+<div id="landingSlide">
 	<div class="meshwellIntroduction">
 		<div class="welcomeMessage">
 			A smart matchmaking system to find your new team and friends.
@@ -16,6 +16,9 @@
 		</section>
 	</div>
 </div>
+
+<!--Content for Desktop/Laptop devices-->
+<div class="d-none d-lg-block">
 
 <div id="howItWorks">
 	<div id="" class="container fullFluid">
@@ -52,9 +55,9 @@
 		    </div>
 	 	</div>
 	</div>
-	<section2 id="guider-anchor" class="guider-arrow">
+	<section id="guider-anchor" class="guider-arrow">
 		<a href="#casualCompetitive"><span></span>Casual and competitive preferences supported</a>
-	</section2>
+	</section>
 </div>
 
 <div id="casualCompetitive">
@@ -82,9 +85,9 @@
 		    </div>
 	 	</div>
 	</div>
-	<section2 id="guider-anchor" class="guider-arrow">
+	<section id="guider-anchor" class="guider-arrow">
 		<a href="#supportedGames"><span></span>Games currently supported</a>
-	</section2>
+	</section>
 </div>
 
 <div id="supportedGames">
@@ -111,13 +114,21 @@
 	 	</div>
 	</div>
 	<br>
-	<section2 id="guider-anchor" class="guider-arrow">
+	<section id="guider-anchor" class="guider-arrow">
 		<a href="{% url 'register' %}"><span></span>Let's get started!</a>
 	</section>
 </div>
 
+<!--Takes user back to the top of the page-->
 <a class="back-to-top" style="display: inline;" href="#" >
 	<i class="fas fa-arrow-circle-up"></i>
 </a>
+
+</div>
+
+<!--Content for Mobile devices-->
+<div class="d-lg-none">
+	<p>Under Construction!</p>
+</div>
 
 {% endblock %}
