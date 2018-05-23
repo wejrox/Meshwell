@@ -323,6 +323,7 @@ section h1 {
   margin-right: 15%;
   margin-top: 3%;
   margin-bottom: 3%;
+  min-height: 60vh;
 }
 
 .headerContent{
