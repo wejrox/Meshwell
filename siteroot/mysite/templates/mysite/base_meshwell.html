@@ -65,6 +65,9 @@
 			      <li class="nav-item {% if request.resolver_match.url_name == "about-us" %}active{% endif %}">
 			        <a class="nav-link" href="{% url 'about-us' %}">About Us</a>
 			      </li>
+						<li class="nav-item {% if request.resolver_match.url_name == "about-us" %}active{% endif %}">
+			        <a class="nav-link" href="{% url 'tutorial' %}">Tutorial</a>
+			      </li>
 			    </ul>
 			    <ul class="navbar-nav ml-auto">
 			    	{% if user.is_authenticated %}
@@ -89,11 +92,11 @@
 						<!-- Login modal elements -->
 						<a href="/register/" class="btn btn-primary" role="button">Sign up!</a>
 						<button type="button" class="btn btn-outline-secondary js-login" data-url="{% url 'login_modal' %}">Login</button>
-						
+
 						<div class="modal fade" id="modal-login">
 							<div class="modal-dialog">
 								<div class="modal-content">
-									
+
 								</div>
 							</div>
 						</div>

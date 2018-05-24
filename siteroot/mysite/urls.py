@@ -31,6 +31,7 @@ urlpatterns = [
     path('feedback/', site_views.feedback, name='feedback'),
     path('catalog/', site_views.catalog, name='catalog'),
     path('about-us/', site_views.about_us, name='about-us'),
+    path('tutorial/', site_views.tutorial, name='tutorial'),
     path('terms-of-service/', site_views.terms_of_service, name='terms-of-service'),
     path('privacy-policy/', site_views.privacy_policy, name='privacy-policy'),
     path('contact-us/', site_views.contact_us, name='contact-us'),

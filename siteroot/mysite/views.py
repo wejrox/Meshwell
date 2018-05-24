@@ -21,7 +21,7 @@ from django.template.loader import render_to_string
 
 # Import settings
 from django.conf import settings
-from mysite import private_settings
+#from mysite import private_settings
 
 @receiver(user_logged_in)
 def auto_profile(sender, request, user, **kwargs):
@@ -190,6 +190,16 @@ def about_us(request):
 		'message':'The About Us page for Meshwell.',
 	}
 	return render(request, 'mysite/about_us.html', context)
+
+def tutorial(request):
+	'''
+	Page with a tutorial on using meshwell
+	'''
+	context = {
+		'title':'Tutorial',
+		'message':'The tutorial page for Meshwell.',
+	}
+	return render(request, 'mysite/tutorial.html', context)
 
 def terms_of_service(request):
 	'''
@@ -600,7 +610,7 @@ def join_session(session_profile, session, avail):
 @login_required
 def exit_queue(request):
 	'''
-	Removes the authenticated player from the queue, 
+	Removes the authenticated player from the queue,
 	Deletes session if it's empty
 	'''
 	if not request.user.profile.in_queue:
