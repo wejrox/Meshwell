@@ -66,6 +66,23 @@ def banning_users1(self, request, queryset):
 
 	self.message_user(request, "User is banned and Email has been sent")
 
+def send_password_reset(self, request, queryset):
+
+
+	for obj in queryset:
+		if hasattr(obj, 'user'):
+			# This object is a Profile, so lookup the user
+			obj = obj.user
+	self.message_user(request, "User is banned and Email has been sent")
+
+	subject = 'Password Reset'
+	message = 'hello'
+	email_from = settings.EMAIL_HOST_USER
+	recipient_list = [obj.email]
+	send_mail( subject, message,email_from, recipient_list)
+
+#self.message_user(request, "Email sent")
+
 #Banning function for PROFILE
 def banning_users(self, request, queryset):
 
@@ -130,9 +147,10 @@ class ProfileAdmin(admin.ModelAdmin):
 		ordering = ['-total_reports',]
 	list_display = ('user', 'birth_date', 'sessions_played', 'total_reports', 'reason_reported_sent')
 	readonly_fields = (('sessions_played'),('birth_date'),('user'),('pref_server'),('teamwork_commends'),('skill_commends'),('sportsmanship_commends'),('communication_commends'),('discord_id'))#,'total_reports')
-	actions = ['ban1', 'unban1','email_ban']
+	actions = ['ban1', 'unban1','password_reset']
 	ban1 = banning_users
 	unban1 = unbanning_users
+	password_reset = send_password_reset
 
 	def total_reports(self, obj):
 		return Report.objects.filter(user_reported=obj).count()

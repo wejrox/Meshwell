@@ -164,10 +164,10 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 # Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-#emails
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = 'meshwellteam@gmail.com'
+
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'meshwellteam'
 EMAIL_HOST_PASSWORD = 'Ni971411'
+EMAIL_PORT = 465
 EMAIL_USE_SSL = True

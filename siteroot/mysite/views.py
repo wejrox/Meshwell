@@ -21,7 +21,7 @@ from django.template.loader import render_to_string
 
 # Import settings
 from django.conf import settings
-#from mysite import private_settings
+from mysite import private_settings
 
 @receiver(user_logged_in)
 def auto_profile(sender, request, user, **kwargs):
