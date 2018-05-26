@@ -56,22 +56,6 @@ body{
   align-items:center;
 }
 
-#whatIsMeshwell{
-  /* The image used */
-  background-image: url("https://i.imgur.com/NBwwFBC.jpg");
-
-  /* Full height */
-  height: 100vh;
-
-  /* Center and scale the image nicely */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
 #howItWorks{
   /* The image used */
   background-image: url("https://i.imgur.com/xmcqlq1.jpg");
@@ -118,6 +102,39 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
+}
+
+/*Mobile*/
+/*Index Page*/
+#howItWorksMobile{
+  /* The image used */
+  background-image: url("https://i.imgur.com/xmcqlq1.jpg");
+
+<<<<<<< HEAD
+  /* Full height */
+  height: 100vh;
+=======
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#casualCompetitiveMobile{
+  /* The image used */
+  background-image: url("https://i.imgur.com/admPSfP.jpg");
+>>>>>>> 03870ff842f18c32732176bef7e8fa0cd6bb5ff0
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.imgAndTextMobile{
+  text-align: center;
+  color: white !important;
+  background: rgba(0, 0, 0, 0.7);
 }
 
 .meshwellIntroduction{
