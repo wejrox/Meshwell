@@ -369,15 +369,20 @@ class RateSessionForm(forms.Form):
 		for i in range(0, self.player_count):
 			# Get profile
 			profile = Profile.objects.get(pk=self.cleaned_data['player_%s_id' % i])
+			commends = self.cleaned_data.get('player_%s_commends' % i)
+			print(commends)
 			# Apply commendations and reports
-			if self.cleaned_data['player_%s_commends' % i]['skill']:
-				profile.skill_commends += 1
-			if self.cleaned_data['player_%s_commends' % i]['sportsmanship']:
-				profile.sportsmanship_commends += 1
-			if self.cleaned_data['player_%s_commends' % i]['communication']:
-				profile.communication_commends += 1
-			if self.cleaned_data['player_%s_commends' % i]['teamwork']:
-				profile.teamwork_commends += 1
+			if commends is not None:
+				for com in commends:
+					if com == 'Skill':
+						profile.skill_commends += 1
+					elif com == 'Sportsmanship':
+						profile.sportsmanship_commends += 1
+					elif com == 'Communication':
+						profile.communication_commends += 1
+					elif com == 'Teamwork':
+						profile.teamwork_commends += 1
+
 			if self.cleaned_data['player_%s_report' % i]:
 				report = Report.objects.create(session=self.session, user_reported=profile, sent_by=self.profile, report_reason='toxic')
 				report.save()
