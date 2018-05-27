@@ -1120,7 +1120,7 @@ def manual_matchmaking(request):
 		player_session.save()
 
 		join_session(player_session, session, avail)
-		return redirect('edit_availability')
+		return redirect('dashboard')
 	return render(request, 'mysite/manual_matchmaking_list.html', context)
 
 @login_required
