@@ -368,26 +368,26 @@ class RateSessionForm(forms.Form):
 		# Apply commendations and reports
 		for i in range(0, self.player_count):
 			# Get profile
-			profile = Profile.objects.get(pk=self.cleaned_data['player_%s_id' % i])
+			persons_profile = Profile.objects.get(pk=self.cleaned_data['player_%s_id' % i])
 			commends = self.cleaned_data.get('player_%s_commends' % i)
 			print(commends)
 			# Apply commendations and reports
 			if commends is not None:
 				for com in commends:
 					if com == 'Skill':
-						profile.skill_commends += 1
+						persons_profile.skill_commends += 1
 					elif com == 'Sportsmanship':
-						profile.sportsmanship_commends += 1
+						persons_profile.sportsmanship_commends += 1
 					elif com == 'Communication':
-						profile.communication_commends += 1
+						persons_profile.communication_commends += 1
 					elif com == 'Teamwork':
-						profile.teamwork_commends += 1
+						persons_profile.teamwork_commends += 1
 
 			if self.cleaned_data['player_%s_report' % i]:
-				report = Report.objects.create(session=self.session, user_reported=profile, sent_by=self.profile, report_reason='toxic')
+				report = Report.objects.create(session=self.session, user_reported=persons_profile, sent_by=self.profile, report_reason='toxic')
 				report.save()
-			profile.received_ratings += 1
-			profile.save()
+			persons_profile.received_ratings += 1
+			persons_profile.save()
 
 class SelectMatchmakingOptionsForm(forms.Form):
 	'''
