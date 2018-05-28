@@ -999,7 +999,7 @@ def discord_disconnect_account(request):
 	Removes the reference to the user id from the profile that is currently logged in
 	'''
 	request.user.profile.discord_id = None
-	request.user,profile.save()
+	request.user.profile.save()
 	return redirect('dashboard')
 
 @login_required
