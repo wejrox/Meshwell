@@ -365,7 +365,6 @@
 				<hr>
 				<!--/Availabilities-->
 				<!--Session History-->
-				<br>
 				<div class="container px-0">
 					<div class="row mx-0">
 						<div class="customTableTitle">
@@ -381,20 +380,19 @@
 						</div>
 					</div>
 					<!--/Rate session modal-->
-					<div class="container scrollable">
+					<div class="container-fluid scrollable">
 					<!--Previous Sessions Display-->
 					{% for key, value in prev_sessions.items %}
-					<div class="row shadow p-3 m-3 rounded-md border">
-						<div class="col p-0">
+					<div class="row p-3 rounded-md border">
+						<div class="col-lg-3 p-0 text-center">
 							<div>
-							<img class="img-fluid rounded-md" src="{{ value.game.icon }}" height=100pt width=100pt/> 
-							<br>
+								<img class="img-fluid rounded-md" src="{{ value.game.icon }}" height=100pt width=100pt/> 
 							</div>
 							<br><b>{{ value.session.start|date:'D d M Y' }}</b>
 							<br><b>Start:</b> {{ value.session.start|date:'P' }}
 							<br><b>End:</b> {{ value.session.end_time|time:'P' }}
 						</div>
-						<div class="col-7">
+						<div class="col-lg-7">
 							<div class="scrollable-sm">
 								<table class="table table-curved table-striped">
 									{% for key, value in value.players.items %}
