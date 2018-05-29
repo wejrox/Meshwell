@@ -548,7 +548,7 @@ def enter_queue(request):
 	# Get user's availabilities, or send to availability page
 	user_availabilities = Availability.objects.filter(profile=user_profile)
 	if not user_availabilities:
-		return redirect('availability')
+		return redirect('dashboard')
 	else:
 		sessions = get_suitable_sessions(user_profile)
 		if sessions:

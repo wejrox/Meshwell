@@ -184,7 +184,7 @@
 			<!--Container-->
 			<div class="container shadow rounded-md" style="border: 1px solid #cdcdcd">
 				<!--Matchmaking Buttons-->
-				<div class="row text-center">
+				<div class="row">
 					{% if not user.profile.in_queue %}
 					<!--Preferences modal-->
 					<div class="modal fade" id="modal-matchmaking-preferences">
@@ -196,10 +196,12 @@
 					</div>
 					<!--/Preferences modal-->
 					<div class="matchmakingButtons">
+						<div class="text-center">
 						<a href="{% url 'enter_queue' %}" type="button" class=" btn btn-danger btn-lg" data-toggle="tooltip" data-placement="bottom"
 							title="Use our algorithm to find other compatible players." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Smart Matchmaking</a>
 						<button class="btn btn-primary btn-lg js-load-manual-matches" data-toggle="tooltip" data-placement="bottom"
 							title="Select from a list of potential players you can play with. Compatibility metrics will be shown." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Manual Matchmaking</button>
+						</div>
 						<div class="text-center" style="padding-top:1vh;">
 							<button type="button" class="btn btn-outline-secondary js-matchmaking-preferences" data-url="{% url 'matchmaking_preferences' %}" data-toggle="tooltip" data-placement="bottom"
 							title="Choose how you would like us to find you suitable matches." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Preferences</button>
@@ -221,27 +223,20 @@
 				<!--/Matchmaking Butons-->
 				<!--Matching Session Details-->
 				<div class="row">
-					<!--Show matching status-->
-					{% if queue.session %}
-						<div class="text-center">
-							<p>
-								<b>You have found a session!</b> <br>
-								<b>Game: </b>{{ queue.session.game_name }} <br>
-								<b>Date: </b>{{ queue.session.start|date:'D d-m-Y' }}<br>
-								<b>Start Time: </b>{{ queue.session.start|date:'H:i a' }}<br>
-								<b>End Time: </b>{{ queue.session.end_time|date:'H:i a' }}<br>
-								<b>Viability: </b>{{ queue.session.viability }}<br>
-							</p>
-						</div>
+					<div class="col text-center mt-2">
+						<!--Show matching status-->
+						{% if queue.session %}
+						<b>You have found a session!</b><br>
+						<b>Game: </b>{{ queue.session.game_name }}<br>
+						<b>Date: </b>{{ queue.session.start|date:'D d-m-Y' }}<br>
+						<b>Start Time: </b>{{ queue.session.start|date:'H:i a' }}<br>
+						<b>End Time: </b>{{ queue.session.end_time|date:'H:i a' }}<br>
+						<b>Viability: </b>{{ queue.session.viability }}<br>
 						{% else %}
-						<div class="text-center">
-							<p>
-								Searching for a session...<br>
-								Time elapsed: X seconds<br>
-							</p>
-						</div>
+						Searching for a session...<br>
 						{% endif %}
-					{% endif %}
+					</div>
+				{% endif %}
 				</div>
 				<!--/Matching Session Details-->
 				<hr>
