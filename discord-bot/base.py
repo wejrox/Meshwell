@@ -115,9 +115,9 @@ async def auto_manage_channels():
 					# Get channel
 					member = guild.get_member(str(row[1]))
 					channel = discord.utils.get(guild.channels, name=str(row[0]))
-					rate_url = "https://www.meshwell.com/dashboard/session/rate/"+str(row[2])
+					rate_url = "https://www.meshwell.com/dashboard/"
 					# Send message to members to rate session
-					message = "We hope you've enjoyed your session! \nPlease follow the link to rate your session in order to receive the best matching experience.\n"+str(rate_url)
+					message = "We hope you've enjoyed your session! \nPlease visit the dashboard and rate your session in order to receive the best matching experience and improved recommendations.\n"+str(rate_url)
 					await member.send(content=message)
 					# If channel exists, delete it
 					if channel is not None:
