@@ -259,30 +259,32 @@
 						</div>
 						<div class="row">
 							<div class="col col-lg-12">
-								<table class="table table-curved table-striped shadow">
-									<thead class="thead-dark">
-										<tr>
-											<th scope="col">Game Name</th>
-											<th scope="col">Connected Account</th>
-											<th scope="col">Platform</th>
-											<th scope="col">Casual MMR</th>
-											<th scope="col">Competitive MMR</th>
-											<th scope="col"></th>
-										</tr>
-									</thead>
-									<tbody>
-										{% for value in connected_accounts %}
-										<tr>
-											<td>{{ value.game.name }}</td>
-											<td>{{ value.game_player_tag }}</td>
-											<td>{{ value.platform }}</td>
-											<td>{{ value.cas_rank }}</td>
-											<td>{{ value.comp_rank }}</td>
-											<td><a href="{% url 'remove_connected_account' pk=value.id %}" class="btn btn-danger btn-sm" >Unlink</button></td>
-										</tr>
-										{% endfor %}
-									</tbody>
-								</table>
+								<div class="table-responsive">
+									<table class="table table-curved table-striped shadow">
+										<thead class="thead-dark">
+											<tr>
+												<th scope="col">Game Name</th>
+												<th scope="col">Connected Account</th>
+												<th scope="col">Platform</th>
+												<th scope="col">Casual MMR</th>
+												<th scope="col">Competitive MMR</th>
+												<th scope="col"></th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for value in connected_accounts %}
+											<tr>
+												<td>{{ value.game.name }}</td>
+												<td>{{ value.game_player_tag }}</td>
+												<td>{{ value.platform }}</td>
+												<td>{{ value.cas_rank }}</td>
+												<td>{{ value.comp_rank }}</td>
+												<td><a href="{% url 'remove_connected_account' pk=value.id %}" class="btn btn-danger btn-sm" >Unlink</button></td>
+											</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 						<div class="row mx-0">
@@ -320,30 +322,32 @@
 						</div>
 						<div class="row">
 							<div class="col col-lg-12">
-								<table class="table table-curved table-striped shadow">
-									<thead class="thead-dark">
-										<tr>
-											<th scope="col">Day</th>
-											<th scope="col">Start Time</th>
-											<th scope="col">End Time</th>
-											<th scope="col">Competitive</th>
-											<th scope=""></th></th>
-											<th scope=""></th></th>
-										</tr>
-									</thead>
-									<tbody>
-										{% for value in availabilities %}
-										<tr>
-											<td>{{ value.pref_day }}</td>
-											<td>{{ value.start_time }}</td>
-											<td>{{ value.end_time }}</td>
-											<td>{{ value.competitive }}</td>
-											<td><button class="btn btn-info btn-sm js-edit-availability" data-url="{% url 'edit_availability' pk=value.id %}">Edit</button></td>
-											<td><a href="{% url 'remove_availability' pk=value.id %}" class="btn btn-danger btn-sm" >Delete</button></td>
-										</tr>
-										{% endfor %}
-									</tbody>
-								</table>
+								<div class="table-responsive">
+									<table class="table table-curved table-striped shadow">
+										<thead class="thead-dark">
+											<tr>
+												<th scope="col">Day</th>
+												<th scope="col">Start Time</th>
+												<th scope="col">End Time</th>
+												<th scope="col">Competitive</th>
+												<th scope=""></th></th>
+												<th scope=""></th></th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for value in availabilities %}
+											<tr>
+												<td>{{ value.pref_day }}</td>
+												<td>{{ value.start_time }}</td>
+												<td>{{ value.end_time }}</td>
+												<td>{{ value.competitive }}</td>
+												<td><button class="btn btn-info btn-sm js-edit-availability" data-url="{% url 'edit_availability' pk=value.id %}">Edit</button></td>
+												<td><a href="{% url 'remove_availability' pk=value.id %}" class="btn btn-danger btn-sm" >Delete</button></td>
+											</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 						{% if not availabilities %}
