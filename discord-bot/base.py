@@ -113,7 +113,7 @@ async def auto_manage_channels():
 			for row in past:
 				if row[0] is not None and row[1] is not None:
 					# Get channel
-					member = guild.get_member(str(row[1]))
+					member = guild.get_member(int(row[1]))
 					channel = discord.utils.get(guild.channels, name=str(row[0]))
 					rate_url = "https://www.meshwell.com/dashboard/"
 					# Send message to members to rate session
