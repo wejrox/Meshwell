@@ -1,46 +1,90 @@
-{% extends 'mysite/base_meshwell.html' %}
 {% load static %}
-{% block title %}{{ title }}{% endblock %}
-{% block content %}
-<div class="mainContent">
-	<div class="headerContent">
-        {{ title }}
-    </div>
-    <br>
-    <table class="table">
-		<thead class="thead-dark">
-			<tr>
-                <th scope="col"></th>
-				<th scope="col">Date</th>
-				<th scope="col">Start</th>
-				<th scope="col">End</th>
-				<th scope="col">Competitive</th>
-				<th scope="col">Viability</th>
-				<th scope="col">Recommended Level</th>
-				<th scope="col"></th>
-			</tr>
-		</thead>
-		<tbody>
-            {% for key, value in sessions.items %}
-            <tr>
-				<td><img class="img-fluid rounded img-thumbnail" src="{{ value.game_image }}" height=50pt width=50pt /></td>
-                <td>{{ value.session.start|date:'D d N' }}</td>
-                <td>{{ value.session.start|date:'H:i a' }}</td>
-				<td>{{ value.session.end_time }}</td>
-				<td>{{ value.session.competitive }}</td>
-				<td>{{ value.session.viability }}</td>
-				<td>{{ value.session.recommend_level }}</td>
-				<td>
-                    <form action="#" method="get">
-                        {% csrf_token %}
-                        <input type="hidden" name="id" value="{{ key }}">
-                        <input type="submit" class="btn btn-success" value="Join Session" name="Join Session">
-                    </form>
-                </td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+<!--Manual Matchmaking-->
+<div class="container">
+	<div class="container scrollable">
+	<!--Previous Sessions-->
+	{% for key, value in manual_matchmaking.items %}
+	<!--Set background colour based on recommendation level-->
+	{% if value.session.recommend_level < 0 %}
+	<div class="row shadow p-3 m-3 rounded-md" style="background-color: rgb(255, 184, 184); border: 0.2em solid rgb(194, 113, 113) !important;">
+	{% elif value.session.recommend_level > 0 %}
+	<div class="row shadow p-3 m-3 rounded-md" style="background-color: rgb(165, 255, 160); border: 0.2em solid rgb(97, 153, 97) !important;">
+	{% else %}
+	<div class="row shadow p-3 m-3 rounded-md border">
+	{% endif %}
+		<div class="col p-0">
+			<div>
+			<img class="img-fluid rounded-md" src="{{ value.game_image }}" height=100pt width=100pt/> 
+			<br>
+			</div>
+			<br><b>{{ value.session.start|date:'D d M Y' }}</b>
+			<br><b>Start:</b> {{ value.session.start|date:'P' }}
+			<br><b>End:</b> {{ value.session.end_time|time:'P' }}
+		</div>
+		<div class="col-7">
+			<div class="scrollable-sm">
+				<table class="table table-curved table-striped">
+					{% for key, value in value.players.items %}
+					<tr>
+						<td style="border: none;">{{ value.name }}</td>
+						<td style="border: none;" align="center">
+							<img src="{% static 'css/images/dashboard/tw_icon.png' %}" width="20" data-toggle="tooltip" data-placement="bottom"
+							title="Teamwork" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
+							{{ value.teamwork_commends }}
+						</td>
+						<td style="border: none;" align="center">
+							<img src="{% static 'css/images/dashboard/cm_icon.png' %}" width="20"data-toggle="tooltip" data-placement="bottom"
+							title="Communication" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
+							{{ value.communication_commends }}
+						</td>
+						<td style="border: none;" align="center">
+							<img src="{% static 'css/images/dashboard/sl_icon.png' %}" width="20"data-toggle="tooltip" data-placement="bottom"
+							title="Skill" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
+							{{ value.skill_commends }}
+						</td>
+						<td style="border: none;" align="center">
+							<img src="{% static 'css/images/dashboard/ps_icon.png' %}" width="20"data-toggle="tooltip" data-placement="bottom"
+							title="Sportsmanship" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
+							{{ value.sportsmanship_commends }}
+						</td>
+					</tr>
+					{% endfor %}
+				</table>
+			</div>
+		</div>
+		<div class="col p-0">
+			<!-- Join session button -->
+			<a href="{% url 'manual_matchmaking' pk=value.session.id %}" class="btn btn-info btn-sm btn-block">Join</a>
+			<!--Display viability-->
+			<div class="text-center">
+				{% if value.session.viability >= 80 %}
+				<div style="color:green">
+				{% elif value.session.viability >= 70 %}
+				<div style="color:rgb(65, 141, 65)">
+				{% elif value.session.viability >= 60 %}
+				<div style="color:orange">
+				{% elif value.session.viability >= 50 %}
+				<div style="color:darkorange">
+				{% else %}
+				<div style="color:red">
+				{% endif %}
+					<div style="font-size:5rem;line-height:4rem;padding-top:10pt;">
+						{{value.session.viability}}
+					</div>
+					<div style="font-size:2rem;">
+						% Match
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	{% empty %}
+	<div class="text-center">
+		There are no upcoming sessions matching your requirements.
+	</div>
+	{% endfor %}
+	<!--/Previous Sessions-->
+	</div>
 </div>
-
-{% endblock %}
+<!--/Manual Matchmaking-->

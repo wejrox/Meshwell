@@ -1089,30 +1089,61 @@ def discord_put_user_on_server(access_token, discord_id):
 	return True
 
 @login_required
-def manual_matchmaking(request):
+def manual_matchmaking(request, pk=None):
 	'''
-	User selects from a list of current sessions, given the viability
+	Returns a JSON representation of available sessions
+	User selects from a list of current sessions, given the viability and recommendation level
 	'''
+	if request.user.profile.in_queue:
+		return redirect('dashboard')
+
+	data = dict()
 	context = {'title':'Manual Matchmaking'}
-	context['sessions'] = {}
+	context['manual_matchmaking'] = {}
 	sessions = get_suitable_sessions(request.user.profile)
 	i = 0
 	if sessions is not None:
 		for sv in sessions:
-			# Format: sv[<Viability, [Session, Availability], Recommend-Level>]
-			context['sessions'][str(i)] = {}
-			context['sessions'][str(i)]['session'] = {}
-			context['sessions'][str(i)]['session']['id'] = sv[1][0].id
-			# Get the percentage to 2 decimal places
-			context['sessions'][str(i)]['session']['viability'] = str(math.floor(sv[0] * 10000) / 100) + " %"
-			context['sessions'][str(i)]['session']['start'] = sv[1][0].start
-			context['sessions'][str(i)]['session']['end_time'] = sv[1][0].end_time
-			context['sessions'][str(i)]['session']['competitive'] = sv[1][0].competitive
-			context['sessions'][str(i)]['session']['recommend_level'] = sv[2]
-			context['sessions'][str(i)]['game_image'] = sv[1][0].game.image.url
+			# Get the connected players
+			session_profiles = Session_Profile.objects.filter(session=sv[1][0])
 
-	if request.GET.get('Join Session'):
-		session_id = request.GET.get('id')
+			# Format: sv[<Viability, [Session, Availability], Recommend-Level>, players]
+			context['manual_matchmaking'][str(i)] = {}
+			context['manual_matchmaking'][str(i)]['session'] = {}
+			context['manual_matchmaking'][str(i)]['session']['pk'] = sv[1][0].id
+			context['manual_matchmaking'][str(i)]['session']['id'] = i
+			# Get the percentage to 2 decimal places
+			context['manual_matchmaking'][str(i)]['session']['viability'] = math.floor(sv[0] * 10000) / 100
+			context['manual_matchmaking'][str(i)]['session']['start'] = sv[1][0].start
+			context['manual_matchmaking'][str(i)]['session']['end_time'] = sv[1][0].end_time
+			context['manual_matchmaking'][str(i)]['session']['competitive'] = sv[1][0].competitive
+			context['manual_matchmaking'][str(i)]['session']['recommend_level'] = sv[2]
+			context['manual_matchmaking'][str(i)]['game_image'] = sv[1][0].game.image.url
+
+			# Assign Players
+			count = 0
+			context['manual_matchmaking'][str(i)]['players'] = {}
+			for ses_p in session_profiles:
+				# Get their attached account
+				game_account = Profile_Connected_Game_Account.objects.filter(game=sv[1][0].game, profile=ses_p.profile).first()
+				if game_account is None:
+					break
+				# Initialise the player storage
+				context['manual_matchmaking'][str(i)]['players'][str(count)] = {}
+				# Assign details
+				context['manual_matchmaking'][str(i)]['players'][str(count)]['name'] = game_account.game_player_tag
+				context['manual_matchmaking'][str(i)]['players'][str(count)]['teamwork_commends'] = ses_p.profile.teamwork_commends
+				context['manual_matchmaking'][str(i)]['players'][str(count)]['sportsmanship_commends'] = ses_p.profile.sportsmanship_commends
+				context['manual_matchmaking'][str(i)]['players'][str(count)]['skill_commends'] = ses_p.profile.skill_commends
+				context['manual_matchmaking'][str(i)]['players'][str(count)]['communication_commends'] = ses_p.profile.communication_commends
+
+				# Go to next connnected user
+				count += 1
+			# Go to the next session
+			i += 1
+
+	if pk is not None:
+		session_id = pk
 		session = sessions[int(session_id)][1][0]
 		avail = sessions[int(session_id)][1][1]
 		# Create a user session
@@ -1121,7 +1152,9 @@ def manual_matchmaking(request):
 
 		join_session(player_session, session, avail)
 		return redirect('dashboard')
-	return render(request, 'mysite/manual_matchmaking_list.html', context)
+	
+	data['html_match_list'] = render_to_string('mysite/manual_matchmaking_list.html', context, request=request)
+	return JsonResponse(data)
 
 @login_required
 def matchmaking_preferences(request):
