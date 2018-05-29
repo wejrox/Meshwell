@@ -1,477 +1,473 @@
 {% extends 'mysite/base_meshwell.html' %} {% load static %} {% block title %}{{ title }}{% endblock %} {% block content %}
 
-<!-- <div class="d-none d-lg-block"> -->
-<div class="dashboardContent">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-lg-1"></div>
-			<div class="col-lg-3">
-				<div class="profileColumn1">
-					<div class="row-fluid">
-						<div class="profilePicture img-thumbnail shadow">
-							<!--Profile Picture-->
-							<!-- Hover Effect 12 Code by Mike Young (https://miketricking.github.io/bootstrap-image-hover) -->
-							<div class="hovereffect">
-								<img class="img-responsive" src="{% static 'css/images/dashboard/pp.png' %}" alt="Profile Picture Placeholder" />
-								<div class="overlay">
-									<p>
-										<a href="#">Change Profile Picture</a>
-									</p>
-								</div>
-							</div>
-							<!-- Old Profile Picture Code <img src="https://i.imgur.com/kKDfShy.png" class="img-fluid" alt="Profile Picture Placeholder" style=""> -->
+<div class="container-fluid mt-3">
+	<div class="row">
+		<!--Left Column-->
+		<div class="col-lg-3">
+			<div class="row-fluid">
+				<div class="profilePicture img-thumbnail shadow">
+					<!--Profile Picture-->
+					<!-- Hover Effect 12 Code by Mike Young (https://miketricking.github.io/bootstrap-image-hover) -->
+					<div class="hovereffect">
+						<img class="img-responsive" src="{% static 'css/images/dashboard/pp.png' %}" alt="Profile Picture Placeholder" />
+						<div class="overlay">
+							<p>
+								<a href="#">Change Profile Picture</a>
+							</p>
 						</div>
-						<!--/Profile Picture-->
 					</div>
-					<br>
-					<div class="row-fluid">
-						<div class="profileDetails shadow">
-							<div class="profileDetailsContent">
-								<div style="text-align:center" class="underline">
-									<span class="pull-left" style="float: left; margin-top: 1vh;">
-										Personal
-									</span>
-									<span style="color: #fff;">
-										.
-									</span>
-									<button type="button" class="btn btn-outline-secondary js-edit-profile" data-url="{% url 'edit_profile' %}" style="float:right;">Edit</button>
-									<div class="modal fade" id="modal-edit-profile">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<!--Dynamically created-->
-											</div>
-										</div>
-									</div>
-								</div>
-								<table class="table">
-									<tbody>
-										<tr>
-											<td style="border: none;">
-												Username
-											</td>
-											<td class="value" style="border: none;">
-												{{ profile.username }}
-											</td>
-										</tr>
-										<tr>
-											<td style="border: none;">
-												First Name
-											</td>
-											<td class="value" style="border: none;">
-												{{ profile.first_name }}
-											</td>
-										</tr>
-										<tr>
-											<td style="border: none;">
-												Last Name
-											</td>
-											<td class="value" style="border: none;">
-												{{ profile.last_name }}
-											</td>
-										</tr>
-										<tr>
-											<td style="border: none;">
-												Email
-											</td>
-											<td class="value" style="border: none;">
-												{{ profile.email }}
-											</td>
-										</tr>
-										<tr>
-											<td style="border: none;">
-												Birth Date
-											</td>
-											<td class="value" style="border: none;">
-												{{ profile.birth_date }}
-											</td>
-										</tr>
-										<tr>
-											<td style="border: none;">
-												Sessions Played
-											</td>
-											<td class="value" style="border: none;">
-												{{ profile.sessions_played }}
-											</td>
-										</tr>
-										<tr>
-											<td style="border: none;">
-												Region
-											</td>
-											<td class="value" style="border: none;">
-												{{ profile.pref_server }}
-											</td>
-										</tr>
-										<tr>
-											<td style="border: none;">
-												Discord
-											</td>
-											<td class="value" style="border: none;">
-												{% if profile.discord_id %}
-												<a href="{% url 'discord_disconnect_account' %}" class="btn btn-danger btn-sm" role="button">Disconnect</a>
-												{% else %}
-												<a href="https://discordapp.com/api/oauth2/authorize?response_type=code&client_id=440712654370373632&scope=identify%20guilds.join&redirect_uri=https%3A%2F%2Fwww.meshwell.ml%2Fdiscord_callback"
-												 class="btn btn-info btn-sm" role="button">Connect</a>
-												{% endif %}
-											</td>
-										</tr>
-									</tbody>
-								</table>
-								<span class="underline">Commendations</span>
-								<table class="table">
-									<tbody>
-										<tr>
-											<td style="border: none; width: 32px;">
-												<img src="{% static 'css/images/dashboard/tw_icon.png' %}" width="32" alt="Created by Parallel Digital Studio from Noun Project">
-											</td>
-											<td style="border: none;">
-												Teamwork
-											</td>
-											<td class="value" style="border: none;">
-												{{ profile.teamwork_commends }}
-											</td>
-										</tr>
-										<tr>
-											<td style="border: none;">
-												<img src="{% static 'css/images/dashboard/cm_icon.png' %}" width="32" alt="Created by Gregor Cresnar from Noun Project">
-											</td>
-											<td style="border: none;">
-												Communication
-											</td>
-											<td class="value" style="border: none;">
-												{{ profile.communication_commends }}
-											</td>
-										</tr>
-										<tr>
-											<td style="border: none;">
-												<img src="{% static 'css/images/dashboard/sl_icon.png' %}" width="32" alt="Created by Miguel C Balandrano  from Noun Project">
-											</td>
-											<td style="border: none;">
-												Skill Level
-											</td>
-											<td class="value" style="border: none;">
-												{{ profile.skill_commends }}
-											</td>
-										</tr>
-										<tr>
-											<td style="border: none;">
-												<img src="{% static 'css/images/dashboard/ps_icon.png' %}" width="32" alt="Created by rui from Noun Project">
-											</td>
-											<td style="border: none;">
-												Sportsmanship
-											</td>
-											<td class="value" style="border: none;">
-												{{ profile.sportsmanship_commends }}
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-						<!--/Profile Details-->
-					</div>
-					<br>
-					<div class="row-fluid">
-						<!--Discord Widget-->
-						<div class="discordCustom">
-							<div class="customWidget shadow">
-								<iframe src="https://discordapp.com/widget?id=418990653641588736&theme=light" width="100%" height="500" allowtransparency="true"
-								 frameborder="0"></iframe>
-							</div>
-						</div>
-						<!--/Discord Widget-->
-					</div>
+					<!-- Old Profile Picture Code <img src="https://i.imgur.com/kKDfShy.png" class="img-fluid" alt="Profile Picture Placeholder" style=""> -->
 				</div>
+				<!--/Profile Picture-->
 			</div>
-			<!--/Profile and Discord-->
-			<div class="col col-lg-7">
-				<div class="profileColumn2 shadow">
-					<div class="container">
-						<!--Matchmaking-->
-						<div class="row">
-							{% if not user.profile.in_queue %}
-							<!--Preferences modal-->
-							<div class="modal fade" id="modal-matchmaking-preferences">
+			<br>
+			<div class="row-fluid">
+				<div class="profileDetails shadow">
+					<div class="profileDetailsContent">
+						<div style="text-align:center" class="underline">
+							<span class="pull-left" style="float: left; margin-top: 1vh;">
+								Personal
+							</span>
+							<span style="color: #fff;">
+								.
+							</span>
+							<button type="button" class="btn btn-outline-secondary js-edit-profile" data-url="{% url 'edit_profile' %}" style="float:right;">Edit</button>
+							<div class="modal fade" id="modal-edit-profile">
 								<div class="modal-dialog">
 									<div class="modal-content">
 										<!--Dynamically created-->
 									</div>
 								</div>
 							</div>
-							<!--/Preferences modal-->
-							<div class="matchmakingButtons">
-								<a href="{% url 'enter_queue' %}" type="button" class=" btn btn-danger btn-lg" data-toggle="tooltip" data-placement="bottom"
-								 title="Use our algorithm to find other compatible players." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Smart Matchmaking</a>
-								<button class="btn btn-primary btn-lg js-load-manual-matches" data-toggle="tooltip" data-placement="bottom"
-								 title="Select from a list of potential players you can play with. Compatibility metrics will be shown." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Manual Matchmaking</button>
-								<div class="text-center" style="padding-top:1vh;">
-									<button type="button" class="btn btn-outline-secondary js-matchmaking-preferences" data-url="{% url 'matchmaking_preferences' %}" data-toggle="tooltip" data-placement="bottom"
-									title="Choose how you would like us to find you suitable matches." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Preferences</button>
-								</div>
-							</div>
-							<!--Dynamically created list of sessions-->
-							<div id="manual-matchmaking-list" class='container'>
-								<div class="list-content">
-
-								</div>
-							</div>
-							<!--/Dynamically created list of sessions-->
-							{% else %}
-							<div class="matchmakingButtons">
-								<a href="{% url 'exit_queue' %}" type="button" class="btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom"
-								 title="Cancel your current search for a session." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Cancel Matchmaking</a>
-							</div>
 						</div>
-						<div class="row">
-							<!--Show matching status-->
-							{% if queue.session %}
-								<div class="text-center">
-									<p>
-										<b>You have found a session!</b> <br>
-										<b>Game: </b>{{ queue.session.game_name }} <br>
-										<b>Date: </b>{{ queue.session.start|date:'D d-m-Y' }}<br>
-										<b>Start Time: </b>{{ queue.session.start|date:'H:i a' }}<br>
-										<b>End Time: </b>{{ queue.session.end_time|date:'H:i a' }}<br>
-										<b>Viability: </b>{{ queue.session.viability }}<br>
-									</p>
-								</div>
-								{% else %}
-								<div class="text-center">
-									<p>
-										Searching for a session...<br>
-										Time elapsed: X seconds<br>
-									</p>
-								</div>
-								{% endif %}
-							{% endif %}
-						</div>
-						<!--/Matchmaking-->
-						<hr>
-						<!--Connected Accounts-->
-						<!--Connect account modal-->
-						<div class="modal fade" id="modal-connect-account">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<!--Dynamically created-->
-								</div>
-							</div>
-						</div>
-						<!--/Connect account modal-->
-						<div class="row">
-							<!--Table-->
-							<div class="container">
-								<div class="row">
-									<div class="customTableTitle">
-										<img src="{% static 'css/images/dashboard/cn.png' %}" height="30px" style="border-radius: 12px;"> Connected Game Account
-									</div>
-								</div>
-								<div class="row">
-									<div class="col col-lg-12">
-										<table class="table table-curved table-striped shadow">
-											<thead class="thead-dark">
-												<tr>
-													<th scope="col">Game Name</th>
-													<th scope="col">Connected Account</th>
-													<th scope="col">Platform</th>
-													<th scope="col">Casual MMR</th>
-													<th scope="col">Competitive MMR</th>
-													<th scope="col"></th>
-												</tr>
-											</thead>
-											<tbody>
-												{% for value in connected_accounts %}
-												<tr>
-													<td>{{ value.game.name }}</td>
-													<td>{{ value.game_player_tag }}</td>
-													<td>{{ value.platform }}</td>
-													<td>{{ value.cas_rank }}</td>
-													<td>{{ value.comp_rank }}</td>
-													<td><a href="{% url 'remove_connected_account' pk=value.id %}" class="btn btn-danger btn-sm" >Unlink</button></td>
-												</tr>
-												{% endfor %}
-											</tbody>
-										</table>
-									</div>
-								</div>
-								<div class="row mx-0">
-								    <button class="btn btn-info btn-block js-connect-account" data-url="/dashboard/connected_accounts/add/">Connect Account</button>
-								</div>
-							</div>
-						</div>
-						<!--/Connected Accounts-->
-						<br>
-						<!--Availabilities-->
-						<!--Add-Availability modal-->
-						<div class="modal fade" id="modal-add-availability">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<!--Dynamically created-->
-								</div>
-							</div>
-						</div>
-						<!--/Add-Availability modal-->
-						<!--Edit-Availability modal-->
-						<div class="modal fade" id="modal-edit-availability">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<!--Dynamically created-->
-								</div>
-							</div>
-						</div>
-						<!--/Edit-Availability modal-->
-						<div class="row">
-							<div class="container">
-								<div class="row">
-									<div class="customTableTitle">
-										<img src="{% static 'css/images/dashboard/av.png' %}" height="30px" style="border-radius: 12px;"> Availabilities
-									</div>
-								</div>
-								<div class="row">
-									<div class="col col-lg-12">
-										<table class="table table-curved table-striped shadow">
-											<thead class="thead-dark">
-												<tr>
-													<th scope="col">Day</th>
-													<th scope="col">Start Time</th>
-													<th scope="col">End Time</th>
-													<th scope="col">Competitive</th>
-													<th scope=""></th></th>
-													<th scope=""></th></th>
-												</tr>
-											</thead>
-											<tbody>
-												{% for value in availabilities %}
-												<tr>
-													<td>{{ value.pref_day }}</td>
-													<td>{{ value.start_time }}</td>
-													<td>{{ value.end_time }}</td>
-													<td>{{ value.competitive }}</td>
-													<td><button class="btn btn-info btn-sm js-edit-availability" data-url="{% url 'edit_availability' pk=value.id %}">Edit</button></td>
-													<td><a href="{% url 'remove_availability' pk=value.id %}" class="btn btn-danger btn-sm" >Delete</button></td>
-												</tr>
-												{% endfor %}
-											</tbody>
-										</table>
-									</div>
-								</div>
-								{% if not availabilities %}
-								<div class="text-center">
-									You don't have any availabilities entered. <br>
-									Maybe you should add some?
-								</div>
-								{% endif %}
-								<div class="row mx-0">
-								    <button class="btn btn-info btn-block js-add-availability" data-url="{% url 'add_availability' %}">Add New Availability</button>
-								</div>
-							</div>
-						</div>
-						<!--/Availabilities-->
-						<!--Session History-->
-						<br>
-						<div class="container">
-							<div class="row">
-								<div class="customTableTitle">
-									<img src="{% static 'css/images/dashboard/ht.png' %}" height="30px" style="border-radius: 12px;"> Session History
-								</div>
-							</div>
-							<!--Rate session modal-->
-							<div class="modal fade" id="modal-rate-session">
-								<div class="modal-dialog">
-									<div class="modal-content">
-										<!--Dynamically created-->
-									</div>
-								</div>
-							</div>
-							<!--/Rate session modal-->
-							<div class="container scrollable">
-							<!--Previous Sessions-->
-							{% for key, value in prev_sessions.items %}
-							<div class="row shadow p-3 m-3 rounded-md border">
-								<div class="col p-0">
-									<div>
-									<img class="img-fluid rounded-md" src="{{ value.game.icon }}" height=100pt width=100pt/> 
-									<br>
-									</div>
-									<br><b>{{ value.session.start|date:'D d M Y' }}</b>
-									<br><b>Start:</b> {{ value.session.start|date:'P' }}
-									<br><b>End:</b> {{ value.session.end_time|time:'P' }}
-								</div>
-								<div class="col-7">
-									<div class="scrollable-sm">
-										<table class="table table-curved table-striped">
-											{% for key, value in value.players.items %}
-											<tr>
-												<td style="border: none;">{{ value.name }}</td>
-												<td style="border: none;" align="center">
-													<img src="{% static 'css/images/dashboard/tw_icon.png' %}" width="20" data-toggle="tooltip" data-placement="bottom"
-													title="Teamwork" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
-													{{ value.teamwork_commends }}
-												</td>
-												<td style="border: none;" align="center">
-													<img src="{% static 'css/images/dashboard/cm_icon.png' %}" width="20"data-toggle="tooltip" data-placement="bottom"
-													title="Communication" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
-													{{ value.communication_commends }}
-												</td>
-												<td style="border: none;" align="center">
-													<img src="{% static 'css/images/dashboard/sl_icon.png' %}" width="20"data-toggle="tooltip" data-placement="bottom"
-													title="Skill" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
-													{{ value.skill_commends }}
-												</td>
-												<td style="border: none;" align="center">
-													<img src="{% static 'css/images/dashboard/ps_icon.png' %}" width="20"data-toggle="tooltip" data-placement="bottom"
-													title="Sportsmanship" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
-													{{ value.sportsmanship_commends }}
-												</td>
-											</tr>
-											{% endfor %}
-										</table>
-									</div>
-								</div>
-								<div class="col p-0">
-									<!-- Show the rating they gave the session, or allow them to rate it -->
-									{% if value.session.rating %}
-									<div class="text-center">
-										<b>Your rating: {{ value.session.rating }}/5</b>
-									</div>
-									{% else %}
-										<button class="btn btn-info btn-sm btn-block js-rate-session" data-url="{% url 'rate_session' pk=value.session.id %}">Rate</button>
-									{% endif %}
-									<!--Display viability-->
-									<div class="text-center">
-										{% if value.session.viability >= 80 %}
-										<div style="color:green">
-										{% elif value.session.viability >= 70 %}
-										<div style="color:gold">
-										{% elif value.session.viability >= 60 %}
-										<div style="color:orange">
-										{% elif value.session.viability >= 50 %}
-										<div style="color:darkorange">
+						<table class="table">
+							<tbody>
+								<tr>
+									<td style="border: none;">
+										Username
+									</td>
+									<td class="value" style="border: none;">
+										{{ profile.username }}
+									</td>
+								</tr>
+								<tr>
+									<td style="border: none;">
+										First Name
+									</td>
+									<td class="value" style="border: none;">
+										{{ profile.first_name }}
+									</td>
+								</tr>
+								<tr>
+									<td style="border: none;">
+										Last Name
+									</td>
+									<td class="value" style="border: none;">
+										{{ profile.last_name }}
+									</td>
+								</tr>
+								<tr>
+									<td style="border: none;">
+										Email
+									</td>
+									<td class="value" style="border: none;">
+										{{ profile.email }}
+									</td>
+								</tr>
+								<tr>
+									<td style="border: none;">
+										Birth Date
+									</td>
+									<td class="value" style="border: none;">
+										{{ profile.birth_date }}
+									</td>
+								</tr>
+								<tr>
+									<td style="border: none;">
+										Sessions Played
+									</td>
+									<td class="value" style="border: none;">
+										{{ profile.sessions_played }}
+									</td>
+								</tr>
+								<tr>
+									<td style="border: none;">
+										Region
+									</td>
+									<td class="value" style="border: none;">
+										{{ profile.pref_server }}
+									</td>
+								</tr>
+								<tr>
+									<td style="border: none;">
+										Discord
+									</td>
+									<td class="value" style="border: none;">
+										{% if profile.discord_id %}
+										<a href="{% url 'discord_disconnect_account' %}" class="btn btn-danger btn-sm" role="button">Disconnect</a>
 										{% else %}
-										<div style="color:red">
+										<a href="https://discordapp.com/api/oauth2/authorize?response_type=code&client_id=440712654370373632&scope=identify%20guilds.join&redirect_uri=https%3A%2F%2Fwww.meshwell.ml%2Fdiscord_callback"
+											class="btn btn-info btn-sm" role="button">Connect</a>
 										{% endif %}
-											<div style="font-size:5rem;line-height:4rem;padding-top:10pt;">
-												{{value.session.viability}}
-											</div>
-											<div style="font-size:2rem;">
-												% Match
-											</div>
-										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<span class="underline">Commendations</span>
+						<table class="table">
+							<tbody>
+								<tr>
+									<td style="border: none; width: 32px;">
+										<img src="{% static 'css/images/dashboard/tw_icon.png' %}" width="32" alt="Created by Parallel Digital Studio from Noun Project">
+									</td>
+									<td style="border: none;">
+										Teamwork
+									</td>
+									<td class="value" style="border: none;">
+										{{ profile.teamwork_commends }}
+									</td>
+								</tr>
+								<tr>
+									<td style="border: none;">
+										<img src="{% static 'css/images/dashboard/cm_icon.png' %}" width="32" alt="Created by Gregor Cresnar from Noun Project">
+									</td>
+									<td style="border: none;">
+										Communication
+									</td>
+									<td class="value" style="border: none;">
+										{{ profile.communication_commends }}
+									</td>
+								</tr>
+								<tr>
+									<td style="border: none;">
+										<img src="{% static 'css/images/dashboard/sl_icon.png' %}" width="32" alt="Created by Miguel C Balandrano  from Noun Project">
+									</td>
+									<td style="border: none;">
+										Skill Level
+									</td>
+									<td class="value" style="border: none;">
+										{{ profile.skill_commends }}
+									</td>
+								</tr>
+								<tr>
+									<td style="border: none;">
+										<img src="{% static 'css/images/dashboard/ps_icon.png' %}" width="32" alt="Created by rui from Noun Project">
+									</td>
+									<td style="border: none;">
+										Sportsmanship
+									</td>
+									<td class="value" style="border: none;">
+										{{ profile.sportsmanship_commends }}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!--/Profile Details-->
+			</div>
+			<br>
+			<div class="row-fluid">
+				<!--Discord Widget-->
+				<div class="discordCustom">
+					<div class="customWidget shadow">
+						<iframe src="https://discordapp.com/widget?id=418990653641588736&theme=light" width="100%" height="500" allowtransparency="true"
+							frameborder="0"></iframe>
+					</div>
+				</div>
+				<!--/Discord Widget-->
+			</div>
+		</div>
+		<!--/Left Column-->
+		<!--Right Column-->
+		<div class="col col-lg-7">
+			<!--Container-->
+			<div class="container shadow rounded-md" style="border: 1px solid #cdcdcd">
+				<!--Matchmaking Buttons-->
+				<div class="row text-center">
+					{% if not user.profile.in_queue %}
+					<!--Preferences modal-->
+					<div class="modal fade" id="modal-matchmaking-preferences">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<!--Dynamically created-->
+							</div>
+						</div>
+					</div>
+					<!--/Preferences modal-->
+					<div class="matchmakingButtons">
+						<a href="{% url 'enter_queue' %}" type="button" class=" btn btn-danger btn-lg" data-toggle="tooltip" data-placement="bottom"
+							title="Use our algorithm to find other compatible players." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Smart Matchmaking</a>
+						<button class="btn btn-primary btn-lg js-load-manual-matches" data-toggle="tooltip" data-placement="bottom"
+							title="Select from a list of potential players you can play with. Compatibility metrics will be shown." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Manual Matchmaking</button>
+						<div class="text-center" style="padding-top:1vh;">
+							<button type="button" class="btn btn-outline-secondary js-matchmaking-preferences" data-url="{% url 'matchmaking_preferences' %}" data-toggle="tooltip" data-placement="bottom"
+							title="Choose how you would like us to find you suitable matches." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Preferences</button>
+						</div>
+					</div>
+					<!--Dynamically created list of sessions-->
+					<div id="manual-matchmaking-list" class='container'>
+						<div class="list-content">
+
+						</div>
+					</div>
+					<!--/Dynamically created list of sessions-->
+					{% else %}
+					<div class="matchmakingButtons">
+						<a href="{% url 'exit_queue' %}" type="button" class="btn-primary btn-lg" data-toggle="tooltip" data-placement="bottom"
+							title="Cancel your current search for a session." style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;">Cancel Matchmaking</a>
+					</div>
+				</div>
+				<!--/Matchmaking Butons-->
+				<!--Matching Session Details-->
+				<div class="row">
+					<!--Show matching status-->
+					{% if queue.session %}
+						<div class="text-center">
+							<p>
+								<b>You have found a session!</b> <br>
+								<b>Game: </b>{{ queue.session.game_name }} <br>
+								<b>Date: </b>{{ queue.session.start|date:'D d-m-Y' }}<br>
+								<b>Start Time: </b>{{ queue.session.start|date:'H:i a' }}<br>
+								<b>End Time: </b>{{ queue.session.end_time|date:'H:i a' }}<br>
+								<b>Viability: </b>{{ queue.session.viability }}<br>
+							</p>
+						</div>
+						{% else %}
+						<div class="text-center">
+							<p>
+								Searching for a session...<br>
+								Time elapsed: X seconds<br>
+							</p>
+						</div>
+						{% endif %}
+					{% endif %}
+				</div>
+				<!--/Matching Session Details-->
+				<hr>
+				<!--Connect account modal-->
+				<div class="modal fade" id="modal-connect-account">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<!--Dynamically created-->
+						</div>
+					</div>
+				</div>
+				<!--/Connect account modal-->
+				<!--Connected Accounts-->
+				<div class="row">
+					<div class="container">
+						<div class="row mx-0">
+							<div class="customTableTitle">
+								<img class="rounded-sm" src="{% static 'css/images/dashboard/cn.png' %}" height="30px"> Connected Game Account
+							</div>
+						</div>
+						<div class="row">
+							<div class="col col-lg-12">
+								<table class="table table-curved table-striped shadow">
+									<thead class="thead-dark">
+										<tr>
+											<th scope="col">Game Name</th>
+											<th scope="col">Connected Account</th>
+											<th scope="col">Platform</th>
+											<th scope="col">Casual MMR</th>
+											<th scope="col">Competitive MMR</th>
+											<th scope="col"></th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for value in connected_accounts %}
+										<tr>
+											<td>{{ value.game.name }}</td>
+											<td>{{ value.game_player_tag }}</td>
+											<td>{{ value.platform }}</td>
+											<td>{{ value.cas_rank }}</td>
+											<td>{{ value.comp_rank }}</td>
+											<td><a href="{% url 'remove_connected_account' pk=value.id %}" class="btn btn-danger btn-sm" >Unlink</button></td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="row mx-0">
+							<button class="btn btn-info btn-block js-connect-account" data-url="/dashboard/connected_accounts/add/">Connect Account</button>
+						</div>
+					</div>
+				</div>
+				<!--/Connected Accounts-->
+				<!--Add-Availability modal-->
+				<div class="modal fade" id="modal-add-availability">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<!--Dynamically created-->
+						</div>
+					</div>
+				</div>
+				<!--/Add-Availability modal-->
+				<!--Edit-Availability modal-->
+				<div class="modal fade" id="modal-edit-availability">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<!--Dynamically created-->
+						</div>
+					</div>
+				</div>
+				<hr>
+				<!--/Edit-Availability modal-->
+				<!--Availabilities-->
+				<div class="row">
+					<div class="container">
+						<div class="row mx-0">
+							<div class="customTableTitle">
+								<img class="rounded-sm" src="{% static 'css/images/dashboard/av.png' %}" height="30px"> Availabilities
+							</div>
+						</div>
+						<div class="row">
+							<div class="col col-lg-12">
+								<table class="table table-curved table-striped shadow">
+									<thead class="thead-dark">
+										<tr>
+											<th scope="col">Day</th>
+											<th scope="col">Start Time</th>
+											<th scope="col">End Time</th>
+											<th scope="col">Competitive</th>
+											<th scope=""></th></th>
+											<th scope=""></th></th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for value in availabilities %}
+										<tr>
+											<td>{{ value.pref_day }}</td>
+											<td>{{ value.start_time }}</td>
+											<td>{{ value.end_time }}</td>
+											<td>{{ value.competitive }}</td>
+											<td><button class="btn btn-info btn-sm js-edit-availability" data-url="{% url 'edit_availability' pk=value.id %}">Edit</button></td>
+											<td><a href="{% url 'remove_availability' pk=value.id %}" class="btn btn-danger btn-sm" >Delete</button></td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+						{% if not availabilities %}
+						<div class="text-center">
+							You don't have any availabilities entered. <br>
+							Maybe you should add some?
+						</div>
+						{% endif %}
+						<div class="row mx-0">
+							<button class="btn btn-info btn-block js-add-availability" data-url="{% url 'add_availability' %}">Add New Availability</button>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<!--/Availabilities-->
+				<!--Session History-->
+				<br>
+				<div class="container px-0">
+					<div class="row mx-0">
+						<div class="customTableTitle">
+							<img class="rounded-sm" src="{% static 'css/images/dashboard/ht.png' %}" height="30px"> Session History
+						</div>
+					</div>
+					<!--Rate session modal-->
+					<div class="modal fade" id="modal-rate-session">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<!--Dynamically created-->
+							</div>
+						</div>
+					</div>
+					<!--/Rate session modal-->
+					<div class="container scrollable">
+					<!--Previous Sessions Display-->
+					{% for key, value in prev_sessions.items %}
+					<div class="row shadow p-3 m-3 rounded-md border">
+						<div class="col p-0">
+							<div>
+							<img class="img-fluid rounded-md" src="{{ value.game.icon }}" height=100pt width=100pt/> 
+							<br>
+							</div>
+							<br><b>{{ value.session.start|date:'D d M Y' }}</b>
+							<br><b>Start:</b> {{ value.session.start|date:'P' }}
+							<br><b>End:</b> {{ value.session.end_time|time:'P' }}
+						</div>
+						<div class="col-7">
+							<div class="scrollable-sm">
+								<table class="table table-curved table-striped">
+									{% for key, value in value.players.items %}
+									<tr>
+										<td style="border: none;">{{ value.name }}</td>
+										<td style="border: none;" align="center">
+											<img src="{% static 'css/images/dashboard/tw_icon.png' %}" width="20" data-toggle="tooltip" data-placement="bottom"
+											title="Teamwork" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
+											{{ value.teamwork_commends }}
+										</td>
+										<td style="border: none;" align="center">
+											<img src="{% static 'css/images/dashboard/cm_icon.png' %}" width="20"data-toggle="tooltip" data-placement="bottom"
+											title="Communication" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
+											{{ value.communication_commends }}
+										</td>
+										<td style="border: none;" align="center">
+											<img src="{% static 'css/images/dashboard/sl_icon.png' %}" width="20"data-toggle="tooltip" data-placement="bottom"
+											title="Skill" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
+											{{ value.skill_commends }}
+										</td>
+										<td style="border: none;" align="center">
+											<img src="{% static 'css/images/dashboard/ps_icon.png' %}" width="20"data-toggle="tooltip" data-placement="bottom"
+											title="Sportsmanship" style="font-family: ubuntulight, ubunturegular, Ubuntu-R, Arial, Helvetica, sans-serif;"> 
+											{{ value.sportsmanship_commends }}
+										</td>
+									</tr>
+									{% endfor %}
+								</table>
+							</div>
+						</div>
+						<div class="col p-0">
+							<!-- Show the rating they gave the session, or allow them to rate it -->
+							{% if value.session.rating %}
+							<div class="text-center">
+								<b>Your rating: {{ value.session.rating }}/5</b>
+							</div>
+							{% else %}
+								<button class="btn btn-info btn-sm btn-block js-rate-session" data-url="{% url 'rate_session' pk=value.session.id %}">Rate</button>
+							{% endif %}
+							<!--Display viability-->
+							<div class="text-center">
+								{% if value.session.viability >= 80 %}
+								<div style="color:green">
+								{% elif value.session.viability >= 70 %}
+								<div style="color:gold">
+								{% elif value.session.viability >= 60 %}
+								<div style="color:orange">
+								{% elif value.session.viability >= 50 %}
+								<div style="color:darkorange">
+								{% else %}
+								<div style="color:red">
+								{% endif %}
+									<div style="font-size:5rem;line-height:4rem;padding-top:10pt;">
+										{{value.session.viability}}
+									</div>
+									<div style="font-size:2rem;">
+										% Match
 									</div>
 								</div>
 							</div>
-							{% empty %}
-							<div class="text-center">
-								You haven't played any sessions!
-							</div>
-							{% endfor %}
-							<!--/Previous Sessions-->
-							</div>
 						</div>
-						<!--/Session History-->
+						{% empty %}
+						<div class="text-center">
+							You haven't played any sessions!
+						</div>
+						{% endfor %}
+						<!--/Previous Sessions Display-->
 					</div>
+					<!--/Session History-->
 				</div>
+				<!--/Container-->
 			</div>
-			<!--/Matchmaking and Tables-->
-			<div class="col-lg-1"></div>
+			<!--/Right Column-->
 		</div>
 	</div>
 </div>
