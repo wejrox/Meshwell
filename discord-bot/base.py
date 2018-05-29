@@ -11,7 +11,7 @@ import sys
 # Run code on exit of script
 import atexit
 
-debug = False
+debug = True
 bot = commands.Bot(command_prefix=bot_settings.cmd_prefix)
 
 # Database
@@ -52,12 +52,17 @@ async def auto_manage_channels():
 	# Query database every x timeframe
 	print("=================\nRunning\n=================")
 	while not bot.is_closed():
+		print("Checking for sessions")
 		# Get upcoming sessions
 		cursor = db_connection.cursor()
+		print("Made cursor")
 		cursor.execute(query_data.upcoming_sessions_query)
+		print("Executed query")
 		upcoming = cursor.fetchall()
+		print("About to check them")
 		# Create channels if needed
 		if len(upcoming) > 0:
+			print('Found Something')
 			# Run only if in debug mode for performance reasons
 			if debug:
 				print("Fetched upcoming session details [session_id, discord_id]:")
@@ -77,7 +82,7 @@ async def auto_manage_channels():
 					# Set default perms
 					await channel.set_permissions(guild.default_role, connect=False)
 					# Assign permissions to channel for users
-					member = guild.get_member(row[1])
+					member = guild.get_member(int(row[1]))
 					if member is not None:
 						await channel.set_permissions(member, connect=True)
 						print("Permissions set")
