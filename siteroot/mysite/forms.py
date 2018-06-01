@@ -171,7 +171,10 @@ class ConnectAccountForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
+		self.game_pk = kwargs.pop('game_pk')
 		super(ConnectAccountForm, self).__init__(*args, **kwargs)
+		self['game'].initial = self.game_pk
+		self['game_player_tag'].initial = ""
 	
 	def save(self):
 		print(self.cleaned_data)

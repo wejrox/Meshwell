@@ -3,7 +3,7 @@ $(function () {
     var loadForm = function () {
         var btn = $(this);
         $.ajax({
-            url: btn.attr("data-url"),
+            url: btn.attr("data-url") + btn.attr("game-pk"),
             type: 'get',
             dataType: 'json',
             beforeSend: function() {

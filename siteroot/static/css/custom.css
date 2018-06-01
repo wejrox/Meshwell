@@ -687,23 +687,28 @@ td.value{
 [type=reset], [type=submit], button, html [type=button]{
   -webkit-appearance: none;
 }
-
-/*Carousel*/
-.vertical-center {
-  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
-  min-height: 100vh; /* These two lines are counted as one :-)       */
-
-  display: flex;
-  align-items: center;
+ /* Carousel */
+.carousel{
+  min-width: 100% !important;
 }
-
-.carousel img {
+.carousel img{
   margin: auto;
   min-width: 100% !important
 }
 
 .carousel-inner{
-  background:#272727;
+  background:#4b4b4b;
+}
+
+.carousel .disconnected{
+  filter: contrast(50%);
+}
+
+.buttons{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 10pt;
 }
 
 /*Navbar*/
