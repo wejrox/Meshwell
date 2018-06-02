@@ -72,6 +72,7 @@ def dashboard(request):
 			'username':request.user.username,
 			'first_name':request.user.first_name,
 			'last_name':request.user.last_name,
+			'email':request.user.email,
 			'pref_server':request.user.profile.pref_server,
 			'birth_date':request.user.profile.birth_date,
 			'sessions_played':request.user.profile.sessions_played,
