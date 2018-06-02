@@ -256,17 +256,20 @@
 							{% for key, value in connected_accounts.items %}
 							<div class="carousel-item {% if key == '0' %}active{% endif %}">
 								<img class="d-block w-100 {% if value.game_player_tag is None %}disconnected{% endif %}" src="{{ value.game.image_url }}" alt="{{ value.game.name }}">
-								<div class="carousel-caption d-none d-md-block">
-									{% if value.game_player_tag is not None %}
-									<h5>{{value.game_player_tag}}</h5>
-									{% else %}
-									<h5>No account connected</h5>
-									{% endif %}
+								{% if value.game_player_tag is not None %}
+								<div class="d-none d-md-block">
+									<div class="player-text-background">
+										<div class="player-text">
+											
+											{{value.game_player_tag}}
+										</div>
+									</div>
 								</div>
+								{% endif %}
 								{% if value.game_player_tag is not None %}
 								<div class="carousel-caption d-block">
 									<p>
-										<a href="{% url 'remove_connected_account' pk=value.id %}" class="btn btn-md btn-primary">Disconnect</a>
+										<a href="{% url 'remove_connected_account' pk=value.id %}" class="btn btn-md btn-danger">Disconnect</a>
 									</p>
 								</div>
 								{% else %}

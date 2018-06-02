@@ -693,24 +693,38 @@ td.value{
 }
 .carousel img{
   margin: auto;
-  min-width: 100% !important
+  max-height: 400px;
 }
-
 .carousel-inner{
   background:#4b4b4b;
+}
+
+.carousel-caption{
+  bottom:0px;
+  padding-bottom:0px;
 }
 
 .carousel .disconnected{
   filter: contrast(50%);
 }
-
-.buttons{
+.carousel .player-text {
   position: absolute;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 10pt;
+  width: 100%;
+  font-size: 5rem;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
 }
-
+.carousel .player-text-background {
+  position: absolute;
+  width: 100%;
+  top: 60%;
+  left: 0px;
+  height: 25%;
+  background: rgba(0, 0, 0, 0.7);
+}
 /*Navbar*/
 .navbar-light .navbar-nav .nav-link{
   color: #2660A4;
