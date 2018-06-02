@@ -83,7 +83,25 @@ def dashboard(request):
 		}
 	}
 
-	context['connected_accounts'] = Profile_Connected_Game_Account.objects.filter(profile=request.user.profile)
+	connected_accounts = Profile_Connected_Game_Account.objects.filter(profile=request.user.profile)
+	games = Game.objects.all()
+
+	context['connected_accounts'] = {}
+	i = 0
+	for game in games:
+		context['connected_accounts'][str(i)] = {}
+		context['connected_accounts'][str(i)]['game'] = {}
+		context['connected_accounts'][str(i)]['game']['pk'] = game.id
+		context['connected_accounts'][str(i)]['game']['name'] = game.name
+		context['connected_accounts'][str(i)]['game']['image_url'] = game.image.url
+		for account in connected_accounts:
+			if account.game == game:
+				context['connected_accounts'][str(i)]['id'] = account.id
+				context['connected_accounts'][str(i)]['game_player_tag'] = account.game_player_tag
+				context['connected_accounts'][str(i)]['platform'] = account.platform
+				context['connected_accounts'][str(i)]['cas_rank'] = account.cas_rank
+				context['connected_accounts'][str(i)]['comp_rank'] = account.comp_rank
+		i += 1
 	context['availabilities'] = Availability.objects.filter(profile=request.user.profile)
 	# Get all required data for displaying previous sessions
 	usr_ses_prof = Session_Profile.objects.filter(profile=request.user.profile, session__start__lt=timezone.now()).exclude(session__end_time__isnull=True).order_by('-session__start')
@@ -423,7 +441,7 @@ def deactivate_user(request):
 	return render(request, 'registration/deactivate.html', context)
 
 @login_required
-def connect_account(request):
+def connect_account(request, game_pk=None):
 	'''
 	Returns a form for connecting account, in JSON format.
 	Displayed in Modal
@@ -433,14 +451,14 @@ def connect_account(request):
 	}
 	data = dict()
 	if request.method == 'POST':
-		form = ConnectAccountForm(request.POST, user=request.user)
+		form = ConnectAccountForm(request.POST, user=request.user, game_pk=game_pk)
 		if form.is_valid():
 			form.save()
 			data['form_is_valid'] = True
 		else:
 			data['form_is_valid'] = False
 	else:
-		form = ConnectAccountForm(user=request.user)
+		form = ConnectAccountForm(user=request.user, game_pk=game_pk)
 
 	# Set the form to whichever form we are using
 	context['form'] = form
@@ -505,12 +523,15 @@ def get_r6siege_ranks(pref_server, player_tag):
 	headers = { 'X-App-Id':'MyRequest' }
 	response = requests.get(url, headers=headers)
 
+	print ("SERVER: " + pref_server)
+	print ("tag: " + player_tag)
 	# Try get the ranks or cancel if we can't
 	try:
 		data = response.json()
 	except:
 		return None
 
+	print('got a response')
 	# Cancel the check if the user was not found or too many were found
 	if not response.ok or len(data) != 1:
 		return None

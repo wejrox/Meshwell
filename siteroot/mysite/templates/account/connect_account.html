@@ -1,7 +1,7 @@
 <!-- Modal -->
 {% load crispy_forms_tags %}
 
-<form method="post" action="{% url 'connect_account' %}" class="js-connect-account-form">
+<form method="post" action="{% url 'connect_account' game_pk=form.game_pk %}" class="js-connect-account-form">
 	{% csrf_token %}
 	<div class="modal-header">
 		<h5 class="modal-title" id="exampleModalLongTitle">Connect Account</h5>

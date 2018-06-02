@@ -687,25 +687,44 @@ td.value{
 [type=reset], [type=submit], button, html [type=button]{
   -webkit-appearance: none;
 }
-
-/*Carousel*/
-.vertical-center {
-  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
-  min-height: 100vh; /* These two lines are counted as one :-)       */
-
-  display: flex;
-  align-items: center;
+ /* Carousel */
+.carousel{
+  min-width: 100% !important;
 }
-
-.carousel img {
+.carousel img{
   margin: auto;
-  min-width: 100% !important
+  max-height: 400px;
 }
-
 .carousel-inner{
-  background:#272727;
+  background:#4b4b4b;
 }
 
+.carousel-caption{
+  bottom:0px;
+  padding-bottom:0px;
+}
+
+.carousel .disconnected{
+  filter: contrast(50%);
+}
+.carousel .player-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  font-size: 5rem;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+}
+.carousel .player-text-background {
+  position: absolute;
+  width: 100%;
+  top: 60%;
+  left: 0px;
+  height: 25%;
+  background: rgba(0, 0, 0, 0.7);
+}
 /*Navbar*/
 .navbar-light .navbar-nav .nav-link{
   color: #2660A4;
