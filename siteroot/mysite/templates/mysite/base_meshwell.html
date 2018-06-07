@@ -73,11 +73,11 @@
 			    </ul>
 			    <ul class="navbar-nav ml-auto">
 			    	{% if user.is_authenticated %}
-			    	<div class="navName">
+			    	<div class="navName d-none d-lg-flex">
 			    		Hello, {{ user.get_username }}
 			    	</div>
 
-			    	<div style="border-left: 1px solid #2f97c1; height: 1cm; padding-right: 20px;"></div>
+			    	<div class="d-none d-lg-block" style="border-left: 1px solid #2f97c1; height: 1cm; padding-right: 20px;"></div>
 			    	{% endif %}
 			    	<li class="nav-item">
 						{% if user.is_authenticated %}
