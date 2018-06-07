@@ -1,6 +1,7 @@
 {% load static %}
 <!--Manual Matchmaking-->
 <div class="container">
+	{% if manual_matchmaking %}
 	<div class="container scrollable">
 		<!--Previous Sessions-->
 		{% for key, value in manual_matchmaking.items %}
@@ -52,7 +53,7 @@
 					</table>
 				</div>
 			</div>
-			<div class="col p-0">
+			<div class="col-lg-2 p-0">
 				<!-- Join session button -->
 				<a href="{% url 'manual_matchmaking' pk=value.session.id %}" class="btn btn-info btn-sm btn-block">Join</a>
 				<!--Display viability-->
@@ -79,12 +80,13 @@
 			</div>
 			
 		</div>
-		{% empty %}
-		<div class="text-center">
-			There are no upcoming sessions matching your requirements.
-		</div>
 		{% endfor %}
 		<!--/Previous Sessions-->
 	</div>
+	{% else %}
+	<div class="text-center">
+		There are no upcoming sessions matching your requirements.
+	</div>
+	{% endif %}
 </div>
 <!--/Manual Matchmaking-->

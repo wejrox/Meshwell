@@ -1,7 +1,8 @@
 {% extends 'mysite/base_meshwell.html' %} {% load static %} {% block title %}{{ title }}{% endblock %} {% block content %}
 
-<div class="container-fluid mt-3">
+<div class="container-fluid mt-3 mb-3">
 	<div class="row">
+		<div class="col-none col-lg-1"></div>
 		<!--Left Column-->
 		<div class="col-lg-3">
 			<div class="row-fluid">
@@ -22,15 +23,10 @@
 			</div>
 			<br>
 			<div class="row-fluid">
-				<div class="profileDetails shadow">
-					<div class="profileDetailsContent">
-						<div style="text-align:center" class="underline">
-							<span class="pull-left" style="float: left; margin-top: 1vh;">
-								Personal
-							</span>
-							<span style="color: #fff;">
-								.
-							</span>
+				<div class="rounded-md border shadow">
+					<div class="p-3">
+						<div class="underline">
+							<span>Personal</span>
 							<button type="button" class="btn btn-outline-secondary js-edit-profile" data-url="{% url 'edit_profile' %}" style="float:right;">Edit</button>
 							<div class="modal fade" id="modal-edit-profile">
 								<div class="modal-dialog">
@@ -169,11 +165,9 @@
 			<br>
 			<div class="row-fluid">
 				<!--Discord Widget-->
-				<div class="discordCustom">
-					<div class="customWidget shadow">
-						<iframe src="https://discordapp.com/widget?id=418990653641588736&theme=light" width="100%" height="500" allowtransparency="true"
-							frameborder="0"></iframe>
-					</div>
+				<div class="shadow rounded-md mb-3">
+					<iframe src="https://discordapp.com/widget?id=418990653641588736&theme=light" width="100%" height="500" allowtransparency="true"
+						frameborder="0"></iframe>
 				</div>
 				<!--/Discord Widget-->
 			</div>
@@ -182,7 +176,7 @@
 		<!--Right Column-->
 		<div class="col col-lg-7" style="background-color:white">
 			<!--Container-->
-			<div class="container shadow rounded-md" style="border: 1px solid #cdcdcd">
+			<div class="container shadow rounded-md border">
 				<!--Matchmaking Buttons-->
 				<div class="row">
 					{% if not user.profile.in_queue %}
@@ -364,7 +358,7 @@
 				<hr>
 				<!--/Availabilities-->
 				<!--Session History-->
-				<div class="container px-0">
+				<div class="container px-0 pb-3">
 					<div class="row mx-0">
 						<div class="customTableTitle">
 							<img class="rounded-sm" src="{% static 'css/images/dashboard/ht.png' %}" height="30px"> Session History
@@ -422,7 +416,7 @@
 								</table>
 							</div>
 						</div>
-						<div class="col p-0">
+						<div class="col-lg-2 px-0">
 							<!-- Show the rating they gave the session, or allow them to rate it -->
 							{% if value.session.rating %}
 							<div class="text-center">
@@ -467,6 +461,7 @@
 			</div>
 			<!--/Right Column-->
 		</div>
+		<div class="col-none col-lg-1"></div>
 	</div>
 </div>
 <!-- </div> /Desktop View-->
