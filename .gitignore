@@ -16,6 +16,7 @@ migrations/
 # Ignore pycache files
 *.pyc
 .vscode-root/
+.vscode/
 
 # Ignore bot settings file as it has the bot key
 discord-bot/bot_settings.py

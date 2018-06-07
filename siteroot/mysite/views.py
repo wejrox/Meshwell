@@ -23,6 +23,9 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from mysite import private_settings
 
+def testing(request):
+	return render(request, 'mysite/testing.html', {})
+
 @receiver(user_logged_in)
 def auto_profile(sender, request, user, **kwargs):
 	'''

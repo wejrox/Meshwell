@@ -28,6 +28,7 @@ from django.contrib import admin
 urlpatterns = [
     # Core
     path('', site_views.index, name='index'),
+    path('testing/', site_views.testing, name='testing'),
     path('feedback/', site_views.feedback, name='feedback'),
     path('catalog/', site_views.catalog, name='catalog'),
     path('about-us/', site_views.about_us, name='about-us'),
