@@ -182,7 +182,11 @@
 									<hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
 									<ul>
 											<li><a href="{% url 'index' %}">Homepage</a></li>
+											{% if user.is_authenticated %}
+											<li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+											{% else %}
 											<li><a href="#">Register</a></li>
+											{% endif %}
 											<!-- Modal element goes here -->
 											<li><a href="{% url 'catalog' %}">Supported Games</a></li>
 									</ul>
@@ -192,7 +196,6 @@
 									<hr style="border-color: #696969; margin-left: 20%; margin-right: 20%;">
 									<ul>
 											<li><a href="{% url 'about-us' %}">Company Information</a></li>
-											<li><a href="#">Contact us</a></li>
 											<!-- Modal element goes here -->
 									</ul>
 							</div>
@@ -202,6 +205,7 @@
 									<ul>
 											<li><a href="{% url 'terms-of-service' %}">Terms of Service</a></li>
 											<li><a href="{% url 'privacy-policy' %}">Privacy Policy</a></li>
+											<li><a href="#">Contact us</a></li>
 											<li><a href="{% url 'feedback' %}">Feedback</a></li>
 									</ul>
 							</div>
