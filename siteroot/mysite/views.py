@@ -518,41 +518,96 @@ def connected_accounts(request):
 
 	return render(request, 'mysite/connected_accounts.html', context)
 
-def get_r6siege_ranks(pref_server, player_tag):
+def get_r6siege_data(url, params=None):
 	'''
-	Gets the player details specified, or None if there are multiple entries
-	Decides on region based on the profiles region.
+	Given a url to make a request from, gets data and returns it or none
 	'''
-	url = 'https://r6db.com/api/v2/players?name=' + player_tag
-	headers = { 'X-App-Id':'MyRequest' }
-	response = requests.get(url, headers=headers)
+	headers = {
+		'Content-Type':'application/json', 
+		'Ubi-AppId':'39baebad-39e5-4552-8c25-2c9b919064e2',
+		'Authorization':'ubi_v1 t=' + private_settings.SIEGE_AUTH
+	}
 
-	print ("SERVER: " + pref_server)
-	print ("tag: " + player_tag)
-	# Try get the ranks or cancel if we can't
+	response = requests.get(url, headers=headers, params=params)
+
 	try:
 		data = response.json()
+		if not response.ok or len(data) != 1:
+			return None
+		return data
 	except:
 		return None
 
-	print('got a response')
-	# Cancel the check if the user was not found or too many were found
-	if not response.ok or len(data) != 1:
+def get_r6siege_profile(player_tag, platform):
+	''' 
+	Gets the players profile details given their name
+	'''
+	url = 'https://public-ubiservices.ubi.com/v2/profiles'
+	params = {'platformType':platform, 'nameOnPlatform':player_tag}
+	data = get_r6siege_data(url, params)
+	if len(data['profiles']) == 0:
+		return None
+	return data['profiles'][0]['profileId']
+
+def get_r6siege_ranks(pref_server, player_tag, platform):
+	'''
+	Gets the player details specified, or the first entry if there are multiple entries
+	Decides on region based on the profiles region and platform.
+	'''
+	platform_url_names = {
+	"uplay": "OSBOR_PC_LNCH_A",
+	"psn": "OSBOR_PS4_LNCH_A",
+	"xbl": "OSBOR_XBOXONE_LNCH_A"
+	}
+	platform_space_ids = {
+	"uplay": "5172a557-50b5-4665-b7db-e3f2e8c5041d",
+	"psn": "05bfb3f7-6c21-4c42-be1f-97a33fb5cf66",
+	"xbl": "98a601e5-ca91-4440-b1c5-753f601a2c90"
+	}
+	# Parse platform
+	if platform == Profile_Connected_Game_Account.PC:
+		space = platform_space_ids['uplay']
+		url_name = platform_url_names['uplay']
+		platform = 'uplay'
+	elif platform == Profile_Connected_Game_Account.PS4:
+		space = platform_space_ids['psn']
+		url_name = platform_url_names['psn']
+		platform = 'psn'
+	elif platform == Profile_Connected_Game_Account.XBOX:
+		space = platform_space_ids['xbl']
+		url_name = platform_url_names['xbl']
+		platform = 'xbl'
+	else:
+		return None
+	
+	# Parse region
+	if pref_server == 'Oceania' or pref_server == 'Asia' or pref_server == 'Middle-East':
+		pref_server = 'apac'
+	elif pref_server == 'South America' or pref_server == 'US-West' or pref_server == 'US-East':
+		pref_server = 'ncsa'
+	elif pref_server == 'Europe' or pref_server == 'South Africa':
+		pref_server = 'emea'
+	else:
 		return None
 
-	# Decide which region to check
-	region = pref_server
-	if region == 'Oceania' or region == 'Asia' or region == 'Middle-East':
-		region = 'apac'
-	elif region == 'South America' or region == 'US-West' or region == 'US-East':
-		region = 'ncsa'
-	elif region == 'Europe' or region == 'South Africa':
-		region = 'emea'
+	# Get profile ID for rank access
+	profile_id = get_r6siege_profile(player_tag, platform)
+	if profile_id is None:
+		return None
 
-	ranks = { 'cas_rank':0, 'comp_rank':0 }
+	url = 'https://public-ubiservices.ubi.com/v1/spaces/%s/sandboxes/%s/r6karma/players' % (space, url_name)
+	params = {
+		'board_id':'pvp_ranked',
+		'region_id':pref_server,
+		'season_id':'-1',
+		'profile_ids':profile_id
+	}
+	data = get_r6siege_data(url, params)
 
-	ranks['cas_rank'] = 0
-	ranks['comp_rank'] = data[0]['ranks'][region]['mmr']
+	if data is None:
+		return None
+
+	ranks = { 'cas_rank':0, 'comp_rank':data['players'][profile_id]['mmr'] }
 
 	return ranks
 

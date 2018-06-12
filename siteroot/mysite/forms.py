@@ -128,6 +128,7 @@ class FeedbackForm(forms.ModelForm):
 	class Meta:
 		model=Feedback
 		exclude=[]
+		
 # User login
 class LoginForm(forms.Form):
 	username = forms.CharField(help_text="Enter your username.")
@@ -211,7 +212,7 @@ class ConnectAccountForm(forms.ModelForm):
 				ranks = None
 				# Get ranks depending on game selected
 				if game.name == 'Rainbow Six Siege':
-					ranks = views.get_r6siege_ranks(self.user.profile.pref_server, cleaned_data.get('game_player_tag'))
+					ranks = views.get_r6siege_ranks(self.user.profile.pref_server, cleaned_data.get('game_player_tag'), cleaned_data.get('platform'))
 				else:
 					raise forms.ValidationError("%s isn't a supported game" % str(game))
 				
