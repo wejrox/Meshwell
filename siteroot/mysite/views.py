@@ -545,7 +545,7 @@ def get_r6siege_profile(player_tag, platform):
 	url = 'https://public-ubiservices.ubi.com/v2/profiles'
 	params = {'platformType':platform, 'nameOnPlatform':player_tag}
 	data = get_r6siege_data(url, params)
-	if len(data['profiles']) == 0:
+	if data is None or len(data['profiles']) == 0:
 		return None
 	return data['profiles'][0]['profileId']
 
@@ -719,7 +719,7 @@ def get_suitable_sessions(profile):
 	'''
 	# Modifiers
 	acceptable_mmr_range = 100 # How much above/below us should they be to be viable?
-	min_accepted_viability = 0.4 # A value (out of 1) which states how viable a session must be to be included
+	min_accepted_viability = 0.0 # A value (out of 1) which states how viable a session must be to be included
 	# Queueing players details
 	user_availabilities = Availability.objects.filter(profile=profile)
 	user_connected_accounts = Profile_Connected_Game_Account.objects.filter(profile=profile)
