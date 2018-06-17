@@ -258,14 +258,14 @@ def feedback(request):
 	Page for submitting feedback to the team
 	'''
 	title = 'Feedback'
-	form = FeedbackForm(request.POST)
+	form = FeedbackForm()
 	context = {
 		'title': title,
-		'form': form,
 		'message': 'Please enter your details and feedback below. Your feedback is greatly appreciated, and helps us to provide a better service!',
 		'success': 'False',
 	}
 	if request.method == 'POST':
+		form = FeedbackForm(request.POST)
 		if form.is_valid():
 			#saving details from the feedback form
 			instance = form.save(commit=False)
@@ -276,36 +276,11 @@ def feedback(request):
 				'message': 'Thank you for your feedback!',
 				'success': 'True',
 			}
-			return render(request, 'mysite/feedback.html', context)
 	else:
-		return render(request, 'mysite/feedback.html', context)
-
-def contact_us(request):
-	'''
-	Page for submitting a contact request
-	'''
-	title = 'Contact Us'
-	form = FeedbackForm(request.POST)
-	context = {
-		'title': title,
-		'form': form,
-		'message': 'Please enter your details and we will get back to you very soon!',
-		'success': 'False',
-	}
-	if request.method == 'POST':
-		if form.is_valid():
-			#saving details from the feedback form
-			instance = form.save(commit=False)
-			instance.save()
-
-			context = {
-				'title': 'Message submittted',
-				'message': 'Thank you!',
-				'success': 'True',
-			}
-			return render(request, 'mysite/contact_us.html', context)
-	else:
-		return render(request, 'mysite/contact_us.html', context)
+		form = FeedbackForm()
+	
+	context['form'] = form
+	return render(request, 'mysite/feedback.html', context)
 
 def register(request):
 	'''
@@ -545,7 +520,7 @@ def get_r6siege_profile(player_tag, platform):
 	url = 'https://public-ubiservices.ubi.com/v2/profiles'
 	params = {'platformType':platform, 'nameOnPlatform':player_tag}
 	data = get_r6siege_data(url, params)
-	if len(data['profiles']) == 0:
+	if data is None or len(data['profiles']) == 0:
 		return None
 	return data['profiles'][0]['profileId']
 
@@ -719,7 +694,7 @@ def get_suitable_sessions(profile):
 	'''
 	# Modifiers
 	acceptable_mmr_range = 100 # How much above/below us should they be to be viable?
-	min_accepted_viability = 0.4 # A value (out of 1) which states how viable a session must be to be included
+	min_accepted_viability = 0.0 # A value (out of 1) which states how viable a session must be to be included
 	# Queueing players details
 	user_availabilities = Availability.objects.filter(profile=profile)
 	user_connected_accounts = Profile_Connected_Game_Account.objects.filter(profile=profile)

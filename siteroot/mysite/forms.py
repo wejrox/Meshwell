@@ -49,7 +49,7 @@ class RegistrationForm(UserCreationForm):
 		widget=forms.Select(),
 	)
 	tos = forms.BooleanField(
-		label=mark_safe('I have read and agree to the <a href="/tos/" target="_blank">Terms of Service</a>')
+		label=mark_safe('I have read and agree to the <a href="/terms-of-service/" target="_blank">Terms of Service</a>')
 	)
 
 	#Class meta will dictate what the form uses for its fields
@@ -128,7 +128,7 @@ class FeedbackForm(forms.ModelForm):
 	class Meta:
 		model=Feedback
 		exclude=[]
-		
+
 # User login
 class LoginForm(forms.Form):
 	username = forms.CharField(help_text="Enter your username.")
