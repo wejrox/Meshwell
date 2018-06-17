@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 import requests, requests.auth, json, urllib.parse, datetime, math
-from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, RateSessionForm, LoginForm, SelectMatchmakingOptionsForm
+from mysite.forms import FeedbackForm, DeactivateUser, RegistrationForm, EditProfileForm, ConnectAccountForm, UserAvailabilityForm, RateSessionForm, LoginForm, SelectMatchmakingOptionsForm, CreateSessionForm
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User, Group
@@ -586,9 +586,35 @@ def get_r6siege_ranks(pref_server, player_tag, platform):
 
 	return ranks
 
-# Handles the user entering the queue for a session when the button on the nav bar is pressed
+@login_required
+def create_session(request):
+	context = {
+		'title':'Create Session',
+	}
+	data = dict()
+	if request.method == 'POST':
+		form = CreateSessionForm(request.POST, user=request.user)
+		if form.is_valid():
+			form.save()
+			data['form_is_valid'] = True
+		else:
+			data['form_is_valid'] = False
+	else:
+		form = CreateSessionForm(user=request.user)
+
+	# Set the form to whichever form we are using
+	context['form'] = form
+	data['html_form'] = render_to_string('account/create_session.html',
+										context,
+										request=request
+										)
+	return JsonResponse(data)
+
 @login_required
 def enter_queue(request):
+	'''
+	Handles the user entering the queue for a session when the button on the nav bar is pressed
+	'''
 	# Get user details
 	django_user = request.user
 	user_profile = django_user.profile
@@ -617,14 +643,6 @@ def enter_queue(request):
 		join_session(player_session, session[1][0], session[1][1])
 	### REPLACE WITH A REDIRECTION TO A SESSION CREATION FORM! ###
 	else:
-		# Create a session and add the user
-		player_acc = Profile_Connected_Game_Account.objects.filter(profile=user_profile).first()
-		game = Game.objects.get(id=player_acc.game.id)
-		session = Session.objects.create(game=game)
-		session.start = timezone.now()
-		session.save()
-		player_session.session = session
-		player_session.save()
 		user_profile.in_queue = True
 		user_profile.save()
 
@@ -635,7 +653,6 @@ def join_session(session_profile, session, avail):
 	Adds a user to a given session, overwriting the time of the session if necessary.
 	Returns True on success, False on failure
 	'''
-
 	# Ensure space available
 	if not session.space_available:
 		return False
@@ -673,15 +690,21 @@ def exit_queue(request):
 
 	# Get the most recent queue (since we could have played before)
 	player_session = Session_Profile.objects.filter(profile=request.user.profile).order_by('-session__start').first()
-	# Session now has spaces (regardless of if there were spaces before)
-	player_session.session.space_available = True
-	player_session.session.save()
-	# Delete session if nobody is in it
-	sessions = Session_Profile.objects.filter(session=player_session.session)
-	if sessions is None:
-		Session_Profile.objects.delete(player_session.session)
+	print(player_session.id)
 	# Remove our player session
 	player_session.delete()
+	print(player_session.id)
+
+	# Session now has spaces (regardless of if there were spaces before)
+	session = player_session.session
+	session.space_available = True
+	session.save()
+
+	# Delete session if nobody is in it
+	sp = Session_Profile.objects.filter(session=session)
+	if not sp:
+		session.delete()
+
 	request.user.profile.in_queue = False
 	request.user.profile.save()
 	return redirect('dashboard')
@@ -925,10 +948,6 @@ def add_availability(request):
 	Used to populate a modal.
 	Allows a user to add a new availability if not in a queue
 	'''
-	# Ensure that user is not queued!
-	if request.user.profile.in_queue:
-		return redirect('dashboard')
-
 	data = dict()
 
 	context = {
@@ -964,9 +983,6 @@ def edit_availability(request, pk):
 	Used to populate a modal.
 	Allows a user to edit their availabilities if not in queue
 	'''
-	# Ensure that user is not queued!
-	if request.user.profile.in_queue:
-		return redirect('dashboard')
 	data = dict()
 
 	context = {

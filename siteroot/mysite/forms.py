@@ -8,6 +8,8 @@ from apps.api.models import Profile, Feedback, Profile_Connected_Game_Account, A
 from mysite import views
 from django.forms import ModelForm
 from django.utils.safestring import mark_safe
+from django.utils.timezone import localdate, now
+import datetime
 
 #form to create profile
 #RegistrationForm VIEW must be created first as well as URl
@@ -238,12 +240,18 @@ class UserAvailabilityForm(forms.ModelForm):
 		help_text= 'Required.',
 		initial='00:00',
 		input_formats=['%H:%M', '%H:%M:%S'],
+		widget = forms.TextInput(
+			attrs={'type':'time'}
+		)
 	)
 	end_time = forms.TimeField(
 		required = True,
 		help_text= 'Required.',
 		initial='01:00',
 		input_formats=['%H:%M', '%H:%M:%S'],
+		widget = forms.TextInput(
+			attrs={'type':'time'}
+		)
 	)
 	competitive = forms.BooleanField(
 		required = False,
@@ -459,3 +467,100 @@ class SelectMatchmakingOptionsForm(forms.Form):
 			self.add_error('commend_priority_2', 'You cannot have duplicate priorities.')
 		if 	(cleaned_data['commend_priority_3'] == cleaned_data['commend_priority_4']):
 			self.add_error('commend_priority_3', 'You cannot have duplicate priorities.')
+		return cleaned_data
+
+class CreateSessionForm(forms.ModelForm):
+	'''
+	Form displayed on dashboard as modal
+	'''
+	date = forms.DateField(
+		required=True,
+		widget=forms.TextInput(
+			attrs={'type':'date'}
+		),
+		initial=localdate(now())
+	)
+	start_time = forms.TimeField(
+		required = True,
+		initial='00:00',
+		input_formats=['%H:%M', '%H:%M:%S'],
+		widget = forms.TextInput(
+			attrs={'type':'time'}
+		),
+		label = 'Start Time'
+	)
+	end_time = forms.TimeField(
+		required = True,
+		initial='01:00',
+		input_formats=['%H:%M', '%H:%M:%S'],
+		widget = forms.TextInput(
+			attrs={'type':'time'}
+		),
+		label = 'End Time'
+	)
+
+	field_order=['game', 'date', 'start_time', 'end_time', 'competitive']
+	class Meta:
+		model = Session
+		fields = (
+			'game',
+			'end_time',
+			'competitive',
+		)
+	
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user')
+		super(CreateSessionForm, self).__init__(*args, **kwargs)
+		game_accounts = Profile_Connected_Game_Account.objects.filter(profile=self.user.profile)
+		new_choices = list(self.fields['game'].choices)
+		games_available = []
+		for i, g in enumerate(game_accounts):
+			games_available.append(g.game.name)
+
+		for choice in new_choices:
+			if choice[1] not in games_available:
+				new_choices.remove(choice)
+
+		self.fields['game'].choices = new_choices
+
+	def clean(self):
+		cleaned_data = super().clean()
+		
+		# Get an hour after the start time for validation
+		start_time = datetime.datetime.strptime(self.data['date'], "%Y-%m-%d").date()
+		start_time = datetime.datetime.combine(start_time, cleaned_data.get('start_time'))
+		buffered_start_time = start_time + datetime.timedelta(hours=1)
+		buffered_start_time = buffered_start_time.time()
+		print(start_time)
+		print(datetime.datetime.now())
+		if start_time < datetime.datetime.now():
+			self.add_error('date', "Oops, that day has already passed!")
+		if cleaned_data.get('start_time') >= cleaned_data.get('end_time'):
+			self.add_error('start_time', "Start time cannot be after End time!")
+		elif buffered_start_time > cleaned_data.get('end_time'):
+			self.add_error('end_time', "Session must last at least an hour")
+		
+		return cleaned_data
+	
+	def save(self):
+		# Set up details
+		start_date = datetime.datetime.strptime(self.data['date'], "%Y-%m-%d").date()
+		start_time = datetime.datetime.strptime(self.data['start_time'], "%H:%M").time()
+		start = datetime.datetime.combine(start_date, start_time)
+
+		# Create a new session
+		session = Session()
+		session.game = Game.objects.get(pk=self.data['game'])
+		session.start = start
+		session.end_time = self.data['end_time']
+		if self.data.get('competitive', False):
+			session.competitive = True
+
+		session.save()
+
+		# Create a session profile
+		session_profile = Session_Profile()
+		session_profile.session = session
+		session_profile.profile = self.user.profile
+
+		session_profile.save()

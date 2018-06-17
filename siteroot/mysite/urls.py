@@ -58,6 +58,7 @@ urlpatterns = [
     path('dashboard/session/<int:pk>/rate/', site_views.rate_session, name='rate_session'),
     path('dashboard/manual_matchmaking/', site_views.manual_matchmaking, name='manual_matchmaking'),
     path('dashboard/manual_matchmaking/<int:pk>/join/', site_views.manual_matchmaking, name='manual_matchmaking'),
+    path('dashboard/create_session/', site_views.create_session, name='create_session'),
     # Admin
     url(r'^admin/', admin.site.urls),
     # API

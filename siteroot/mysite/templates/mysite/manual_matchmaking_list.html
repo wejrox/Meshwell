@@ -84,8 +84,11 @@
 		<!--/Previous Sessions-->
 	</div>
 	{% else %}
-	<div class="text-center">
-		There are no upcoming sessions matching your requirements.
+	<div class="text-center mt-3">
+		<p>
+			There are no upcoming sessions matching your requirements.
+		</p>
+		<button class="btn btn-md btn-outline-secondary js-create-session" data-url="{% url 'create_session' %}">Create one now!</button>
 	</div>
 	{% endif %}
 </div>
