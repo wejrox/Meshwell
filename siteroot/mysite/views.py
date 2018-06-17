@@ -21,7 +21,7 @@ from django.template.loader import render_to_string
 
 # Import settings
 from django.conf import settings
-#from mysite import private_settings
+from mysite import private_settings
 
 def testing(request):
 	return render(request, 'mysite/testing.html', {})
@@ -278,7 +278,7 @@ def feedback(request):
 			}
 	else:
 		form = FeedbackForm()
-	
+
 	context['form'] = form
 	return render(request, 'mysite/feedback.html', context)
 
