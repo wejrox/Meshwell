@@ -4,22 +4,30 @@
 {% block content %}
 <!--Content for Desktop/Laptop devices-->
 <div class="d-none d-lg-block">
-	<div id="landingSlide">
-		<div class="meshwellIntroduction">
-			<div class="welcomeMessage">
-				A smart matchmaking system to find your new team and friends.
-			</div> 
-			<br><br>
-			<a href="/register/" class="btn-lg btn-primary" role="button" style="font-size:1.75rem; text-decoration:none;">Sign up!</a>
+	<div id="landingSlide" class="home-slide meshwell-introduction">
+		<div class="container-fluid">
+			<div class="d-flex flex-column">
+				<div class="d-flex justify-content-center">
+					<div class="welcomeMessage">
+						A smart matchmaking system to find your new team and friends.
+					</div> 
+				</div>
+				<div class="d-flex justify-content-center">
+					<a href="/register/" class="btn-lg btn-primary" role="button" style="font-size:1.75rem; text-decoration:none;">Sign up!</a>
+				</div>
+			</div>
 		</div>
-		<section id="guider-anchor" class="guider-arrow">
-			<a href="#howItWorks"><span></span>How it works</a>
-		</section>
+		<div id="guider-anchor" class="guider-arrow">
+			<a href="#howItWorks">
+				<span></span> <!--Arrow Animation-->
+				How it works
+			</a>
+		</div>
 	</div>
-	<div id="howItWorks">
-		<div id="" class="container fullFluid">
+	<div id="howItWorks" class="home-slide">
+		<div class="container-fluid">
 			<div class="row">
-				<div class="col textStyle">
+				<div class="col pt-1">
 					<div class="headerContent">
 						<i class="fas fa-code-branch"></i> How it works
 					</div>
@@ -51,27 +59,27 @@
 				</div>
 			</div>
 		</div>
-		<section id="guider-anchor" class="guider-arrow">
-			<a href="#casualCompetitive"><span></span>Casual and competitive preferences supported</a>
-		</section>
+		<div id="guider-anchor" class="guider-arrow">
+			<a href="#casualCompetitive"><span></span>Casual or Competitive?</a>
+		</div>
 	</div>
-	<div id="casualCompetitive">
-		<div id="" class="container fullFluid">
+	<div id="casualCompetitive" class="home-slide">
+		<div class="container-fluid">
 			<div class="row">
-				<div class="col textStyle">
+				<div class="col">
 					<div class="headerContent" style="background: rgba(0, 0, 0, 0.78);">
-						<i class="fas fa-filter"></i> Casual and competitive players welcome
+						<i class="fas fa-filter"></i> Casual and Competitive
 					</div>
 					<br>
 					<div class="imgAndText">
 						<div class="row">
 							<div class="col-lg-6">
-								<img class="rounded-circle" src="https://i.imgur.com/dffbWmB.png" alt="Generic placeholder image" width="300" height="300">
+								<img class="rounded-circle" src="https://i.imgur.com/dffbWmB.png" alt="Generic placeholder image" width="200" height="200">
 								<h2 style="margin-top: 1rem;">Casual</h2>
 								<p>Find other players who just want to have fun and play games.</p>
 							</div><!-- /.col-lg-6 -->
 							<div class="col-lg-6">
-								<img class="rounded-circle" src="https://i.imgur.com/M6rcTSt.png" alt="Generic placeholder image" width="300" height="300">
+								<img class="rounded-circle" src="https://i.imgur.com/M6rcTSt.png" alt="Generic placeholder image" width="200" height="200">
 								<h2 style="margin-top: 1rem;">Competitive</h2>
 								<p>Find other teammates to take your games to a competitive level!</p>
 							</div><!-- /.col-lg-6 -->
@@ -80,25 +88,25 @@
 				</div>
 			</div>
 		</div>
-		<section id="guider-anchor" class="guider-arrow">
+		<div id="guider-anchor" class="guider-arrow">
 			<a href="#supportedGames"><span></span>Games currently supported</a>
-		</section>
+		</div>
 	</div>
-	<div id="supportedGames">
-		<div id="" class="container fullFluid">
+	<div id="supportedGames" class="home-slide">
+		<div class="container-fluid">
 			<div class="row">
-				<div class="col textStyle">
+				<div class="col">
 					<div class="headerContent" style="background: rgba(0, 0, 0, 0.8) !important;">
-						<i class="fas fa-hands-helping"></i> Games we currently support
+						<i class="fas fa-hands-helping"></i> Supported Games
 					</div>
-					<div class="row" style="margin-top: 2cm; margin-left: 4cm !important; margin-right: 4cm !important;">
+					<div class="row">
 						<div class="col pictureCenter">
-						<img class="" src='https://i.imgur.com/EjPOE4y.png' style="width: 75%; max-width: 600px;"/>
+							<img src='https://i.imgur.com/EjPOE4y.png' style="width: 100%; max-width: 400px;"/>
 						</div>
-						<div class="col textStyle">
+						<div class="col">
 							<br>
-							<div class="paragraphContent" style="">
-								<img class="" src='https://i.imgur.com/vyodKdo.jpg' style="width: 50%;" /> <br><br>
+							<div class="paragraphContent">
+								<img class="rounded-md" src='https://i.imgur.com/vyodKdo.jpg' style="width: 50%;" /> <br><br>
 								Tom Clancy's Rainbow Six Siege is a tactical shooter video game developed by Ubisoft Montreal and published by Ubisoft.
 							</div>
 						</div>
@@ -108,20 +116,19 @@
 			</div>
 		</div>
 		<br>
-		<section id="guider-anchor" class="guider-arrow">
+		<div id="guider-anchor" class="guider-arrow">
 			<a href="{% url 'register' %}"><span></span>Let's get started!</a>
-		</section>
+		</div>
 	</div>
 </div>
 
 <!--Content for Mobile devices-->
 <div class="d-lg-none">
-	<div id="landingSlide">
-		<div class="meshwellIntroduction">
-			<div class="welcomeMessage">
-				A smart matchmaking system to find your new team and friends.
-			</div> 
-			<br><br>
+	<div id="landingSlide" class="meshwell-introduction">
+		<div class="welcomeMessage mx-3 py-3">
+			A smart matchmaking system to find your new team and friends.
+		</div> 
+		<div class="p-5">
 			<a href="/register/" class="btn-lg btn-primary" role="button" style="font-size:1.75rem; text-decoration:none;">Sign up!</a>
 		</div>
 	</div>
@@ -129,27 +136,27 @@
 	<div id="howItWorksMobile">
 		<div id="" class="container">
 		 	<div class="row">
-			    <div class="col textStyle">
+			    <div class="col">
 					<div class="imgAndTextMobile">
-						<i class="fas fa-code-branch"><h1>How it works</h1></i>
-						<div class="row">
+						<h1><i class="fas fa-code-branch mt-3"><h1>How it works</h1></i></h1>
+						<div class="row mx-1 pb-2">
 							<div class="col-lg-3">
-								<img class="rounded-circle" src="https://i.imgur.com/IhZtCpF.png" alt="Generic placeholder image" width="140" height="140">
+								<img class="rounded-circle mt-3" src="https://i.imgur.com/IhZtCpF.png" alt="Connect Image" width="150" height="150">
 								<h2>Connect!</h2>
 								<p>Connect your discord and game accounts. Add your preferences, connect your account, and start searching.</p>
 							</div><!-- /.col-lg-3 -->
 							<div class="col-lg-3">
-								<img class="rounded-circle" src="https://i.imgur.com/uGt6Msq.png" alt="Generic placeholder image" width="140" height="140">
+								<img class="rounded-circle mt-3" src="https://i.imgur.com/uGt6Msq.png" alt="Matchmake Image" width="150" height="150">
 								<h2>Matchmake!</h2>
 								<p>Using our algorithm, we'll find other gamers who match your preferences.</p>
 							</div><!-- /.col-lg-3 -->
 							<div class="col-lg-3">
-								<img class="rounded-circle" src="https://i.imgur.com/PM6qCoX.png" alt="Generic placeholder image" width="140" height="140">
+								<img class="rounded-circle mt-3" src="https://i.imgur.com/PM6qCoX.png" alt="Communicate Image" width="150" height="150">
 								<h2>Communicate!</h2>
 								<p>Connect to our Discord server, communicate and have fun.</p>
 							</div><!-- /.col-lg-3 -->
 							<div class="col-lg-3">
-								<img class="rounded-circle" src="https://i.imgur.com/M8VO1dt.png" alt="Generic placeholder image" width="140" height="140">
+								<img class="rounded-circle mt-3" src="https://i.imgur.com/M8VO1dt.png" alt="Review Image" width="150" height="150">
 								<h2>Review!</h2>
 								<p>Rate and commend your teammates to improve future sessions!</p>
 							</div><!-- /.col-lg-3 -->
@@ -163,20 +170,20 @@
 	<div id="casualCompetitiveMobile">
 		<div id="" class="container">
 		 	<div class="row">
-			    <div class="col textStyle">
+			    <div class="col">
 					<div class="imgAndTextMobile">
-						<div class="row">
-							<i class="fas fa-filter"><h1>Casual and competitive players welcome</h1></i>
+						<div class="row mx-1 pb-2">
+							<h1><i class="fas fa-filter mt-3"><h1>Casual and Competitive</h1></i></h1>
 							<div class="col-lg-6">
-								<img class="rounded-circle" src="https://i.imgur.com/dffbWmB.png" alt="Generic placeholder image" width="300" height="300">
+								<img class="rounded-circle mt-3" src="https://i.imgur.com/dffbWmB.png" alt="Casual Image" width="150" height="150">
 								<h2 style="margin-top: 1rem;">Casual</h2>
 								<p>Find other players who just want to have fun and play games.</p>
-							</div><!-- /.col-lg-6 -->
+							</div>
 							<div class="col-lg-6">
-								<img class="rounded-circle" src="https://i.imgur.com/M6rcTSt.png" alt="Generic placeholder image" width="300" height="300">
+								<img class="rounded-circle mt-3" src="https://i.imgur.com/M6rcTSt.png" alt="Competitive Image" width="150" height="150">
 								<h2 style="margin-top: 1rem;">Competitive</h2>
 								<p>Find other teammates to take your games to a competitive level!</p>
-							</div><!-- /.col-lg-6 -->
+							</div>
 						</div>
 					</div>
 			    </div>
@@ -187,15 +194,15 @@
 	<div id="supportedGames">
 		<div id="" class="container">
 		 	<div class="row">
-			    <div class="col textStyle">
+			    <div class="col mb-3">
 			     	<div class="imgAndTextMobile">
-						<i class="fas fa-hands-helping"><h1>Currently Supported Games</h1></i>
-						<div class="row">
+						<h1><i class="fas fa-hands-helping mt-3"><h1>Supported Games</h1></i></h1>
+						<div class="row pb-2">
 							<div class="col-lg-12">
-								<img class="rounded-circle" src="https://i.imgur.com/EjPOE4y.png" alt="Generic placeholder image" width="350" height="350">
+								<img class="rounded-circle mt-3" src="https://i.imgur.com/EjPOE4y.png" alt="Generic placeholder image" width="150" height="150">
 								<h2>Rainbow Six Siege</h2>
 								<p>Tom Clancy's Rainbow Six Siege is a tactical shooter video game developed by Ubisoft Montreal and published by Ubisoft.</p>
-							</div><!-- /.col-lg-12 -->
+							</div>
 						</div>
 					</div>
 			    </div>

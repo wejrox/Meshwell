@@ -41,59 +41,26 @@ body{
 
 /*Index Page*/
 #landingSlide{
-  /* The image used */
   background-image: url("https://i.imgur.com/O6G3IRE.jpg");
-
-  /* Full height */
-  height: 100vh;
-
-  /* Center and scale the image nicely */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  display:flex;
-  justify-content:center;
-  align-items:center;
 }
 
 #howItWorks{
-  /* The image used */
   background-image: url("https://i.imgur.com/xmcqlq1.jpg");
-
-  /* Full height */
-  height: 100vh;
-
-  /* Center and scale the image nicely */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  display:flex;
-  justify-content:center;
-  align-items:center;
 }
 
 #casualCompetitive{
-  /* The image used */
   background-image: url("https://i.imgur.com/admPSfP.jpg");
-
-  /* Full height */
-  height: 100vh;
-
-  /* Center and scale the image nicely */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  display:flex;
-  justify-content:center;
-  align-items:center;
 }
 
 #supportedGames{
-  /* The image used */
   background-image: url("https://i.imgur.com/zbFTgGv.jpg");
+}
+
+.home-slide{
+  position: relative;
 
   /* Full height */
-  height: 100vh;
+  height: 900px;
 
   /* Center and scale the image nicely */
   background-position: center;
@@ -132,7 +99,7 @@ body{
   background: rgba(0, 0, 0, 0.7);
 }
 
-.meshwellIntroduction{
+.meshwell-introduction{
   text-align: center;
   color: #fff;
   font-weight: 100;
@@ -140,9 +107,9 @@ body{
 }
 
 .welcomeMessage{
-  font-size: 3vw;
-  text-shadow: 0 0 20px #000000;
-  margin-bottom: 1%;
+  font-size: 3rem;
+  color: white !important;
+  text-shadow: 0 5px 5px #000000;
 }
 
 .hr.indexPage {
@@ -153,10 +120,6 @@ body{
 .container.fullFluid{
   max-width: 100% !important;
   z-index: 60;
-}
-
-.col.textStyle{
-  padding-top: 1em;
 }
 
 .col.pictureCenter{
@@ -256,11 +219,14 @@ section h1 {
 
 #guider-anchor {}
 
+.guider-arrow {
+  position:absolute;
+  bottom: 50pt;
+}
+
 .guider-arrow a {
-  position: absolute;
-  bottom: 3cm;
+  position: relative;
   z-index: 8;
-  display: inline-block;
   -webkit-transform: translate(0, -50%);
   transform: translate(0, -50%);
   color: #fff;
@@ -275,7 +241,7 @@ section h1 {
 }
 
 #guider-anchor a {
-  padding-top: 70px;
+  padding-top: 50px;
 }
 #guider-anchor a span {
   position: absolute;
