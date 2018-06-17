@@ -20,5 +20,5 @@ Meshwell has a ReST API which third-parties can use to obtain a glimpse into the
 This API is private however, so a request must be made for access.
 
 ## References
-**Project Trello:** https://trello.com/b/OnRJLnFj/capstone-programming-project
-**Discord:** 
+**Project Trello:** https://trello.com/b/OnRJLnFj/capstone-programming-project  
+**Discord:** https://discord.gg/dafqTZq
