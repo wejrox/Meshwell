@@ -1,10 +1,10 @@
 # Meshwell - Play together, mesh well.
 A gamer matchmaking system, developed using Python on the Django framework.  
-**Backend:** Django-REST MVC/MTV API with Database integration.  
-**Frontend:** HTML, Bootstrap, JavaScript and Python.  
-*Hosting provided by Amazon Web Servers, **Ubuntu 16.04** distribution.*
+**Backend:** Django, Django-REST MVC/MTV API with MySQL Backend.  
+**Frontend:** HTML5, Bootstrap 4.0, JavaScript and Python.  
+*Hosting provided by Amazon Web Servers, **Ubuntu 16.04** distribution (Free Tier).*
 
-## The service
+## The Service
 Meshwell is designed to provide users with a streamlined alternative to the current state of matchmaking in the gaming industry.  
 Where currently players meet others in game and sometimes find people that they enjoy playing with, Meshwell provides the alternative of queueuing dynamically and finding other players that wish to play like you do (be it competitively or casually, teamwork or solo focused).  
 Using our algorithm, we find other players that match your playstyle and provide you with a secure, private Discord channel to play your session together.  
