@@ -21,7 +21,7 @@ from django.template.loader import render_to_string
 
 # Import settings
 from django.conf import settings
-from mysite import private_settings
+#from mysite import private_settings
 
 def testing(request):
 	return render(request, 'mysite/testing.html', {})
@@ -523,7 +523,7 @@ def get_r6siege_data(url, params=None):
 	Given a url to make a request from, gets data and returns it or none
 	'''
 	headers = {
-		'Content-Type':'application/json', 
+		'Content-Type':'application/json',
 		'Ubi-AppId':'39baebad-39e5-4552-8c25-2c9b919064e2',
 		'Authorization':'ubi_v1 t=' + private_settings.SIEGE_AUTH
 	}
@@ -539,7 +539,7 @@ def get_r6siege_data(url, params=None):
 		return None
 
 def get_r6siege_profile(player_tag, platform):
-	''' 
+	'''
 	Gets the players profile details given their name
 	'''
 	url = 'https://public-ubiservices.ubi.com/v2/profiles'
@@ -579,7 +579,7 @@ def get_r6siege_ranks(pref_server, player_tag, platform):
 		platform = 'xbl'
 	else:
 		return None
-	
+
 	# Parse region
 	if pref_server == 'Oceania' or pref_server == 'Asia' or pref_server == 'Middle-East':
 		pref_server = 'apac'
@@ -1232,7 +1232,7 @@ def manual_matchmaking(request, pk=None):
 
 		join_session(player_session, session, avail)
 		return redirect('dashboard')
-	
+
 	data['html_match_list'] = render_to_string('mysite/manual_matchmaking_list.html', context, request=request)
 	return JsonResponse(data)
 

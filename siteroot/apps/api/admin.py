@@ -26,48 +26,7 @@ admin.site.register(Feedback)
 admin.site.register(Banned_User)
 
 
-#User Banning and emailing Function(CURRENTLY TESTING THIS)
-def banning_users1(self, request, queryset):
-
-	for obj in queryset:
-		if hasattr(obj, 'user'):
-			# This object is a Profile, so lookup the user
-			#profile = obj
-			profile = obj
-			obj = obj.user
-		obj.is_active = False
-		obj.save()
-		#import pdb; pdb.set_trace() ******DEBUGGING INPUT******
-		banned_user = profile.banned_profile.create(profile=profile)
-		reports = banned_user.profile.user_reported_report.all()
-		banned_user.save()
-		for report in reports:
-			banned_user.report_reason.add(report)
-			banned_reasons.append(report.get_report_reason_display())
-
-		def get_report_reason(self, obj):
-		#	return obj.banned_user.report_reason
-		#get_report_reason.short_description = 'Reason'
-			return "\n".join([r.report_reason for r in obj.report_reason.all()])
-
-
-		# Send the email
-		subject = 'Ban'
-		message = '''Hello {},We are sorry to inform you that you have been banned from {},
-		for the following reasons: .
-		This will take place immediately.Thank you for understanding.
-
-		Regards,
-		The Meshwell Team
-		'''.format(user.username, "meshwell" )
-		email_from = settings.EMAIL_HOST_USER
-		recipient_list = [user.email]
-		send_mail( subject, message,email_from, recipient_list)
-
-	self.message_user(request, "User is banned and Email has been sent")
-
 def send_password_reset(self, request, queryset):
-
 
 	for obj in queryset:
 		if hasattr(obj, 'user'):
@@ -76,7 +35,7 @@ def send_password_reset(self, request, queryset):
 	self.message_user(request, "User is banned and Email has been sent")
 
 	subject = 'Password Reset'
-	message = 'hello'
+	message = 'http://meshwell.ml/password_reset'
 	email_from = settings.EMAIL_HOST_USER
 	recipient_list = [obj.email]
 	send_mail( subject, message,email_from, recipient_list)
@@ -102,7 +61,6 @@ def banning_users(self, request, queryset):
 
 		banned_reasons = []
 
-		#import pdb; pdb.set_trace() ******DEBUGGING INPUT******
 		banned_user = profile.banned_profile.create(profile=profile)
 		reports = banned_user.profile.user_reported_report.all()
 		banned_user.save()
@@ -147,9 +105,9 @@ class ProfileAdmin(admin.ModelAdmin):
 		ordering = ['-total_reports',]
 	list_display = ('user', 'birth_date', 'sessions_played', 'total_reports', 'reason_reported_sent')
 	readonly_fields = (('sessions_played'),('birth_date'),('user'),('pref_server'),('teamwork_commends'),('skill_commends'),('sportsmanship_commends'),('communication_commends'),('discord_id'))#,'total_reports')
-	actions = ['ban1', 'unban1','password_reset']
-	ban1 = banning_users
-	unban1 = unbanning_users
+	actions = ['ban', 'unban','password_reset']
+	ban = banning_users
+	unban = unbanning_users
 	password_reset = send_password_reset
 
 	def total_reports(self, obj):
@@ -163,7 +121,7 @@ admin.site.register(Profile, ProfileAdmin)
 class MyUserAdmin(UserAdmin):
 	list_display = ('userprofile','username', 'first_name', 'last_name' , 'email')
 	readonly_fields = ('first_name' , ('last_name') , ('email') , ('username'))
-	actions = [banning_users1,unbanning_users]
+	actions = [unbanning_users]
 
 	def userprofile(self, instance):
 		return instance.profile.user
