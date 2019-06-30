@@ -41,7 +41,7 @@ async def auto_manage_channels():
 	'''
 	await bot.wait_until_ready()
 
-	# Get guild/server identity,
+	# Get guild/server identity.
 	print("=================\nSetup\n=================")
 	print("Finding guild (server)...")
 
@@ -170,7 +170,7 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-	# Required for commands to work
+	# Required for commands to work.
 	await bot.process_commands(message)
 
 
