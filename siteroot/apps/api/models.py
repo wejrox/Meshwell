@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-# Auth
+# Auth.
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
@@ -13,6 +13,7 @@ class Profile(models.Model):
 	def __str__(self):
 		return self.user.username
 
+	# Regions that players can reside within.
 	USWEST = 'US-West'
 	USEAST = 'US-East'
 	EUROPE = 'Europe'
@@ -22,6 +23,7 @@ class Profile(models.Model):
 	SOUTHAFRICA = 'South Africa'
 	MIDDLEEAST = 'Middle-East'
 
+	# Choices for regions that a player would like to queue in.
 	PREF_SERVER_CHOICES = (
 		(USWEST, 'US-West'),
 		(USEAST, 'US-East'),
@@ -39,6 +41,7 @@ class Profile(models.Model):
 		default=USWEST,
 	)
 
+	# Types of attributes that a user can be commended for.
 	TEAMWORK = 'Teamwork'
 	COMMUNICATION = 'Communication'
 	SKILL = 'Skill'
@@ -55,21 +58,22 @@ class Profile(models.Model):
 	skill_commends = models.IntegerField(null=False, blank=False, default='0',)
 	sportsmanship_commends = models.IntegerField(null=False, blank=False, default='0',)
 
-	# Weighting of commends
+	# Weighting of commends.
 	commend_priority_1 = models.CharField(null=False, blank=False, max_length=20, default=TEAMWORK, choices=COMMENDS_CHOICES,)
 	commend_priority_2 = models.CharField(null=False, blank=False, max_length=20, default=COMMUNICATION, choices=COMMENDS_CHOICES,)
 	commend_priority_3 = models.CharField(null=False, blank=False, max_length=20, default=SKILL, choices=COMMENDS_CHOICES,)
 	commend_priority_4 = models.CharField(null=False, blank=False, max_length=20, default=SPORTSMANSHIP, choices=COMMENDS_CHOICES,)
 	ignore_matchmaking = models.BooleanField(null=False, blank=False, default=False,)
 
-	# The default game to prefer
+	# The default game type to prefer when matching.
 	pref_game = models.ForeignKey(
 		'Game',
 		on_delete=models.CASCADE,
 		blank=True,
 		null=True,
 	)
-	# Other details
+
+	# Other user details.
 	birth_date = models.DateField(null=True, blank=False,)
 	sessions_played = models.IntegerField(null=False, blank=False, default=0,)
 	received_ratings = models.IntegerField(null=False, blank=False, default=0,)
@@ -78,26 +82,36 @@ class Profile(models.Model):
 	# The users id on discord, which will never change. Current max length is 19, but set to 20 for safe measure (64bit Integer)
 	discord_id = models.CharField(max_length=20, null=True, blank=True,)
 
-# Add a trigger for creating a profile if a user is created and the profile doesn't exist
-# This handles user creation from the website, alongside user creation via api which creates both a user and an attached profile
+
 @receiver(post_save, sender=User)
 def create_profile(sender, instance=None, created=False, **kwargs):
+	'''
+	A trigger for creating a profile if a user is created and the profile doesn't exist.
+	This handles user creation from the website, alongside user creation via api which creates both a user and an attached profile.
+	'''
 	userprofile = Profile.objects.filter(user=instance)
 	if created and not userprofile:
 		profile = Profile.objects.create(user=instance)
 		profile.save()
 
-# Add a trigger for token authentication generation on user signup
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
+	'''
+	A trigger for token authentication generation on user signup.
+	'''
 	if created:
 		Token.objects.create(user=instance)
 
-# An entry for the users availability. All fields required, connected to an account
+
 class Availability(models.Model):
+	'''
+	An entry for the users availability. All fields required, connected to an account.
+	'''
 	def __str__(self):
 		return str.join(str(self.start_time), str(self.end_time))
 
+	# Days of the week
 	MONDAY = 'Monday'
 	TUESDAY = 'Tuesday'
 	WEDNESDAY = 'Wednesday'
@@ -123,6 +137,7 @@ class Availability(models.Model):
 		null=False,
 	)
 
+	# Preferred time slot on the day to play in.
 	start_time = models.TimeField(null=False, blank=False)
 	end_time = models.TimeField(null=False, blank=False)
 
@@ -132,42 +147,54 @@ class Availability(models.Model):
 		default=MONDAY,
 	)
 
+	# Whether or not this preference is for competitive (ranked) play.
 	competitive = models.BooleanField(default=False)
 
-# An entry for a game that we support
+
 class Game(models.Model):
+	'''
+	An entry for a game that we support.
+	'''
 	def __str__(self):
 		return self.name
 
+	# Name of the game.
 	name = models.CharField(
 		max_length=20,
 		null=False,
 		blank=False,
 	)
 
+	# Maximum number of players able to join a session of this game.
 	max_players = models.IntegerField(
 		null=False,
 		blank=False,
 		default=2,
 	)
 
+	# Description of the game.
 	description = models.CharField(
 		max_length=255,
 		null=False,
 		blank=False,
 		default='No description provided.',
 	)
-	# ADD IMAGE SUPPORT
+
+	# An image describing the game (usually box-art).
 	image = models.ImageField(
 		upload_to="games",
 		default='games/default.png',
 	)
 
-# An entry for a Role that has a connected game
+
 class Game_Role(models.Model):
+	'''
+	An entry for a Role to play in a game, which has a connected game.
+	'''
 	def __str__(self):
 		return self.name
 
+	# Game that this role belongs to.
 	game = models.ForeignKey(
 		'Game',
 		on_delete=models.PROTECT,
@@ -175,12 +202,14 @@ class Game_Role(models.Model):
 		null=False,
 	)
 
+	# Name of the role.
 	name = models.CharField(
 		max_length=20,
 		blank=False,
 		null=False,
 	)
 
+	# What the role entails.
 	description = models.CharField(
 		max_length=255,
 		null=False,
@@ -188,11 +217,15 @@ class Game_Role(models.Model):
 		default='No description provided.',
 	)
 
-# A game account that a user has connected to their account
+
 class Profile_Connected_Game_Account(models.Model):
+	'''
+	A game account that a user has connected to their meshwell account.
+	'''
 	def __str__(self):
 		return self.game_player_tag
 
+	# Supported platforms
 	PS4 = 'Playstation 4'
 	XBOX = 'Xbox One'
 	PC = 'PC'
@@ -203,6 +236,7 @@ class Profile_Connected_Game_Account(models.Model):
 		(PC, 'PC'),
 	)
 
+	# Meshwell profile connected to this game account.
 	profile = models.ForeignKey(
 		'Profile',
 		on_delete=models.PROTECT,
@@ -210,6 +244,7 @@ class Profile_Connected_Game_Account(models.Model):
 		null=False,
 	)
 
+	# Game which this account belongs to.
 	game = models.ForeignKey(
 		'Game',
 		on_delete=models.PROTECT,
@@ -225,16 +260,24 @@ class Profile_Connected_Game_Account(models.Model):
 		blank=False,
 		null=False,
 		choices=PLATFORM_CHOICES,
-                default=PC,
+		default=PC,
 	)
+
+	# Casual rank.
 	cas_rank = models.IntegerField(blank=True, null=True, default=0,)
+
+	# Competitive rank.
 	comp_rank = models.IntegerField(blank=True, null=True, default=0,)
 
-# An entry for a Session, created when two players queue that could match, then players that match are added when possible
+
 class Session(models.Model):
+	'''
+	An entry for a Session, created when two players queue that could match, then players that match are added when possible.
+	'''
 	def __str__(self):
 		return str.join(', ', (str(self.game.name), str(self.datetime_created), str(self.start)))
 
+	# Game that is selected for this session.
 	game = models.ForeignKey(
 		'Game',
 		on_delete=models.PROTECT,
@@ -242,17 +285,30 @@ class Session(models.Model):
 		null=False,
 	)
 
+	# Datetime that the session was created (defaults to the current datetime)
 	datetime_created = models.DateTimeField(auto_now_add=True,)
+
+	# Datetime that the session will begin.
 	start = models.DateTimeField(blank=True, null=True,)
+
+	# Datetime that the session will end.
 	end_time = models.TimeField(blank=True, null=True,)
+
+	# Whether or not this session is competitive.
 	competitive = models.BooleanField(default=False,)
+
+	# Whether or not this session has space available.
 	space_available = models.BooleanField(default=True,)
 
-# An entry for a profile's session, connected with a Session when it is found
+
 class Session_Profile(models.Model):
+	'''
+	An entry for a profile's session, connected with a Session when it is found.
+	'''
 	def __str__(self):
 		return str.join(str(self.profile), str(self.game_role))
 
+	# Session which a profile is connected to.
 	session = models.ForeignKey(
 		'Session',
 		on_delete=models.PROTECT,
@@ -260,6 +316,7 @@ class Session_Profile(models.Model):
 		null=True,
 	)
 
+	# Profile that has joined a session.
 	profile = models.ForeignKey(
 		'Profile',
 		on_delete=models.PROTECT,
@@ -267,6 +324,7 @@ class Session_Profile(models.Model):
 		null=False,
 	)
 
+	# Selected game role of the profile.
 	game_role = models.ForeignKey(
 		'Game_Role',
 		on_delete=models.PROTECT,
@@ -274,13 +332,18 @@ class Session_Profile(models.Model):
 		null=True,
 	)
 
+	# Meshwell rating of the profile.
 	rating = models.IntegerField(blank=True, null=True)
 
-# An entry for a report that a player has made.
+
 class Report(models.Model):
+	'''
+	An entry for a report that a player has made.
+	'''
 	def __str__(self):
 		return str.join(str(self.user_reported), str(self.datetime_sent))
 
+	# Reason choices for reporting a player.
 	TOXICITY = 'Toxicity'
 	SPORTSMANSHIP = 'Poor sportsmanship'
 
@@ -289,6 +352,7 @@ class Report(models.Model):
 		(SPORTSMANSHIP, 'Unsportsmanlike Behaviour'),
 	)
 
+	# Session which the report occured within.
 	session = models.ForeignKey(
 		'Session',
 		on_delete=models.PROTECT,
@@ -296,6 +360,7 @@ class Report(models.Model):
 		null=False,
 	)
 
+	# Profile that was reported.
 	user_reported = models.ForeignKey(
 		'Profile',
 		on_delete=models.PROTECT,
@@ -304,6 +369,7 @@ class Report(models.Model):
 		related_name='user_reported_report',
 	)
 
+	# User that reported the profile.
 	sent_by = models.ForeignKey(
 		'Profile',
 		on_delete=models.PROTECT,
@@ -312,31 +378,45 @@ class Report(models.Model):
 		related_name='sent_by_report',
 	)
 
+	# Reason given for reporting the profile.
 	report_reason = models.CharField(
 		max_length=255,
 		choices=REPORT_REASON_CHOICES,
 		default=TOXICITY,
 	)
 
+	# Datetime the report was sent.
 	datetime_sent = models.DateTimeField(auto_now_add=True,)
 
-# The feedback model for when a user submits feedback on the website
+
 class Feedback(models.Model):
+	'''
+	The feedback model for when a user submits feedback on the website.
+	'''
 	def __str__(self):
 		return self.title + ', ' + self.name
 
+	# Name of the person submitting feedback.
 	name = models.CharField(max_length=120)
+
+	# Contact email of the person submitting feedback.
 	email = models.EmailField()
+
+	# Title of the feedback message.
 	title = models.CharField(max_length=254)
+
+	# Contents of the feedback message.
 	message = models.TextField()
 
-#Banned Users model
-class Banned_User(models.Model):
-	def __str__(self):
-		return str.join(str(self.profile) , str(self.report_reason.report_reason))
-		#return self.profile
-		#return str.join(str(self.profile), str(self.report_reason))
 
+class Banned_User(models.Model):
+	'''
+	An entry for users who have been banned from the Meshwell service.
+	'''
+	def __str__(self):
+		return str.join(str(self.profile), str(self.report_reason.report_reason))
+
+	# Profile which is banned.
 	profile = models.ForeignKey(
 		'Profile',
 		on_delete=models.PROTECT,
@@ -345,11 +425,11 @@ class Banned_User(models.Model):
 		related_name='banned_profile'
 	)
 
+	# Reason(s) why the profile was banned.
 	report_reason = models.ManyToManyField(
 		'Report',
-		#on_delete=models.PROTECT,
 		blank=True,
-		#null=True,
 	)
 
+	# Date that the ban commenced.
 	date_banned = models.DateField(null=True, blank=False,)

@@ -8,13 +8,17 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
+
+This file is not the file that is used in production. 
+It has been provided as a means of running the service on your own machine.
 """
 
 import os
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...).
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
+# Quick-start development settings - unsuitable for production.
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -23,9 +27,10 @@ SECRET_KEY = 'j$=k_x0)0w&e)+bi0$7i%xirun42j-e$_b7o3e_qi%5wu8&lmr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Hostnames that the website is accessible from.
 ALLOWED_HOSTS = ['127.0.0.1','52.62.206.111','meshwell.ml', 'www.meshwell.ml']
 
-# Application definition
+# Application definition.
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -33,12 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Third Party
+    # Third Party.
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
     'crispy_forms',
-    # Our apps
+    # Our apps.
     'apps.api',
     'mysite',
 ]
@@ -79,7 +84,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
 
-# Database
+# Database.
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
@@ -91,7 +96,7 @@ DATABASES = {
     }
 }
 
-# Rest Framework settings
+# Rest Framework settings.
 REST_FRAMEWORK = {
 	'DEFAULT_PERMISSION_CLASSES': (
 		'rest_framework.permissions.IsAdminUser',
@@ -104,10 +109,10 @@ REST_FRAMEWORK = {
 	),
 }
 
-# Token authentication
+# Token authentication.
 API_TOKEN = 'd48a9f90f4cd22cfda843b389979225f6bb58a2b'
 
-# Password validation
+# Password validation.
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -125,12 +130,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Authentication Backend
+# Authentication Backend.
 AUTHENTICATION_BACKENDS = (
 	'django.contrib.auth.backends.AllowAllUsersModelBackend',
 )
 
-# Internationalization
+# Internationalization.
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
@@ -144,28 +149,27 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static server files (CSS, JavaScript, Images)
+# Static server files (CSS, JavaScript, Images).
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 STATIC_URL = '/static/'
 
-# Comment out for Local Development
+# Comment out for Local Development.
 #STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
-# Uncomment for Local Development
+# Uncomment for Local Development.
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 
-# Media files(images, other) uploaded by the User (admin or non)
+# Media files(images, other) uploaded by the User (admin or non).
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 
-# Crispy Forms
+# Crispy Forms.
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-
-
+# Email deatils.
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = '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'

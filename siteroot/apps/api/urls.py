@@ -1,14 +1,15 @@
-"""API Router Configuration
+"""
+API Router Configuration.
 This file contains the routing information for the API, which is
 accessed via Views in mysite/views.py, and Urls in mysite/urls.py
 """
 from rest_framework import routers
 from apps.api import views
 
-# Set up our default URL router
+# Set up our default URL router.
 router = routers.DefaultRouter()
 
-# Register dynamic pages
+# Register dynamic pages.
 router.register(r'profile', views.ProfileViewSet, base_name='profile')
 router.register(r'availability', views.AvailabilityViewSet, base_name='availability')
 router.register(r'game', views.GameViewSet, base_name='game')
