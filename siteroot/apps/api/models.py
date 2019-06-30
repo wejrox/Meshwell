@@ -6,7 +6,7 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.conf import settings
 
-# We are building on top of djangos default user model as it provides authentication already, adding our required fields for meshwell
+# We are building on top of djangos default user model as it provides authentication already, adding our required fields for meshwell.
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.PROTECT)
 
@@ -79,7 +79,7 @@ class Profile(models.Model):
 	received_ratings = models.IntegerField(null=False, blank=False, default=0,)
 	in_queue = models.BooleanField(null=False, blank=False, default=False,)
 
-	# The users id on discord, which will never change. Current max length is 19, but set to 20 for safe measure (64bit Integer)
+	# The users id on discord, which will never change. Current max length is 19, but set to 20 for safe measure (64bit Integer).
 	discord_id = models.CharField(max_length=20, null=True, blank=True,)
 
 
@@ -111,7 +111,7 @@ class Availability(models.Model):
 	def __str__(self):
 		return str.join(str(self.start_time), str(self.end_time))
 
-	# Days of the week
+	# Days of the week.
 	MONDAY = 'Monday'
 	TUESDAY = 'Tuesday'
 	WEDNESDAY = 'Wednesday'
@@ -225,7 +225,7 @@ class Profile_Connected_Game_Account(models.Model):
 	def __str__(self):
 		return self.game_player_tag
 
-	# Supported platforms
+	# Supported platforms.
 	PS4 = 'Playstation 4'
 	XBOX = 'Xbox One'
 	PC = 'PC'
@@ -285,7 +285,7 @@ class Session(models.Model):
 		null=False,
 	)
 
-	# Datetime that the session was created (defaults to the current datetime)
+	# Datetime that the session was created (defaults to the current datetime).
 	datetime_created = models.DateTimeField(auto_now_add=True,)
 
 	# Datetime that the session will begin.
