@@ -1,24 +1,23 @@
-# Text backup files
+# Text backup files.
 *.bak
 
-# Database
+# Database.
 *.sqlite
 
-# Ignore non-project specific files when deciding project language
+# Ignore non-project specific files when deciding project language.
 siteroot/mysite/static/* linguist-vendored
 
-# As we are running testing environments, ignore changes to the settings file
+# As we are running testing environments, ignore changes to the settings file.
 #siteroot/mysite/settings.py
 
-# Ignore any database changes
+# Ignore any database changes.
 migrations/
 
-# Ignore pycache files
+# Ignore pycache files.
 *.pyc
 .vscode-root/
 .vscode/
 
-# Ignore bot settings file as it has the bot key
+# Ignore bot settings file as it has the bot key.
 discord-bot/bot_settings.py
-discord-bot/test.py
 siteroot/mysite/private_settings.py

@@ -12,9 +12,6 @@ from django.template import Context
 from django.core.mail import EmailMessage
 
 
-
-
-
 # Register your models here.
 admin.site.register(Availability)
 admin.site.register(Game)
@@ -26,52 +23,57 @@ admin.site.register(Feedback)
 admin.site.register(Banned_User)
 
 
-
-#BANNING FUNCTION
-def banning_users(self, request, queryset):
-
+def ban_users(self, request, queryset):
+	'''
+	Bans a given set of users, sets the reports on the entries.
+	'''
 	for obj in queryset:
 		if hasattr(obj, 'user'):
-			# This object is a Profile, so lookup the user
+			# This object is a Profile, so lookup the user.
 			profile = obj
 			user = obj.user
+
+		# Revoke their login permissions.
 		user.is_active = False
 		user.save()
 
-		# Get the report(s) for this user
+		# Get the report(s) for this user.
 		user_reports = Report.objects.filter(user_reported=profile)
 
-		# Go through each report, in case there are multiples,
-		# add a record in the ban table
-
+		# Create the banned user instance for the profile, append all report ids.
 		banned_reasons = []
-
 		banned_user = profile.banned_profile.create(profile=profile)
 		reports = banned_user.profile.user_reported_report.all()
 		banned_user.save()
+
 		for report in reports:
 			banned_user.report_reason.add(report)
 			banned_reasons.append(report.get_report_reason_display())
-		# Send the email
+
+		# Inform the user that they have been banned via the email they signed up with.
 		subject = 'Ban'
-		message = '''Hello {},We are sorry to inform you that you have been banned from {},
-		for the following reasons: {}.
-		This will take place immediately.Thank you for understanding.
+		message = '''Hello {}, We are sorry to inform you that you have been banned from {} 
+		for the following reasons: {}. 
+		This will take place effective immediately. If you believe that you have been banned in error, 
+		please contact our support team and we will decide on a course of action.
 
 		Regards,
-		The Meshwell Team
-		'''.format(user.username, "meshwell",banned_reasons )
+		The Meshwell Team.
+		'''.format(user.username, "Meshwell", banned_reasons)
 		email_from = settings.EMAIL_HOST_USER
 		recipient_list = [user.email]
 		send_mail( subject, message,email_from, recipient_list)
 
 	self.message_user(request, "User is banned and Email has been sent")
 
-#UNBANNING ADMIN-USERS
-def unbanning_users(self, request, queryset):
+
+def unban_users(self, request, queryset):
+	'''
+	Unbans a given set of users, deleting their entry from the banned_users table.
+	'''
 	for obj in queryset:
 		if hasattr(obj, 'user'):
-			# This object is a Profile, so lookup the user
+			# This object is a Profile, so lookup the user.
 			profile=obj
 			obj = obj.user
 		obj.is_active = True
@@ -86,42 +88,65 @@ class ReportAdmin(admin.ModelAdmin):
 
 admin.site.register(Report, ReportAdmin)
 
-#PROFILE ADMIN-PANEL
+
 class ProfileAdmin(admin.ModelAdmin):
+	'''
+	Profile Admin panel.
+	'''
 	class Meta:
 		ordering = ['-total_reports',]
 	list_display = ('user', 'birth_date', 'sessions_played', 'total_reports', 'reason_reported_sent')
-	readonly_fields = (('sessions_played'),('birth_date'),('user'),('pref_server'),('teamwork_commends'),('skill_commends'),('sportsmanship_commends'),('communication_commends'),('discord_id'))#,'total_reports')
+	readonly_fields = (('sessions_played'), ('birth_date'), ('user'), ('pref_server'), ('teamwork_commends'), 
+						('skill_commends'), ('sportsmanship_commends'), ('communication_commends'), ('discord_id'))
 	actions = ['ban', 'unban']
-	ban = banning_users
-	unban = unbanning_users
+	ban = ban_users
+	unban = unban_users
 
 	def total_reports(self, obj):
+		'''
+		Gets the amount of times a user has been reported.
+		'''
 		return Report.objects.filter(user_reported=obj).count()
+
 	def reason_reported_sent(self, obj):
+		'''
+		Gets the amount of times this user has reported someone else.
+		'''
 		return Report.objects.filter(report_reason=obj).count()
-		#return instance.report.sent_by
 
 admin.site.register(Profile, ProfileAdmin)
 
-#USER ADMIN-PANEL
+
 class MyUserAdmin(UserAdmin):
+	'''
+	User admin panel.
+	'''
 	list_display = ('userprofile','username', 'first_name', 'last_name' , 'email')
 	readonly_fields = ('first_name' , ('last_name') , ('email') , ('username'))
-	actions = [unbanning_users]
+	actions = [unban_users]
 
 	def userprofile(self, instance):
+		'''
+		Gets the user that is attached to this profile.
+		'''
 		return instance.profile.user
 
 admin.site.unregister(User)
 admin.site.register(User, MyUserAdmin)
 
-#BANNED USER ADMIN-PANEL
+
 class Banned_UserAdmin(admin.ModelAdmin):
+	'''
+	Admin panel for viewing banned users.
+	'''
 	fields = ['profile', 'report_reason']
 	list_display = ('profile','get_report_reason')
 
 	def get_report_reason(self, obj):
+		'''
+		Gets a list of report reasons behind why a user was banned.
+		'''
 		return "\n".join([r.report_reason for r in obj.report_reason.all()])
+
 admin.site.unregister(Banned_User)
 admin.site.register(Banned_User, Banned_UserAdmin)

@@ -1,4 +1,5 @@
-"""mysite URL Configuration
+"""
+mysite URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/urls/
@@ -26,7 +27,7 @@ from django.contrib import admin
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    # Core
+    # Core.
     path('', site_views.index, name='index'),
     path('testing/', site_views.testing, name='testing'),
     path('feedback/', site_views.feedback, name='feedback'),
@@ -35,7 +36,7 @@ urlpatterns = [
     path('tutorial/', site_views.tutorial, name='tutorial'),
     path('terms-of-service/', site_views.terms_of_service, name='terms-of-service'),
     path('privacy-policy/', site_views.privacy_policy, name='privacy-policy'),
-    # Account pages
+    # Account pages.
     path('dashboard/', site_views.dashboard, name='dashboard'),
     path('dashboard/profile/', site_views.profile, name='profile'),
     path('dashboard/discord_disconnect_account/', site_views.discord_disconnect_account, name='discord_disconnect_account'),
@@ -59,20 +60,21 @@ urlpatterns = [
     path('dashboard/manual_matchmaking/', site_views.manual_matchmaking, name='manual_matchmaking'),
     path('dashboard/manual_matchmaking/<int:pk>/join/', site_views.manual_matchmaking, name='manual_matchmaking'),
     path('dashboard/create_session/', site_views.create_session, name='create_session'),
-    # Admin
+    # Admin.
     url(r'^admin/', admin.site.urls),
-    # API
+    # API.
     url(r'^api/', include(api_router.urls)),
-    # Password reset
+    # Password reset.
     url(r'^password_reset/$', auth_views.password_reset, name='password_reset'),
     url(r'^password_reset/done/$', auth_views.password_reset_done, name='password_reset_done'),
     url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         auth_views.password_reset_confirm, name='password_reset_confirm'),
     url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
-    # Discord Authentication
+    # Discord Authentication.
     url(r'^discord_callback/', site_views.discord_callback, name='discord_callback'),
 ]
 
-# Development serving of media files (game images)
+
+# Development serving of media files (game images).
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
