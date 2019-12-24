@@ -6,7 +6,7 @@ A gamer matchmaking system, developed using Python on the Django framework.
 
 ## The Service
 Meshwell is designed to provide users with a streamlined alternative to the current state of matchmaking in the gaming industry.  
-Where currently players meet others in game and sometimes find people that they enjoy playing with, Meshwell provides the alternative of queueuing dynamically and finding other players that wish to play like you do (be it competitively or casually, teamwork or solo focused).  
+Where currently players meet others in game and sometimes find people that they enjoy playing with, Meshwell provides the alternative of queueing dynamically and finding other players that wish to play like you do (be it competitively or casually, teamwork or solo focused).  
 Using our algorithm, we find other players that match your playstyle and provide you with a secure, private Discord channel to play your session together.  
 Additionally, we offer the ability to queue for future timeslots, as we understand that it's difficult to find players who can play at the same time as you.  
 
